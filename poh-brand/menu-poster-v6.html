@@ -1,0 +1,134 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Serif+Thai:wght@300;400;500&family=IBM+Plex+Sans+Thai:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* โปสเตอร์เมนู POH v6 · A3 1754×2480
+   พื้นหลัง: agy เจนสีน้ำมัน · คลื่นนุ่มฟุ้ง · สมุนไพรเป็นพระเอกริมขวา (กลับด้านภาพ)
+   ขวด: agy เจนใหม่ให้ตัวอักษรฉลากคมชัด (Poh · SPARKLING TEA · 0% ALCOHOL · 275 ml.)
+   ตัวหนังสือไทยพิมพ์ใน HTML ทั้งหมด */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#1B2C4E; --navy-soft:#3C5378; --blue:#2F4C86; --coral:#C4536A;
+  --gold:#B08D4F; --muted:#6E6E6E; --rule:rgba(27,44,78,.2);
+  --serif-th:'Noto Serif Thai',serif; --sans-th:'IBM Plex Sans Thai',sans-serif;
+  --serif-en:'Cormorant Garamond',serif;
+}
+html,body{width:1754px;height:2480px;overflow:hidden}
+body{background:#FBF7EC;color:#3B3B3B;font-family:var(--sans-th);font-weight:300;
+  font-size:15.5px;line-height:1.92;position:relative}
+.plate{position:absolute;inset:0;z-index:0;
+  background:url('assets/agy-plate-oil2.png') center top/100% auto no-repeat}
+.plate::after{content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,rgba(251,247,236,.90) 0%,rgba(251,247,236,.55) 26%,rgba(251,247,236,0) 44%),
+    linear-gradient(180deg,rgba(251,247,236,.70) 0%,rgba(251,247,236,0) 18%),
+    linear-gradient(0deg,#FBF7EC 0%,#FBF7EC 8%,rgba(251,247,236,.82) 14%,rgba(251,247,236,0) 26%)}
+
+/* ขวดสินค้า · ฉลากคมชัด */
+.hero{position:absolute;z-index:1;left:56.5%;top:330px;transform:translateX(-50%);
+  width:720px;text-align:center}
+.hero img{height:1660px;width:auto;
+  filter:drop-shadow(0 26px 34px rgba(27,44,78,.20))}
+.hero::after{content:"";position:absolute;left:50%;bottom:16px;transform:translateX(-50%);
+  width:430px;height:32px;border-radius:50%;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(27,44,78,.20),rgba(27,44,78,0) 70%)}
+
+/* หัวโปสเตอร์ */
+.head{position:absolute;z-index:2;left:108px;top:126px;width:520px}
+.eyebrow{font-family:var(--serif-en);letter-spacing:.4em;font-size:13.5px;
+  color:var(--gold);text-transform:uppercase;margin-bottom:16px}
+.wordmark{display:flex;align-items:flex-end;gap:24px}
+.mark{font-family:var(--serif-en);font-weight:300;color:var(--navy);
+  letter-spacing:.2em;line-height:1;font-size:100px}
+.bar{width:1px;height:64px;background:var(--rule);margin-bottom:10px}
+.mark-th{font-family:var(--serif-th);font-weight:400;color:var(--navy);font-size:46px;line-height:1}
+.motto{font-family:var(--serif-th);font-weight:400;color:var(--navy);
+  font-size:29px;line-height:1.55;margin-top:16px}
+.divider{width:100px;height:1px;background:var(--gold);opacity:.7;margin-top:24px}
+.spec{margin-top:20px;font-family:var(--serif-th);font-size:21px;color:var(--navy-soft)}
+
+/* บล็อกเนื้อหา · เรียงเป็นคอลัมน์เดียวริมซ้าย */
+.block{position:absolute;z-index:2;left:108px;width:436px}
+.block h3{font-family:var(--serif-th);font-weight:400;color:var(--navy);
+  font-size:24px;line-height:1.4;margin-bottom:10px}
+.block .hr{height:1px;background:var(--rule);margin-bottom:14px}
+.block p + p{margin-top:12px}
+.blue{color:var(--blue)}
+.coral{font-family:var(--serif-th);color:var(--coral);font-size:20px;line-height:1.7}
+
+#b-story {top:600px}
+#b-taste {top:1010px}
+#b-flower{top:1450px}
+#b-blue  {top:1790px}
+
+.idea{position:absolute;z-index:2;left:108px;right:108px;bottom:104px;
+  border-top:1px solid var(--rule);padding-top:26px;text-align:center}
+.creed{display:flex;width:100%}
+.creed div{flex:1;font-family:var(--serif-th);font-size:19px;color:var(--navy);
+  border-right:1px solid var(--rule);padding:5px 0}
+.creed div:last-child{border-right:0}
+.creed span{display:block;font-family:var(--sans-th);font-weight:300;
+  font-size:14px;color:var(--navy-soft);margin-top:2px}
+.closer{font-family:var(--serif-th);font-size:19px;line-height:1.75;color:var(--navy);
+  margin-top:18px;max-width:66ch;margin-inline:auto}
+.foot{margin-top:16px;font-family:var(--serif-en);letter-spacing:.34em;font-size:12px;
+  color:var(--muted);text-transform:uppercase;line-height:2.1}
+</style></head><body>
+<div class="plate"></div>
+<div class="hero"><img src="assets/agy-bottle-cut.png" alt="POH Sparkling Tea 275 ml"></div>
+
+<div class="head">
+  <p class="eyebrow">Sparkling Tea · Takua Pa</p>
+  <div class="wordmark">
+    <span class="mark">POH</span><span class="bar"></span><span class="mark-th">โพ้</span>
+  </div>
+  <p class="motto">เมื่อเมืองท่ากลับมาผลิบาน</p>
+  <div class="divider"></div>
+  <p class="spec">275 ml · 0% Alcohol</p>
+</div>
+
+<div class="block" id="b-story">
+  <h3>ท่าเรือที่ชื่อโพ้</h3><div class="hr"></div>
+  <p>ครั้งหนึ่ง “โพ้” คือท่าเรือของตะกั่วป่า สถานที่ที่ผู้คน เรือสินค้า ภาษา
+     และวัฒนธรรมจากหลายดินแดนเดินทางมาพบกัน จนกลายเป็นหนึ่งในเมืองที่รุ่งเรืองที่สุด
+     ของชายฝั่งอันดามัน</p>
+  <p class="blue">กาลเวลาผ่านไป เรืออาจไม่จอดที่ท่าเหมือนเดิม แต่ผู้คนรุ่นใหม่ยังคงเดินทางเข้ามา
+     พร้อมความคิดสร้างสรรค์ใหม่ ๆ ที่ทำให้เมืองเก่ามีชีวิตอีกครั้ง</p>
+</div>
+
+<div class="block" id="b-taste">
+  <h3>รสชาติแห่งการเดินทาง</h3><div class="hr"></div>
+  <p>POH เริ่มต้นจากใบชาที่ดื่มในอดีต ชาที่อยู่ในความทรงจำของคนตะกั่วป่า
+     ก่อนเติมชีวิตใหม่ด้วยวัตถุดิบจากพังงา ทั้งดาหลา ส้มแขก ลูกจันทน์ มิ้น และกระเจี๊ยบ
+     จนเกิดเป็นสีชมพูอ่อนที่ไม่เคยมีอยู่ในอดีต</p>
+  <p class="coral">เพราะเราไม่ได้ต้องการย้อนเวลากลับไป<br>แต่ต้องการให้ความทรงจำเดินหน้าต่อ</p>
+</div>
+
+<div class="block" id="b-flower">
+  <h3>ดอกดาหลา</h3><div class="hr"></div>
+  <p>ดาหลาไม่ได้เป็นเพียงวัตถุดิบ แต่เป็นสัญลักษณ์ของการผลิบาน ดอกไม้พื้นถิ่น
+     ที่เติบโตบนผืนดินเดียวกับเรื่องราวของเมือง เปรียบเสมือนคนรุ่นใหม่ที่เข้ามาสร้างสีสัน
+     ให้ตะกั่วป่า โดยยังหยั่งรากอยู่บนประวัติศาสตร์เดิม</p>
+</div>
+
+<div class="block" id="b-blue">
+  <h3>สีน้ำเงินบนฉลาก</h3><div class="hr"></div>
+  <p>สีน้ำเงินคือสีของทะเลอันดามัน ทะเลที่เคยนำเรือสินค้า ผู้คน และวัฒนธรรม
+     เข้ามาสู่เมืองท่าแห่งนี้ อีกความหมายหนึ่งคือความสงบ ความลึก และกาลเวลา
+     ที่โอบอุ้มเรื่องราวของตะกั่วป่ามานานนับร้อยปี</p>
+</div>
+
+<div class="idea">
+  <div class="creed">
+    <div>อดีต<span>คือรากเหง้า</span></div>
+    <div>ทะเล<span>คือเส้นทาง</span></div>
+    <div>ดาหลา<span>คือการผลิบาน</span></div>
+    <div>สีชมพู<span>คือสีสันของวันนี้</span></div>
+  </div>
+  <p class="closer">POH ไม่ได้พาเราย้อนกลับไปหาอดีต แต่ชวนให้มองเห็นว่า
+    เมืองที่มีรากแข็งแรง สามารถผลิบานเป็นสิ่งใหม่ได้เสมอ</p>
+  <p class="foot">0% Alcohol · 275 ml · ใบชา · ดาหลา · ส้มแขก · ลูกจันทน์ · มิ้น · กระเจี๊ยบ<br>
+    Takua Pa · Phang-nga</p>
+</div>
+</body></html>

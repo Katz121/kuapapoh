@@ -1,0 +1,97 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Serif+Thai:wght@300;400;500&family=IBM+Plex+Sans+Thai:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* โปสเตอร์สินค้า POH · A3 (1754×2480) เรนเดอร์ dsf 2 = A3 300dpi
+   พื้นหลัง: ภาพสีน้ำที่เจนจาก agy (Antigravity) · ขวด: ภาพถ่ายสินค้าจริงตัดพื้นหลัง */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#1B2C4E; --navy-soft:#3C5378; --coral:#C4536A; --gold:#B08D4F;
+  --muted:#6E6E6E; --rule:rgba(27,44,78,.22);
+  --serif-th:'Noto Serif Thai',serif; --sans-th:'IBM Plex Sans Thai',sans-serif;
+  --serif-en:'Cormorant Garamond',serif;
+}
+html,body{width:1754px;height:2480px;overflow:hidden}
+body{color:#3B3B3B;font-family:var(--sans-th);font-weight:300;
+  font-size:16.5px;line-height:2.05;position:relative;background:#FBF7EC}
+.bg{position:absolute;inset:0;z-index:0;
+  background:url('assets/bg-art.png') center/118% no-repeat}
+.bg::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(58% 44% at 34% 34%,rgba(251,247,236,.92),rgba(251,247,236,0) 72%)}
+
+/* ── ขวดสินค้าจริง ── */
+.shot{position:absolute;z-index:1;right:150px;bottom:250px;width:760px;text-align:center}
+.shot img{height:1560px;width:auto;mix-blend-mode:multiply;
+  filter:drop-shadow(0 30px 40px rgba(27,44,78,.20))}
+.shot::after{content:"";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);
+  width:420px;height:34px;border-radius:50%;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(27,44,78,.24),rgba(27,44,78,0) 70%)}
+
+/* ── คอลัมน์ข้อความ ── */
+.copy{position:absolute;z-index:2;left:140px;top:186px;width:700px}
+.eyebrow{font-family:var(--serif-en);letter-spacing:.44em;font-size:15px;
+  color:var(--gold);text-transform:uppercase}
+.wordmark{display:flex;align-items:flex-end;gap:30px;margin-top:22px}
+.mark{font-family:var(--serif-en);font-weight:300;color:var(--navy);
+  letter-spacing:.2em;line-height:1;font-size:128px}
+.bar{width:1px;height:80px;background:var(--rule);margin-bottom:12px}
+.mark-th{font-family:var(--serif-th);font-weight:400;color:var(--navy);font-size:58px;line-height:1}
+.tagline{font-family:var(--serif-th);font-weight:400;color:var(--navy);
+  font-size:34px;line-height:1.55;margin-top:24px}
+.divider{width:110px;height:1px;background:var(--gold);opacity:.7;margin:34px 0}
+.lead{max-width:34ch}
+.lead + .lead{margin-top:16px}
+.accent{color:var(--navy-soft)}
+.quote{font-family:var(--serif-th);font-weight:400;color:var(--coral);
+  font-size:24px;line-height:1.8;margin-top:34px;padding-left:26px;
+  border-left:1px solid rgba(196,83,106,.45)}
+
+.creed{margin-top:46px;display:flex;flex-wrap:wrap;gap:0;max-width:640px;
+  border-top:1px solid var(--rule);padding-top:26px}
+.creed div{width:50%;font-family:var(--serif-th);font-size:21px;color:var(--navy);
+  line-height:1.5;padding:9px 0}
+.creed span{font-family:var(--sans-th);font-weight:300;font-size:15px;color:var(--navy-soft)}
+
+/* ── ท้ายกระดาษ ── */
+.foot{margin-top:56px;border-top:1px solid var(--rule);padding-top:26px;max-width:640px;
+  font-family:var(--serif-en);letter-spacing:.34em;font-size:13px;
+  color:var(--muted);text-transform:uppercase;line-height:2.3}
+.foot b{display:block;font-family:var(--sans-th);font-weight:300;letter-spacing:0;
+  text-transform:none;font-size:16px;color:var(--navy-soft);margin-bottom:8px}
+</style></head><body>
+<div class="bg"></div>
+
+<div class="shot"><img src="assets/real-bottle-cut@2x.png" alt="POH Sparkling Tea 275 ml"></div>
+
+<div class="copy">
+  <p class="eyebrow">Sparkling Tea · Takua Pa</p>
+  <div class="wordmark">
+    <span class="mark">POH</span><span class="bar"></span><span class="mark-th">โพ้</span>
+  </div>
+  <p class="tagline">เมื่อเมืองท่ากลับมาผลิบาน</p>
+  <div class="divider"></div>
+
+  <p class="lead">ครั้งหนึ่ง “โพ้” คือท่าเรือของตะกั่วป่า จุดที่ผู้คน เรือสินค้า ภาษา
+    และวัฒนธรรมจากหลายดินแดนเดินทางมาพบกัน</p>
+  <p class="lead accent">POH เริ่มต้นจากใบชาที่คนตะกั่วป่าเคยดื่ม ก่อนเติมชีวิตใหม่
+    ด้วยวัตถุดิบจากพังงา ทั้งดาหลา ส้มแขก ลูกจันทน์ มิ้น และกระเจี๊ยบ
+    จนเกิดเป็นสีชมพูอ่อนที่ไม่เคยมีอยู่ในอดีต</p>
+
+  <p class="quote">เพราะเราไม่ได้ต้องการย้อนเวลากลับไป<br>
+    แต่ต้องการให้ความทรงจำเดินหน้าต่อ</p>
+
+  <div class="creed">
+    <div>อดีต · <span>คือรากเหง้า</span></div>
+    <div>ทะเล · <span>คือเส้นทาง</span></div>
+    <div>ดาหลา · <span>คือการผลิบาน</span></div>
+    <div>สีชมพู · <span>คือสีสันของวันนี้</span></div>
+  </div>
+
+  <div class="foot">
+    <b>ใบชา · ดาหลา · ส้มแขก · ลูกจันทน์ · มิ้น · กระเจี๊ยบ</b>
+    0% Alcohol · 275 ml · Takua Pa, Phang-nga
+  </div>
+</div>
+
+</body></html>

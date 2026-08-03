@@ -39,6 +39,15 @@ ART = {
     "__poster__": '<img class="poster" src="../images/poster-main.webp" alt="">',
     "__line78__": '<img class="art-line" src="../images/line-78.webp" alt="">',
     "__logo__": '<img class="art-tile" src="logo-poh.webp" alt="">',
+    # ถุงหิ้ว + ซุ้มโค้งของโครงการอยู่ข้างใน · บอกว่า "ช้อป" โดยไม่หลุดธีม
+    "__shop__": '<div class="ico ico-shop"><svg viewBox="0 0 100 100">'
+                '<path d="M22 32h56a4 4 0 0 1 4 4.3l-4 48a6 6 0 0 1-6 5.7H26a6 6 0 0 1-6-5.7'
+                'l-4-48a4 4 0 0 1 4-4.3z" fill="none" stroke="currentColor" stroke-width="5.5" '
+                'stroke-linejoin="round"/>'
+                '<path d="M37 32v-6a13 13 0 0 1 26 0v6" fill="none" stroke="currentColor" '
+                'stroke-width="5.5" stroke-linecap="round"/>'
+                '<path d="M38 78V62a12 12 0 0 1 24 0v16" fill="none" stroke="#EC0A72" '
+                'stroke-width="5.5" stroke-linecap="round"/></svg></div>',
     # ซุ้มโค้ง = มาร์กของเว็บ (path เดียวกับ favicon ใน index.html)
     "__mark__": '<div class="ico ico-mark"><svg viewBox="0 0 32 32">'
                 '<path d="M6 26V14a10 10 0 0 1 20 0v12" fill="none" stroke="#EC0A72" '
@@ -51,7 +60,7 @@ CELLS = [
     ("map", "HOW TO GET THERE", "แผนที่การเดินทาง"),
     ("__mark__", "WEBSITE", "เว็บไซต์โครงการ"),
     ("__logo__", "FACEBOOK", "เพจกั่วป่าโพ้"),
-    ("ask", "POH TALK", "สอบถามข้อมูล"),   # ชื่อแทร็กจากโปสเตอร์งาน
+    ("__shop__", "POH SHOP", "โพ้ช้อป"),
 ]
 
 PAL = dict(yellow="#FFE81C", magenta="#EC0A72", cobalt="#1E3FA8",

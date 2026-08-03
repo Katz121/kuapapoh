@@ -34,9 +34,15 @@ ICONS = {
            f'<path d="M36 50h28M36 64h16" {S}/></svg>',
 }
 
+# สองช่องแรกใช้ภาพจริงจากเว็บแทนไอคอน (ไฟล์เดียวกัน ไม่ก๊อปซ้ำ)
+ART = {
+    "__poster__": '<img class="poster" src="../images/poster-main.webp" alt="">',
+    "__line78__": '<img class="art-line" src="../images/line-78.webp" alt="">',
+}
+
 CELLS = [
-    ("schedule", "SCHEDULE", "ตารางกิจกรรม"),
-    ("houses", "THREE HOUSES", "สามพื้นที่หลัก"),
+    ("__poster__", "SCHEDULE", "ตารางกิจกรรม"),
+    ("__line78__", "MEETING POINT", "จุดรวมพล"),
     ("map", "HOW TO GET THERE", "แผนที่การเดินทาง"),
     ("web", "WEBSITE", "เว็บไซต์โครงการ"),
     ("fb", "FACEBOOK", "เพจกั่วป่าโพ้"),
@@ -104,9 +110,10 @@ HEAD = """<!doctype html><html lang="th"><head><meta charset="utf-8">
 for name, v in VARIANTS.items():
     rows = []
     for (key, en, th), (bg, fg) in zip(CELLS, v["skin"]):
+        inner = ART.get(key) or f'<div class="ico">{ICONS[key]}</div>'
         rows.append(
             f'<div class="cell" style="background:{bg};color:{fg}">'
-            f'<div class="ico">{ICONS[key]}</div>'
+            f'<div class="art">{inner}</div>'
             f'<div><div class="en">{en}</div><div class="th">{th}</div></div></div>'
         )
     html = HEAD % v["extra"] + "\n".join(rows) + "\n</body></html>"

@@ -1,0 +1,113 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Serif+Thai:wght@300;400;500&family=IBM+Plex+Sans+Thai:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* โปสเตอร์เมนู POH · A3 150dpi (1754×2480) เรนเดอร์ที่ dsf 2 = A3 300dpi */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --paper:#FBF7EC; --navy:#1B2C4E; --navy-soft:#3C5378;
+  --coral:#E4657A; --gold:#B08D4F; --muted:#6E6E6E; --rule:rgba(27,44,78,.2);
+  --serif-th:'Noto Serif Thai',serif; --sans-th:'IBM Plex Sans Thai',sans-serif;
+  --serif-en:'Cormorant Garamond',serif;
+}
+html,body{width:1754px;height:2480px;overflow:hidden}
+body{background:var(--paper);color:#3A3A3A;font-family:var(--sans-th);font-weight:300;
+  font-size:16.5px;line-height:2.05;position:relative}
+body::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(110% 70% at 50% 4%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(90% 60% at 50% 100%, rgba(27,44,78,.06), transparent 65%)}
+.sheet{position:relative;z-index:1;height:100%;padding:128px 130px 110px;
+  display:flex;flex-direction:column;align-items:center;text-align:center}
+
+.eyebrow{font-family:var(--serif-en);letter-spacing:.42em;font-size:15px;
+  color:var(--gold);text-transform:uppercase}
+.wordmark{display:flex;align-items:flex-end;gap:34px;margin-top:26px}
+.mark{font-family:var(--serif-en);font-weight:300;color:var(--navy);
+  letter-spacing:.22em;line-height:1;font-size:132px}
+.bar{width:1px;height:84px;background:var(--rule);margin-bottom:10px}
+.mark-th{font-family:var(--serif-th);font-weight:400;color:var(--navy);font-size:60px;line-height:1}
+.tagline{font-family:var(--serif-th);font-weight:400;color:var(--navy);
+  font-size:34px;line-height:1.6;margin-top:26px}
+.divider{width:132px;height:1px;background:var(--gold);opacity:.65;margin:34px 0 0}
+
+/* ── กลางโปสเตอร์ ── */
+.middle{display:flex;align-items:center;justify-content:center;gap:56px;margin-top:26px;width:100%}
+.side{width:392px;text-align:left}
+.closer{margin-top:44px;font-family:var(--serif-th);font-size:23px;line-height:1.85;color:var(--navy)}
+.side.r{text-align:left}
+.side h3{font-family:var(--serif-th);font-weight:400;color:var(--navy);
+  font-size:25px;line-height:1.5;margin-bottom:10px}
+.side .hr{height:1px;background:var(--rule);margin-bottom:18px}
+.side p + p{margin-top:16px}
+.side p.accent{color:var(--navy-soft)}
+.bottle{width:560px;flex:none;display:flex;justify-content:center}
+.bottle img{height:1392px;width:auto;mix-blend-mode:multiply}
+
+/* ── ส่วนผสม ── */
+.ing{margin-top:8px}
+.ing .label{font-family:var(--serif-en);letter-spacing:.36em;font-size:13px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:18px}
+.ing .list{font-family:var(--serif-th);font-weight:400;color:var(--navy);
+  font-size:27px;line-height:1.7;letter-spacing:.01em}
+
+/* ── ท้ายโปสเตอร์ ── */
+.creed{margin-top:auto;width:100%;display:flex;justify-content:center;gap:0;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 0}
+.creed div{flex:1;font-family:var(--serif-th);font-size:19px;color:var(--navy);
+  border-right:1px solid var(--rule)}
+.creed div:last-child{border-right:0}
+.creed span{display:block;font-family:var(--sans-th);font-weight:300;
+  font-size:15px;color:var(--navy-soft);margin-top:2px}
+.foot{margin-top:26px;font-family:var(--serif-en);letter-spacing:.38em;font-size:13px;
+  color:var(--muted);text-transform:uppercase;line-height:2.2}
+</style></head><body>
+<div class="sheet">
+
+  <p class="eyebrow">Sparkling Tea</p>
+  <div class="wordmark">
+    <span class="mark">POH</span><span class="bar"></span><span class="mark-th">โพ้</span>
+  </div>
+  <p class="tagline">เมื่อเมืองท่ากลับมาผลิบาน</p>
+  <div class="divider"></div>
+
+  <div class="middle">
+    <div class="side">
+      <h3>แรงบันดาลใจ</h3><div class="hr"></div>
+      <p>ครั้งหนึ่ง “โพ้” คือท่าเรือของตะกั่วป่า สถานที่ที่ผู้คน เรือสินค้า ภาษา
+         และวัฒนธรรมจากหลายดินแดนเดินทางมาพบกัน จนกลายเป็นหนึ่งในเมือง
+         ที่รุ่งเรืองที่สุดของชายฝั่งอันดามัน</p>
+      <p class="accent">กาลเวลาผ่านไป เรืออาจไม่จอดที่ท่าเหมือนเดิม
+         แต่ผู้คนรุ่นใหม่ยังคงเดินทางเข้ามา พร้อมความคิดสร้างสรรค์ใหม่ ๆ
+         ที่ทำให้เมืองเก่ามีชีวิตอีกครั้ง</p>
+    </div>
+
+    <div class="bottle"><img src="assets/real-bottle-cut.png" alt=""></div>
+
+    <div class="side r">
+      <h3>ดอกดาหลา</h3><div class="hr"></div>
+      <p>ดาหลาไม่ได้เป็นเพียงวัตถุดิบของเครื่องดื่ม แต่เป็นสัญลักษณ์ของการผลิบาน
+         ดอกไม้พื้นถิ่นที่เติบโตบนผืนดินเดียวกับเรื่องราวของเมือง</p>
+      <p class="accent">เปรียบเสมือนคนรุ่นใหม่ที่เข้ามาสร้างสีสันให้ตะกั่วป่า
+         โดยยังหยั่งรากอยู่บนประวัติศาสตร์เดิม</p>
+    </div>
+  </div>
+
+  <div class="ing">
+    <p class="label">Ingredients</p>
+    <p class="list">ใบชา · ดาหลา · ส้มแขก · ลูกจันทน์ · มิ้น · กระเจี๊ยบ</p>
+  </div>
+
+  <p class="closer">เมืองที่มีรากแข็งแรง สามารถผลิบานเป็นสิ่งใหม่ได้เสมอ</p>
+
+  <div class="creed">
+    <div>อดีต<span>คือรากเหง้า</span></div>
+    <div>ทะเล<span>คือเส้นทาง</span></div>
+    <div>ดาหลา<span>คือการผลิบาน</span></div>
+    <div>สีชมพู<span>คือสีสันของวันนี้</span></div>
+  </div>
+
+  <p class="foot">0% Alcohol · 275 ml<br>Takua Pa · Phang-nga</p>
+</div>
+</body></html>

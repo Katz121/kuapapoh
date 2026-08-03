@@ -132,6 +132,23 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .tracks li{background:var(--yellow);border:1.5px solid var(--ink);padding:.55em .9em}
 .tracks b{display:block;font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.14em}
 
+/* ═══════════ ตารางกิจกรรมรายวัน ═══════════ */
+.days{display:grid;gap:clamp(28px,4vw,52px);margin-top:2.2rem}
+.day{display:grid;gap:1.4rem;border-top:3px solid var(--ink);padding-top:1.6rem}
+@media(min-width:820px){.day{grid-template-columns:260px 1fr;gap:2.6rem;align-items:start}}
+.day .poster img{width:100%;border:2px solid var(--ink)}
+.day h3{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3vw,2.1rem);
+  color:var(--magenta);margin:0 0 .2rem;line-height:1.25}
+.day .dow{color:var(--muted);font-size:.9rem;margin:0 0 1.2rem}
+.slots{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.slot{display:grid;grid-template-columns:1fr;gap:.15rem;padding:.9rem 0;border-bottom:1px solid var(--rule)}
+@media(min-width:560px){.slot{grid-template-columns:82px 1fr;gap:1.2rem;align-items:baseline}}
+.slot time{font-family:var(--mono);font-weight:500;font-size:.86rem;color:var(--cobalt)}
+.slot b{font-weight:600;display:block}
+.slot span{display:block;color:var(--muted);font-size:.93rem;line-height:1.6}
+.pending{border:2px dashed var(--rule);padding:1.2rem 1.4rem;margin-top:1.8rem;
+  color:var(--muted);font-size:.95rem;border-radius:4px}
+
 /* ═══════════ สามพื้นที่ ═══════════ */
 .houses{display:grid;gap:clamp(26px,4vw,48px);margin-top:2.4rem}
 .house{display:grid;gap:1.5rem;align-items:start;border-top:3px solid var(--ink);padding-top:1.7rem}
@@ -232,6 +249,7 @@ footer a{color:var(--yellow)}
     <b>กั่วป่าโพ้</b>
     <nav aria-label="เมนูหลัก">
       <a href="#fest">งาน 12-16 ส.ค.</a>
+      <a href="#schedule">ตารางกิจกรรม</a>
       <a href="#houses">สามพื้นที่</a>
       <a href="#origin">ที่มาของชื่อ</a>
       <a href="#six">6 อ.</a>
@@ -286,15 +304,88 @@ footer a{color:var(--yellow)}
           <li><b lang="en">POH HUB</b>จุดรวมของงาน</li>
           <li><b lang="en">OLD TOWN PEOPLE</b>เรื่องเล่าคนในย่าน</li>
         </ul>
-        <p class="muted" style="margin-top:1.4rem">ตารางกิจกรรมรายวันติดตามที่เพจกั่วป่าโพ้</p>
-        <a class="btn on-paper" href="https://www.facebook.com/profile.php?id=61590430773715"
-           target="_blank" rel="noopener">ดูตารางงานที่เพจ (เปิดแท็บใหม่)</a>
+        <div class="hero-cta" style="margin-top:1.6rem">
+          <a class="btn on-paper" href="#schedule">ดูตารางกิจกรรมรายวัน</a>
+          <a class="btn on-paper" href="https://www.facebook.com/profile.php?id=61590430773715"
+             target="_blank" rel="noopener">เพจกั่วป่าโพ้ (เปิดแท็บใหม่)</a>
+        </div>
       </div>
       <figure class="posterwrap rise">
         <img src="images/poster-main.jpg" width="1054" height="1492" loading="lazy" decoding="async"
              alt="โปสเตอร์งานกั่วป่าโพ้ จีโชว์เมือง วันที่ 12-16 สิงหาคม">
       </figure>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════ ตารางกิจกรรมรายวัน ═══════════ -->
+<section id="schedule" style="padding-top:0">
+  <div class="wrap">
+    <p class="tag rise">ตารางกิจกรรม</p>
+    <h2 class="rise">แต่ละวันมีอะไรบ้าง</h2>
+
+    <div class="days">
+      <article class="day rise">
+        <figure class="poster"><img src="images/day-12.jpg" width="760" height="1013" loading="lazy" decoding="async"
+          alt="โปสเตอร์กิจกรรมวันที่ 12 สิงหาคม"></figure>
+        <div>
+          <h3>12 สิงหาคม 2569</h3>
+          <p class="dow">วันเปิดงาน</p>
+          <ul class="slots">
+            <li class="slot"><time datetime="13:30">13:30</time>
+              <div><b>เดินหง่อคาขี่ แลวิถีเ(ห)มือง</b><span>เปิดบ้านพื้นที่หลักทั้ง 3 หลัง (78 · 109 · 305)</span></div></li>
+            <li class="slot"><time datetime="16:00">16:00</time>
+              <div><b>โพ้ชิม</b><span>ของกินพื้นถิ่นที่พวกเราสรรหามาเสิร์ฟให้ผู้มาเยือน</span></div></li>
+            <li class="slot"><time datetime="17:00">17:00</time>
+              <div><b>พิธีเปิดแบบชาวโพ้</b></div></li>
+            <li class="slot"><time datetime="18:00">18:00</time>
+              <div><b lang="en">THE POH TALK</b><span>“กั่วป่าโพ้ จีโชว์เมือง” งานเสวนาสร้างสรรค์ ร่วมกันคุยเพื่อสิ่งดี ๆ ให้กั่วป่า</span></div></li>
+            <li class="slot"><time datetime="18:40">18:40</time>
+              <div><b>โพ้ชิค</b><span>ชิค ๆ ชิล ๆ ไปกับดนตรีและกิจกรรมบันเทิง</span></div></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="day rise">
+        <figure class="poster"><img src="images/day-13.jpg" width="760" height="1013" loading="lazy" decoding="async"
+          alt="โปสเตอร์กิจกรรมวันที่ 13 สิงหาคม"></figure>
+        <div>
+          <h3>13 สิงหาคม 2569</h3>
+          <p class="dow">นิทรรศการ เวิร์กช็อป และงานสเก็ตช์</p>
+          <ul class="slots">
+            <li class="slot"><time datetime="09:30">9:30</time>
+              <div><b>เดินหง่อคาขี่ แลวิถีเ(ห)มือง</b><span>เปิดบริการทุกพื้นที่ของกิจกรรม</span></div></li>
+            <li class="slot"><time datetime="10:00">10:00</time>
+              <div><b>โพ้ชม</b><span>นิทรรศการมนต์เสน่ห์เปอรานากัน ณ บ้านก๋งโฮสเทล และนิทรรศการหง่อคาขี่มีชีวิต บริเวณหน้าฮกจงเส็ง</span></div></li>
+            <li class="slot"><time datetime="10:30">10:30</time>
+              <div><b>โพ้เวิร์คช้อป</b><span>ทำพวงกุญแจผ้าปาเต๊ะ ณ หน้าบ้านอี๋จู้</span></div></li>
+            <li class="slot"><time datetime="13:00">13:00</time>
+              <div><b>โพ้สเก็ตซ์</b><span>วาดลายผ้า และหน้าคน ย่านเมืองเก่าตะกั่วป่า</span></div></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="day rise">
+        <figure class="poster"><img src="images/day-14.jpg" width="760" height="1013" loading="lazy" decoding="async"
+          alt="โปสเตอร์กิจกรรมวันที่ 14 สิงหาคม"></figure>
+        <div>
+          <h3>14 สิงหาคม 2569</h3>
+          <p class="dow">วันโพ้แกลอรี่</p>
+          <ul class="slots">
+            <li class="slot"><time datetime="09:30">9:30</time>
+              <div><b>เดินหง่อคาขี่ แลวิถีเ(ห)มือง · โพ้ชม</b><span>เปิดให้บริการทุกพื้นที่กิจกรรม และร่วมชมภาพถ่ายกับกิจกรรม “แลกั่วป่า ผ่านตัวตน” ณ บ้านเลขที่ 109 ศาลเจ้ากังตั้งโหยกวน</span></div></li>
+            <li class="slot"><time datetime="10:00">10:00</time>
+              <div><b>โพ้ทอร์ค</b><span>ร่วมคุยมุมมองถ่ายภาพท้องถิ่น และผู้เข้าร่วมประกวด</span></div></li>
+            <li class="slot"><time datetime="13:00">13:00</time>
+              <div><b>โพ้เวิร์คช้อป</b><span>งานทำมือของแท้ ทำโคมไฟโบราณเฉลิมกับลุงเรน</span></div></li>
+            <li class="slot"><time datetime="15:00">15:00</time>
+              <div><b>โพ้สเก็ตซ์</b><span>วาดอาคารผ่านมุมมองในย่านเมืองเก่าตะกั่วป่า</span></div></li>
+          </ul>
+        </div>
+      </article>
+    </div>
+
+    <p class="pending rise">ตารางวันที่ 15 และ 16 สิงหาคม ยังไม่ประกาศ · ติดตามได้ที่เพจกั่วป่าโพ้</p>
   </div>
 </section>
 

@@ -27,6 +27,10 @@ body{
 /* ซุ้มโค้งเป็นเส้นเปล่า เลยต้องใหญ่กว่าไอคอนอื่นถึงจะน้ำหนักเท่ากัน */
 .ico-mark{width:158px;height:158px}
 .ico-shop{width:138px;height:138px}
+/* โลโก้หลักทำเป็นตัวถุง · หูหิ้ววาดทับด้านบน ปลายหูซ่อนอยู่หลังแผ่นโลโก้ */
+.shop{position:relative;height:100%;display:flex;align-items:flex-end;justify-content:center}
+.shop img{height:170px;width:auto;display:block;border-radius:14px;position:relative;z-index:1}
+.shop .handle{position:absolute;top:0;left:50%;transform:translateX(-50%);width:96px;height:60px;z-index:0}
 .en{
   font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:500;
   font-size:15px;letter-spacing:.2em;text-transform:uppercase;

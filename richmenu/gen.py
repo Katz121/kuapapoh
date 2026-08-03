@@ -39,7 +39,14 @@ ART = {
     "__poster__": '<img class="poster" src="../images/poster-main.webp" alt="">',
     "__line78__": '<img class="art-line" src="../images/line-78.webp" alt="">',
     "__logo__": '<img class="art-tile" src="logo-poh.webp" alt="">',
-    # ถุงหิ้ว + ซุ้มโค้งของโครงการอยู่ข้างใน · บอกว่า "ช้อป" โดยไม่หลุดธีม
+    # โลโก้หลักเป็นตัวถุง + หูหิ้วโผล่ข้างบน · เห็นแล้วรู้ว่าถุงช้อป แต่ยังเป็นโลโก้จริง
+    "__shopbrand__": '<div class="shop">'
+                     '<svg class="handle" viewBox="0 0 100 62">'
+                     '<path d="M22 62V34a28 28 0 0 1 56 0v28" fill="none" stroke="#101538" '
+                     'stroke-width="9" stroke-linecap="round"/></svg>'
+                     '<img src="logo-poh.webp" alt="">'
+                     '</div>',
+    # ถุงหิ้วเส้นล้วน (สำรอง)
     "__shop__": '<div class="ico ico-shop"><svg viewBox="0 0 100 100">'
                 '<path d="M22 32h56a4 4 0 0 1 4 4.3l-4 48a6 6 0 0 1-6 5.7H26a6 6 0 0 1-6-5.7'
                 'l-4-48a4 4 0 0 1 4-4.3z" fill="none" stroke="currentColor" stroke-width="5.5" '
@@ -60,7 +67,7 @@ CELLS = [
     ("map", "POH MAP", "โพ้พานำ"),
     ("__mark__", "POH WEB", "โพ้ชวนแล"),
     ("__logo__", "POH NEWS", "โพ้บอกข่าว"),
-    ("__shop__", "POH SHOP", "โพ้ช้อป"),
+    ("__shopbrand__", "POH SHOP", "โพ้ช้อป"),
 ]
 
 PAL = dict(yellow="#FFE81C", magenta="#EC0A72", cobalt="#1E3FA8",

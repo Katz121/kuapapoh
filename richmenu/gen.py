@@ -55,9 +55,9 @@ ART = {
 }
 
 CELLS = [
-    ("__poster__", "SCHEDULE", "ตารางกิจกรรม"),
-    ("__line78__", "MEETING POINT", "จุดรวมพล"),
-    ("map", "HOW TO GET THERE", "แผนที่การเดินทาง"),
+    ("__poster__", "POH TOUR", "โพ้พาเที่ยว"),
+    ("__line78__", "POH TEAM", "โพ้รวมทีม"),
+    ("map", "POH MAP", "โพ้พานำ"),
     ("__mark__", "WEBSITE", "เว็บไซต์โครงการ"),
     ("__logo__", "FACEBOOK", "เพจกั่วป่าโพ้"),
     ("__shop__", "POH SHOP", "โพ้ช้อป"),

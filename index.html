@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>กั่วป่าโพ้ จีโชว์เมือง · ย่านเมืองเก่าตะกั่วป่า พังงา</title>
+<meta name="description" content="โครงการพื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา · บ้านเลขที่ 78 · 109 · 305 · งานกั่วป่าโพ้ จีโชว์เมือง 12-16 สิงหาคม 2569">
+<link rel="canonical" href="https://kuapapoh.pages.dev/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="th_TH">
+<meta property="og:title" content="กั่วป่าโพ้ จีโชว์เมือง · ย่านเมืองเก่าตะกั่วป่า">
+<meta property="og:description" content="เปิดพื้นที่สร้างสรรค์ใหม่ย่านเมืองเก่าตะกั่วป่า พังงา · 12-16 สิงหาคม 2569">
+<meta property="og:image" content="images/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FFE81C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFE81C'/%3E%3Cpath d='M6 26V14a10 10 0 0 1 20 0v12' fill='none' stroke='%23EC0A72' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   กั่วป่าโพ้ · โทนสีถอดจากโปสเตอร์ของโครงการ
+   เหลืองริโซ · ชมพูมาเจนต้า · น้ำเงินลายเส้นอาคาร · แดงโลโก้
+   ═══════════════════════════════════════════════════ */
+:root{
+  --yellow:#FFE81C;
+  --magenta:#EC0A72;      /* ใช้กับตัวใหญ่เท่านั้น */
+  --magenta-text:#C4005D; /* ตัวเล็ก · ผ่าน contrast AA บนพื้นกระดาษ */
+  --cobalt:#1E3FA8;
+  --red:#F4331F;
+  --paper:#FBF7EC;
+  --ink:#101538;
+  --muted:#4d5474;
+  --rule:rgba(16,21,56,.16);
+
+  --display:'Bai Jamjuree','IBM Plex Sans Thai',sans-serif;
+  --body:'IBM Plex Sans Thai','Noto Sans Thai',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+
+  --pad:clamp(20px,5vw,68px);
+  --maxw:1200px;
+  --measure:62ch;
+  --gap-same:clamp(60px,8vw,116px);   /* ระหว่างส่วนที่พื้นสีเดียวกัน */
+  --gap-shift:clamp(48px,6vw,88px);   /* ระหว่างส่วนที่เปลี่ยนสีพื้น */
+  --bar:52px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + 12px)}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-weight:400;font-size:clamp(16px,1.05vw,17px);line-height:1.75;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%;height:auto;display:block}
+figure{margin:0}
+a{color:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+section{padding-block:var(--gap-same)}
+section.shift{padding-block:var(--gap-shift)}
+
+h2{font-family:var(--display);font-weight:700;font-size:clamp(1.8rem,4.2vw,3rem);
+   line-height:1.3;margin:0 0 1rem;text-wrap:balance;letter-spacing:-.01em}
+h3{font-family:var(--display);font-weight:600;font-size:clamp(1.12rem,1.9vw,1.35rem);margin:0 0 .5rem;line-height:1.4}
+p{margin:0 0 1.05rem;max-width:var(--measure)}
+.lede{font-size:clamp(1.02rem,1.4vw,1.18rem);max-width:52ch}
+.muted{color:var(--muted)}
+
+/* ป้ายกำกับ · ไทยใช้ฟอนต์เนื้อความ ไม่ใส่ tracking (สระ/วรรณยุกต์จะลอย) */
+.tag{font-family:var(--body);font-weight:600;font-size:.82rem;letter-spacing:.04em;
+     color:var(--magenta-text);display:flex;align-items:center;gap:.9em;margin:0 0 1.4rem}
+.tag::after{content:"";flex:1;height:1px;background:var(--rule)}
+/* ป้ายอังกฤษ/ตัวเลขล้วน · ใช้ mono ได้เต็มที่ */
+.label-en{font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase}
+
+.skip{position:absolute;left:-9999px;top:0;z-index:99;background:var(--ink);color:var(--yellow);
+      padding:.7rem 1.2rem;text-decoration:none}
+.skip:focus{left:0}
+
+/* ── แถบบนสุด ── */
+.topbar{position:sticky;top:0;z-index:50;background:var(--ink);color:var(--paper)}
+.topbar .wrap{display:flex;align-items:center;gap:1rem;min-height:var(--bar)}
+.topbar b{font-family:var(--display);font-weight:700;font-size:1rem;flex:none}
+.topbar nav{display:flex;gap:1.4rem;margin-left:auto;overflow-x:auto;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topbar nav::-webkit-scrollbar{display:none}
+.topbar a{text-decoration:none;opacity:.78;white-space:nowrap;font-size:.88rem;
+  padding-block:.85rem;transition:opacity .2s,color .2s}
+.topbar a:hover{opacity:1;color:var(--yellow)}
+@media(max-width:700px){.topbar b{font-size:.92rem}.topbar nav{gap:1.1rem}}
+
+/* ═══════════ HERO ═══════════ */
+.hero{background:var(--yellow);color:var(--ink);
+      padding-block:clamp(44px,6.5vw,80px) clamp(28px,4vw,52px)}
+.hero .kicker{color:var(--ink);margin:0 0 1.6rem}
+/* line-height ต้องเผื่อสระบน+วรรณยุกต์ของไทย · ต่ำกว่า 1.05 แล้วชนบรรทัดบน */
+.hero h1{font-family:var(--display);font-weight:700;margin:0;color:var(--magenta);
+         font-size:clamp(2.9rem,10vw,7.4rem);line-height:1.08;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;color:var(--ink);display:block}
+.hero .sub{max-width:40ch;font-size:clamp(1.02rem,1.6vw,1.24rem);margin:1.5rem 0 0;text-wrap:pretty}
+.hero-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.9rem 0 0}
+.chip{font-family:var(--body);font-weight:500;font-size:.86rem;padding:.5em 1.1em;
+      border:1.5px solid var(--ink);border-radius:999px;background:transparent;
+      display:inline-flex;align-items:center;min-height:38px}
+.chip.date{background:var(--ink);color:var(--yellow);border-color:var(--ink)}
+/* ปุ่มจริง · แยกหน้าตาจากป้ายให้ชัด */
+.btn{display:inline-flex;align-items:center;min-height:48px;padding:.75em 1.6em;
+  background:var(--ink);color:var(--yellow);text-decoration:none;border:2px solid var(--ink);
+  font-weight:600;font-size:1rem;border-radius:999px;transition:background .2s,color .2s,transform .2s}
+.btn:hover{background:transparent;color:var(--ink);transform:translateY(-2px)}
+.btn.on-paper{background:var(--magenta);color:#fff;border-color:var(--magenta)}
+.btn.on-paper:hover{background:var(--ink);border-color:var(--ink);color:var(--yellow)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.6rem}
+/* แถวอาคารลายเส้นเป็นฐานของ hero */
+.hero-row{display:grid;grid-template-columns:repeat(3,1fr);align-items:end;
+          gap:clamp(8px,3vw,40px);margin:clamp(26px,4vw,48px) 0 0}
+.hero-row img{width:auto;max-width:100%;max-height:clamp(120px,22vw,290px);margin-inline:auto}
+.hero-row figcaption{font-size:.72rem;color:var(--cobalt);text-align:center;
+  margin-top:.5rem;font-weight:600;line-height:1.45}
+.hero-row .nm{display:block;font-weight:400}
+@media(max-width:520px){.hero-row .nm{display:none}}
+
+/* ═══════════ งาน ═══════════ */
+.fest{display:grid;gap:2.2rem}
+@media(min-width:940px){.fest{grid-template-columns:1fr 1.02fr;gap:3.6rem;align-items:start}}
+.fest .posterwrap img{width:100%;box-shadow:0 20px 46px rgba(16,21,56,.2)}
+.dates{font-family:var(--display);font-weight:700;color:var(--magenta);
+  font-size:clamp(2.5rem,6.6vw,4.4rem);line-height:1.06;letter-spacing:-.02em;margin:0 0 .5rem}
+.dates span{color:var(--ink);font-size:clamp(1.05rem,2.3vw,1.6rem);display:block;
+  letter-spacing:0;line-height:1.35;margin-top:.15em}
+.tracks{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));
+  gap:.5rem;margin:1.5rem 0 0;padding:0;list-style:none}
+.tracks li{background:var(--yellow);border:1.5px solid var(--ink);padding:.55em .9em}
+.tracks b{display:block;font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.14em}
+
+/* ═══════════ สามพื้นที่ ═══════════ */
+.houses{display:grid;gap:clamp(26px,4vw,48px);margin-top:2.4rem}
+.house{display:grid;gap:1.5rem;align-items:start;border-top:3px solid var(--ink);padding-top:1.7rem}
+@media(min-width:880px){.house{grid-template-columns:148px 1fr 1.12fr;gap:2.4rem}}
+.house .no{font-family:var(--display);font-weight:700;color:var(--magenta);
+  font-size:clamp(3.2rem,7vw,5rem);line-height:.9;letter-spacing:-.03em;margin:0}
+.house .no small{display:block;font-family:var(--body);font-size:.8rem;letter-spacing:0;
+  color:var(--ink);font-weight:500;margin-top:.55rem;line-height:1.4}
+.house .shotwrap{position:relative}
+/* ภาพลายเส้นเป็นภาพหลักทั้งสามหลัง · พื้นเหลืองตามอัตลักษณ์โปสเตอร์ */
+.house .plate{background:var(--yellow);border:2px solid var(--ink);aspect-ratio:4/5;
+  display:grid;place-items:center;padding:clamp(1.2rem,3vw,2rem)}
+.house .plate img{max-height:100%;width:auto}
+/* ภาพถ่ายจริงห้อยเป็นการ์ดเล็กที่มุม */
+.house .snap{position:absolute;right:-12px;bottom:-18px;width:clamp(84px,11vw,124px);
+  border:3px solid var(--paper);box-shadow:0 8px 20px rgba(16,21,56,.32);
+  aspect-ratio:3/4;object-fit:cover;background:#e9e4d6;transform:rotate(-3deg)}
+.house .snap.wide{aspect-ratio:4/3}
+@media(max-width:520px){.house .snap{width:78px;right:-6px;bottom:-12px}}
+.house .body h3{color:var(--cobalt)}
+.house .use{font-size:.9rem;color:var(--magenta-text);margin:.85rem 0 0;font-weight:500}
+.house .logo{width:120px;margin-top:1.1rem;border:1px solid var(--rule)}
+.house .logo-cap{font-size:.78rem;color:var(--muted);margin:.4rem 0 0}
+
+/* ═══════════ แถบลาย ═══════════ */
+.patternband{height:clamp(56px,7vw,88px);background:url('images/pattern-strip.jpg') repeat-x center/auto 100%;
+  border-block:3px solid var(--ink)}
+
+/* ═══════════ ที่มาของชื่อ ═══════════ */
+.origin{display:grid;gap:2.2rem}
+@media(min-width:900px){.origin{grid-template-columns:1fr 300px;gap:3.4rem;align-items:start}}
+.framed{background:#fff;border:1px solid var(--rule);max-width:300px;margin-inline:auto}
+.framed img{max-width:264px;margin-inline:auto}
+.framed figcaption{font-size:.78rem;line-height:1.6;color:var(--muted);
+  padding:.7rem .8rem;border-top:1px solid var(--rule)}
+.gloss{display:grid;gap:1rem;margin:1.6rem 0 0}
+@media(min-width:620px){.gloss{grid-template-columns:1fr 1fr;gap:1.2rem}}
+.gloss div{border-top:3px solid var(--cobalt);padding-top:.85rem}
+.gloss b{font-family:var(--display);font-weight:700;font-size:1.5rem;color:var(--cobalt);display:block;line-height:1.35}
+.gloss span{display:block;font-size:.95rem;color:var(--muted);margin-top:.25rem}
+
+/* ═══════════ 6 อ. ═══════════ */
+.six{background:var(--ink);color:var(--paper)}
+.six h2{color:var(--yellow)}
+.six .tag{color:var(--yellow)}
+.six .tag::after{background:rgba(251,247,236,.28)}
+.sixgrid{display:grid;gap:0;margin-top:2.2rem;border-top:1px solid rgba(251,247,236,.28)}
+@media(min-width:760px){.sixgrid{grid-template-columns:1fr 1fr;column-gap:3.2rem}}
+.six-item{padding:1.4rem 0;border-bottom:1px solid rgba(251,247,236,.28);
+  display:grid;grid-template-columns:6.6em 1fr;gap:1rem;align-items:baseline}
+.six-item b{font-family:var(--display);font-weight:700;font-size:1.55rem;color:var(--yellow);line-height:1.3}
+.six-item p{margin:.25rem 0 0;color:#d5d9ef;font-size:.95rem;max-width:44ch}
+
+/* ═══════════ ติดต่อ ═══════════ */
+.contact{background:var(--magenta);color:#fff}
+.contact .tag{color:#fff}
+.contact .tag::after{background:rgba(255,255,255,.45)}
+.contact .wrap{display:grid;gap:2.2rem}
+@media(min-width:880px){.contact .wrap{grid-template-columns:1fr 1fr;gap:3.6rem}}
+.contact p{font-weight:500}
+.clist{list-style:none;margin:0;padding:0}
+.clist li{border-bottom:1px solid rgba(255,255,255,.4);
+  display:grid;grid-template-columns:100px 1fr;gap:1rem;align-items:center}
+.clist .lbl{font-size:.8rem;font-weight:500;opacity:.9}
+.clist a{color:#fff;text-decoration:none;font-weight:600;
+  display:block;padding-block:.85rem;border-bottom:2px solid transparent}
+.clist a:hover{border-bottom-color:#fff}
+
+footer{background:var(--ink);color:#a9aecb;padding:2.2rem 0;font-size:.86rem}
+footer .wrap{display:grid;gap:1rem}
+@media(min-width:820px){footer .wrap{grid-template-columns:1fr auto;align-items:end}}
+footer b{font-family:var(--display);color:var(--paper);font-size:1.05rem;font-weight:700;display:block;margin-bottom:.3rem}
+footer a{color:var(--yellow)}
+.doclinks{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin:.6rem 0 0;padding:0;list-style:none;font-size:.84rem}
+
+/* ═══════════ motion ═══════════ */
+.js .rise{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+.js .rise.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js .rise{opacity:1;transform:none;transition:none}
+  .btn:hover{transform:none}
+}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(16,21,56,.75)}
+@media print{
+  .topbar,.patternband,.hero-row{display:none}
+  body,.hero,.six,.contact{background:#fff!important;color:#000!important}
+  .six h2,.six .tag,.six-item b,.contact .tag{color:#000!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+
+<div class="topbar">
+  <div class="wrap">
+    <b>กั่วป่าโพ้</b>
+    <nav aria-label="เมนูหลัก">
+      <a href="#fest">งาน 12-16 ส.ค.</a>
+      <a href="#houses">สามพื้นที่</a>
+      <a href="#origin">ที่มาของชื่อ</a>
+      <a href="#six">6 อ.</a>
+      <a href="#contact">ติดต่อ</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker label-en" lang="en">Creative Cultural District · Takua Pa</p>
+    <h1>กั่วป่าโพ้<em>จีโชว์เมือง</em></h1>
+    <p class="sub">พัฒนาเมืองที่หลับใหลให้กลับมามีชีวิตอีกครั้ง ด้วยการเปิดพื้นที่ว่างในตึกเก่าย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา</p>
+    <div class="hero-meta">
+      <span class="chip date">เทศกาล 12-16 สิงหาคม 2569</span>
+      <span class="chip">บ้านเลขที่ 78</span>
+      <span class="chip">109</span>
+      <span class="chip">305</span>
+    </div>
+    <div class="hero-cta">
+      <a class="btn" href="#fest">ดูรายละเอียดงาน</a>
+      <a class="btn" href="https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2"
+         target="_blank" rel="noopener">เปิดแผนที่ย่านเมืองเก่า</a>
+    </div>
+    <div class="hero-row">
+      <figure><img src="images/line-78.png" width="237" height="403" alt="ภาพลายเส้นบ้านเลขที่ 78 อดีตบ้านนายเหมือง">
+        <figcaption>78 <span class="nm">กั่วป่าเหมืองมิวเซียม</span></figcaption></figure>
+      <figure><img src="images/line-109.png" width="226" height="334" alt="ภาพลายเส้นบ้านเลขที่ 109 ศาลเจ้ากังตั้งโหยกวน">
+        <figcaption>109 <span class="nm">ศาลเจ้ากังตั้งโหยกวน</span></figcaption></figure>
+      <figure><img src="images/line-305.png" width="388" height="250" alt="ภาพลายเส้นบ้านเลขที่ 305 โรงเรียนเต้าหมิง">
+        <figcaption>305 <span class="nm">โรงเรียนเต้าหมิง</span></figcaption></figure>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ═══════════ งาน ═══════════ -->
+<section id="fest">
+  <div class="wrap">
+    <div class="fest">
+      <div class="rise">
+        <p class="tag">งานที่กำลังจะถึง</p>
+        <h2 class="dates">12-16<span><time datetime="2026-08-12">สิงหาคม 2569</time> · เดอะ กั่วป่าโพ้</span></h2>
+        <p class="lede">เปิดพื้นที่สร้างสรรค์ใหม่ย่านเมืองเก่าตะกั่วป่า พังงา
+          เชื่อมศิลปะ ผู้คน ย่าน วัฒนธรรม เข้าไว้ด้วยกันตลอดห้าวัน</p>
+        <ul class="tracks">
+          <li><b lang="en">POH TALK</b>วงคุยเรื่องเมือง</li>
+          <li><b lang="en">POH SHOW</b>การแสดงในย่าน</li>
+          <li><b lang="en">POH WORKSHOP</b>เวิร์กช็อปงานฝีมือ</li>
+          <li><b lang="en">POH HUB</b>จุดรวมของงาน</li>
+          <li><b lang="en">OLD TOWN PEOPLE</b>เรื่องเล่าคนในย่าน</li>
+        </ul>
+        <p class="muted" style="margin-top:1.4rem">ตารางกิจกรรมรายวันติดตามที่เพจกั่วป่าโพ้</p>
+        <a class="btn on-paper" href="https://www.facebook.com/profile.php?id=61590430773715"
+           target="_blank" rel="noopener">ดูตารางงานที่เพจ (เปิดแท็บใหม่)</a>
+      </div>
+      <figure class="posterwrap rise">
+        <img src="images/poster-main.jpg" width="1054" height="1492" loading="lazy" decoding="async"
+             alt="โปสเตอร์งานกั่วป่าโพ้ จีโชว์เมือง วันที่ 12-16 สิงหาคม">
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ สามพื้นที่ ═══════════ -->
+<section id="houses" style="padding-top:0">
+  <div class="wrap">
+    <p class="tag rise">พื้นที่สร้างสรรค์</p>
+    <h2 class="rise">สามพื้นที่หลัก<br>ที่เคยว่าง กลับมาเป็นของเมือง</h2>
+    <p class="lede rise">นำพื้นที่ว่างในอาคารเก่ามาสร้างสรรค์ผ่านกิจกรรมและการออกแบบ
+      เพื่อเพิ่มมูลค่าทางเศรษฐกิจ สร้างรายได้ให้แก่ชุมชน และสร้างคุณค่าของเมืองแก่ผู้มาเยือน
+      โดยยังคงอัตลักษณ์ของพื้นที่ วิถีชีวิต วัฒนธรรม และเอกลักษณ์เดิมไว้</p>
+
+    <div class="houses">
+      <article class="house rise">
+        <p class="no">78<small>กั่วป่าเหมืองมิวเซียม</small></p>
+        <div class="shotwrap">
+          <div class="plate"><img src="images/line-78.png" width="237" height="403" loading="lazy" decoding="async" alt=""></div>
+        </div>
+        <div class="body">
+          <h3>บ้านของนายเหมือง</h3>
+          <p>ในอดีตเป็นบ้านของนายเหมืองและบริษัทเหมืองแร่ดีบุก
+             จึงนำพื้นที่มาสร้างสรรค์เป็น “กั่วป่าเหมืองมิวเซียม”
+             จัดแสดงอุปกรณ์การทำเหมืองแร่ แผนที่การสำรวจเหมือง และเอกสารต่าง ๆ ที่เกี่ยวกับเหมือง</p>
+          <p class="use">กิจกรรมในพื้นที่หมุนเวียนไปในแต่ละเดือน</p>
+        </div>
+      </article>
+
+      <article class="house rise">
+        <p class="no">109<small>ศาลเจ้ากังตั้งโหยกวน (หวุ่ยกุ่น)</small></p>
+        <div class="shotwrap">
+          <div class="plate"><img src="images/line-109.png" width="226" height="334" loading="lazy" decoding="async" alt=""></div>
+          <img class="snap" src="images/house-109.jpg" width="900" height="1200" loading="lazy" decoding="async"
+               alt="ภาพถ่ายอาคารศาลเจ้ากังตั้งโหยกวน ตัวตึกทาสีเหลืองแดง มีป้ายอักษรจีนเหนือประตู">
+        </div>
+        <div class="body">
+          <h3>สมาคมชาวจีนและศาลเจ้า</h3>
+          <p>เป็นสมาคมของชาวจีนฮากก้าหรือจีนแคะ ปัจจุบันชั้น 2 เป็นที่ประดิษฐานพระท่ามกุงหย่าที่ชาวจีนนับถือ
+             แต่บริเวณชั้น 1 ของอาคารเป็นพื้นที่ว่างไม่ได้มีการใช้สอยแต่อย่างใด
+             ทางกลุ่มจึงประสานกับผู้ปกครองศาลเจ้าเพื่อขอความอนุเคราะห์ใช้จัดงานแสดง</p>
+          <p class="use">กั่วป่าโพ้แกลอรี่ · เวิร์กช็อปวาดภาพ · สอนทำโคมไฟเฉลิมภูมิปัญญาของชาวตะกั่วป่า</p>
+        </div>
+      </article>
+
+      <article class="house rise">
+        <p class="no">305<small>โรงเรียนเต้าหมิง</small></p>
+        <div class="shotwrap">
+          <div class="plate"><img src="images/line-305.png" width="388" height="250" loading="lazy" decoding="async" alt=""></div>
+          <img class="snap wide" src="images/house-305.jpg" width="900" height="675" loading="lazy" decoding="async"
+               alt="ภาพถ่ายอาคารโรงเรียนเต้าหมิง อาคารไม้สองชั้นทาสีเหลือง มีระเบียงยาวและหน้าจั่วประดับ">
+        </div>
+        <div class="body">
+          <h3>โรงเรียนจีนในยุคเหมืองแร่</h3>
+          <p>โรงเรียนจีนที่เคยรุ่งเรืองในยุคเหมืองแร่ ทางทีมมีแนวคิดฟื้นคืนเต้าหมิงให้เป็นพื้นที่สร้างสรรค์
+             เป็นสถานที่แห่งความทรงจำ ผ่าน “เต้าหมิง ประกายแสงแห่งการเรียนรู้”
+             นำอาคารมาจัดแสดงองค์ความรู้ของเมือง ทั้งงานสถาปัตยกรรม วัฒนธรรม ประเพณี
+             และอื่น ๆ ที่เกี่ยวข้องกับเมืองตะกั่วป่า</p>
+          <img class="logo" src="images/logo-305.jpg" width="300" height="300" loading="lazy" decoding="async" alt="ตราสัญลักษณ์เต้าหมิง">
+          <p class="logo-cap">ตราสัญลักษณ์เต้าหมิง</p>
+        </div>
+      </article>
+    </div>
+
+    <p class="rise" style="margin-top:2.2rem">ทางทีมยังต่อยอดโดยนำพื้นที่ว่างอื่น ๆ มาเป็นพื้นที่รอง
+      เพื่อให้ทั้งเมืองเป็นเมืองสร้างสรรค์ ดังแนวคิดที่ว่า <b>“กั่วป่าโพ้ จีโชว์เมือง”</b></p>
+  </div>
+</section>
+
+<div class="patternband" aria-hidden="true"></div>
+
+<!-- ═══════════ ที่มาของชื่อ ═══════════ -->
+<section id="origin" class="shift">
+  <div class="wrap">
+    <p class="tag rise">ที่มาของชื่อ</p>
+    <div class="origin">
+      <div class="rise">
+        <h2>“กั่วป่าโพ้” คือคำที่ใช้เรียกเมืองนี้โดยเฉพาะ</h2>
+        <p class="lede">มาจากการอพยพเข้ามาของชาวจีนในยุคเหมืองแร่ดีบุก
+          จึงมีการใช้รากศัพท์ภาษาจีนแบบฮกเกี้ยนเรียกเมือง</p>
+        <div class="gloss">
+          <div><b>กั่วป่า</b><span>ย่านเมืองเก่าตะกั่วป่า ที่โดดเด่นด้วยพหุวัฒนธรรมและวิถีชีวิต</span></div>
+          <div><b>โพ้</b><span>ท่าเรือที่มีแม่น้ำไหลผ่าน หมายถึงแม่น้ำตะกั่วป่า ที่ทำให้เกิดการสร้างเมืองขึ้น</span></div>
+        </div>
+        <p style="margin-top:1.5rem">รวมกันแล้ว “กั่วป่าโพ้” จึงหมายถึงชุมชนที่เกิดจากการอพยพเข้ามาทำเหมืองแร่ในอดีต
+          โดยขึ้นที่ท่าน้ำตะกั่วป่า หรืออีกนัยหนึ่งคือ <b>“คนตะกั่วป่า”</b> นั่นเอง
+          และในเทศกาลกินผัก คำนี้ยังแฝงอยู่ในการประกอบพิธีกรรมต่าง ๆ ของศาลเจ้า
+          จนกลายเป็นคำอันศักดิ์สิทธิ์ที่สื่อได้ถึงเมืองตะกั่วป่า</p>
+      </div>
+      <figure class="framed rise">
+        <img src="images/photo-port.png" width="264" height="282" loading="lazy" decoding="async"
+             alt="ภาพถ่ายขาวดำ เรือใบและเรือประมงจอดที่ท่าน้ำริมแม่น้ำ">
+        <figcaption>ภาพเก่าจากเอกสารของโครงการ</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 6 อ. ═══════════ -->
+<section class="six shift" id="six">
+  <div class="wrap">
+    <p class="tag rise">แนวคิด 6 อ.</p>
+    <h2 class="rise">ของดีของเมือง<br>แบ่งออกเป็นหกเรื่อง</h2>
+    <div class="sixgrid rise">
+      <div class="six-item"><b>อาภรณ์</b><p>เครื่องแต่งกายเฉพาะถิ่น ผ้าลูกไม้ ผ้าถุงปาเต๊ะ</p></div>
+      <div class="six-item"><b>อาศัย</b><p>วิถีชีวิต ร้านค้า ความเป็นอยู่ และประเพณีที่สอดคล้องอย่างลงตัวกับการดำเนินชีวิต</p></div>
+      <div class="six-item"><b>อาหาร</b><p>อาหารท้องถิ่น รสชาติดั้งเดิมกับสูตรที่ถูกสืบทอด และร้านอาหารจากยุคเหมืองแร่ที่ยังเปิดอยู่</p></div>
+      <div class="six-item"><b>อารมณ์</b><p>ศิลปินถิ่นกั่วป่า ไม่ว่าจะเป็นภาพวาด ร้องรำทำเพลง หรือแม้แต่เสียงกลองในช่วงเทศกาลกินผัก</p></div>
+      <div class="six-item"><b>อาราม</b><p>วัด ศาลเจ้า โหย่กวนในย่านเมืองเก่าที่มีมากมาย และสถานที่พักผ่อนหย่อนใจ</p></div>
+      <div class="six-item"><b>อาคาร</b><p>อาคารบ้านเรือนในย่าน สถาปัตยกรรมที่แฝงไปด้วยทัศนคติและความเชื่อ เป็นมรดกที่ควรค่าแก่การอนุรักษ์</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ติดต่อ ═══════════ -->
+<section class="contact shift" id="contact">
+  <div class="wrap">
+    <div class="rise">
+      <p class="tag">ติดต่อ</p>
+      <h2>สอบถามข้อมูลโครงการ</h2>
+      <p>ติดต่อสอบถามเรื่องพื้นที่ กิจกรรม และงานกั่วป่าโพ้ จีโชว์เมือง ได้ตามช่องทางนี้</p>
+    </div>
+    <ul class="clist rise">
+      <li><span class="lbl">โทร</span><a href="tel:0618749198">061 874 9198</a></li>
+      <li><span class="lbl">อีเมล</span><a href="mailto:jerryleafytoy7@gmail.com">jerryleafytoy7@gmail.com</a></li>
+      <li><span class="lbl">เฟซบุ๊ก</span><a href="https://www.facebook.com/profile.php?id=61590430773715" target="_blank" rel="noopener">เพจ กั่วป่าโพ้ (เปิดแท็บใหม่)</a></li>
+      <li><span class="lbl">ที่ตั้ง</span><a href="https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2" target="_blank" rel="noopener">ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา</a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <b>กั่วป่าโพ้ จีโชว์เมือง</b>
+      ภายใต้โครงการ Creative Cultural District (CCD) · สนับสนุนและดำเนินงานโดยสำนักงานส่งเสริมเศรษฐกิจสร้างสรรค์ (CEA)
+      ร่วมดำเนินงานโดยสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
+    </div>
+    <ul class="doclinks">
+      <li><a href="images/doc-1.jpg" target="_blank" rel="noopener">เอกสารโครงการ 1</a></li>
+      <li><a href="images/doc-2.jpg" target="_blank" rel="noopener">เอกสารโครงการ 2</a></li>
+      <li><a href="images/poster-poh.jpg" target="_blank" rel="noopener">โปสเตอร์ POH</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Event",
+"name":"เดอะ กั่วป่าโพ้ · กั่วป่าโพ้ จีโชว์เมือง",
+"startDate":"2026-08-12","endDate":"2026-08-16",
+"eventStatus":"https://schema.org/EventScheduled",
+"eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
+"location":{"@type":"Place","name":"ย่านเมืองเก่าตะกั่วป่า",
+ "address":{"@type":"PostalAddress","addressLocality":"ตะกั่วป่า","addressRegion":"พังงา","addressCountry":"TH"}},
+"organizer":{"@type":"Organization","name":"กั่วป่าโพ้","telephone":"+66618749198",
+ "url":"https://www.facebook.com/profile.php?id=61590430773715"},
+"image":"images/og-image.jpg"}
+</script>
+<script>
+document.documentElement.classList.add('js');
+const io = new IntersectionObserver((es) => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, {threshold:.1, rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll('.rise').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

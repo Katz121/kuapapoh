@@ -142,6 +142,14 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .meaning .en{display:block;font-family:var(--mono);font-weight:500;font-size:.68rem;
   letter-spacing:.13em;color:var(--cobalt)}
 .meaning .th{display:block;font-weight:600;font-size:1.02rem;line-height:1.35;margin-top:.15em}
+/* จอแคบ · บังคับ P-O-H อยู่บรรทัดเดียวกัน โดยวางตัวอักษรนำไว้บนแทนข้างหน้า */
+@media(max-width:620px){
+  .meaning{grid-template-columns:repeat(3,1fr);gap:.4rem}
+  .meaning>div{flex-direction:column;align-items:flex-start;gap:0;padding:.6em .6em}
+  .meaning dt{font-size:1.6rem}
+  .meaning .en{font-size:.64rem;letter-spacing:.05em}
+  .meaning .th{font-size:.94rem;margin-top:.1em}
+}
 /* คำอธิบายชื่อ · กรอบเหลืองยาวเต็มคอลัมน์ ต่อจากการ์ด P-O-H */
 .meaning-note{margin:.5rem 0 0;background:var(--yellow);border:1.5px solid var(--ink);
   border-left-width:7px;padding:.95em 1.15em;font-size:1.02rem;line-height:1.62}
@@ -531,7 +539,7 @@ footer a{color:var(--yellow)}
     </div>
     <ul class="clist rise">
       <li><span class="lbl">โทร</span><a href="tel:0618749198">061 874 9198</a></li>
-      <li><span class="lbl">อีเมล</span><a href="mailto:jerryleafytoy7@gmail.com">jerryleafytoy7@gmail.com</a></li>
+      <li><span class="lbl">อีเมล</span><a href="mailto:kuapapoh@gmail.com">kuapapoh@gmail.com</a></li>
       <li><span class="lbl">เฟซบุ๊ก</span><a href="https://www.facebook.com/profile.php?id=61590430773715" target="_blank" rel="noopener">เพจ กั่วป่าโพ้ (เปิดแท็บใหม่)</a></li>
       <li><span class="lbl">ที่ตั้ง</span><a href="https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2" target="_blank" rel="noopener">ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา</a></li>
     </ul>

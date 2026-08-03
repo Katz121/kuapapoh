@@ -38,15 +38,20 @@ ICONS = {
 ART = {
     "__poster__": '<img class="poster" src="../images/poster-main.webp" alt="">',
     "__line78__": '<img class="art-line" src="../images/line-78.webp" alt="">',
+    "__logo__": '<img class="art-tile" src="logo-poh.webp" alt="">',
+    # ซุ้มโค้ง = มาร์กของเว็บ (path เดียวกับ favicon ใน index.html)
+    "__mark__": '<div class="ico ico-mark"><svg viewBox="0 0 32 32">'
+                '<path d="M6 26V14a10 10 0 0 1 20 0v12" fill="none" stroke="#EC0A72" '
+                'stroke-width="4" stroke-linecap="round"/></svg></div>',
 }
 
 CELLS = [
     ("__poster__", "SCHEDULE", "ตารางกิจกรรม"),
     ("__line78__", "MEETING POINT", "จุดรวมพล"),
     ("map", "HOW TO GET THERE", "แผนที่การเดินทาง"),
-    ("web", "WEBSITE", "เว็บไซต์โครงการ"),
-    ("fb", "FACEBOOK", "เพจกั่วป่าโพ้"),
-    ("ask", "ASK US", "สอบถามข้อมูล"),
+    ("__mark__", "WEBSITE", "เว็บไซต์โครงการ"),
+    ("__logo__", "FACEBOOK", "เพจกั่วป่าโพ้"),
+    ("ask", "POH TALK", "สอบถามข้อมูล"),   # ชื่อแทร็กจากโปสเตอร์งาน
 ]
 
 PAL = dict(yellow="#FFE81C", magenta="#EC0A72", cobalt="#1E3FA8",

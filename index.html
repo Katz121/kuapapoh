@@ -8,9 +8,15 @@
 <link rel="canonical" href="https://kuapapoh.pages.dev/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="th_TH">
+<meta property="og:site_name" content="กั่วป่าโพ้">
+<meta property="og:url" content="https://kuapapoh.pages.dev/">
 <meta property="og:title" content="กั่วป่าโพ้ จีโชว์เมือง · ย่านเมืองเก่าตะกั่วป่า">
 <meta property="og:description" content="เปิดพื้นที่สร้างสรรค์ใหม่ย่านเมืองเก่าตะกั่วป่า พังงา · 12-16 สิงหาคม 2569">
-<meta property="og:image" content="images/og-image.jpg">
+<!-- Facebook/LINE ต้องการ URL เต็ม · ระบุขนาดไว้ให้ crawler เรนเดอร์การ์ดได้ตั้งแต่ scrape รอบแรก -->
+<meta property="og:image" content="https://kuapapoh.pages.dev/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="โปสเตอร์งานกั่วป่าโพ้ จีโชว์เมือง 12-16 สิงหาคม 2569">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFE81C">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFE81C'/%3E%3Cpath d='M6 26V14a10 10 0 0 1 20 0v12' fill='none' stroke='%23EC0A72' stroke-width='4'/%3E%3C/svg%3E">
@@ -80,11 +86,15 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .topbar{position:sticky;top:0;z-index:50;background:var(--ink);color:var(--paper)}
 .topbar .wrap{display:flex;align-items:center;gap:1rem;min-height:var(--bar)}
 .topbar b{font-family:var(--display);font-weight:700;font-size:1rem;flex:none}
-.topbar nav{display:flex;gap:1.4rem;margin-left:auto;overflow-x:auto;
+.topbar nav{display:flex;gap:1rem;margin-left:auto;overflow-x:auto;
   scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .topbar nav::-webkit-scrollbar{display:none}
+/* ซ่อน scrollbar ไว้แล้ว · ถ้าเมนูล้นจอต้องมี fade ขอบขวาบอกว่ายังปัดต่อได้
+   คลาสนี้ติดด้วย JS เฉพาะตอนที่ล้นจริง ไม่งั้นตัวสุดท้ายบนจอกว้างจะโดนจางไปเปล่าๆ */
+.topbar nav.scrollable{-webkit-mask-image:linear-gradient(to right,#000 84%,transparent 100%);
+  mask-image:linear-gradient(to right,#000 84%,transparent 100%)}
 .topbar a{text-decoration:none;opacity:.78;white-space:nowrap;font-size:.88rem;
-  padding-block:.85rem;transition:opacity .2s,color .2s}
+  padding-block:.85rem;padding-inline:.35rem;transition:opacity .2s,color .2s}
 .topbar a:hover{opacity:1;color:var(--yellow)}
 @media(max-width:700px){.topbar b{font-size:.92rem}.topbar nav{gap:1.1rem}}
 
@@ -107,7 +117,7 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
   background:var(--ink);color:var(--yellow);text-decoration:none;border:2px solid var(--ink);
   font-weight:600;font-size:1rem;border-radius:999px;transition:background .2s,color .2s,transform .2s}
 .btn:hover{background:transparent;color:var(--ink);transform:translateY(-2px)}
-.btn.on-paper{background:var(--magenta);color:#fff;border-color:var(--magenta)}
+.btn.on-paper{background:var(--magenta-text);color:#fff;border-color:var(--magenta-text)}
 .btn.on-paper:hover{background:var(--ink);border-color:var(--ink);color:var(--yellow)}
 .hero-cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.6rem}
 /* แถวอาคารลายเส้นเป็นฐานของ hero */
@@ -228,7 +238,8 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .six-item p{margin:.25rem 0 0;color:#d5d9ef;font-size:.95rem;max-width:44ch}
 
 /* ═══════════ ติดต่อ ═══════════ */
-.contact{background:var(--magenta);color:#fff}
+/* ใช้ magenta-text (เข้มกว่า) เพราะขาวบน --magenta ได้ contrast แค่ 4.33:1 · ตก WCAG AA */
+.contact{background:var(--magenta-text);color:#fff}
 .contact .tag{color:#fff}
 .contact .tag::after{background:rgba(255,255,255,.45)}
 .contact .wrap{display:grid;gap:2.2rem}
@@ -247,7 +258,8 @@ footer .wrap{display:grid;gap:1rem}
 @media(min-width:820px){footer .wrap{grid-template-columns:1fr auto;align-items:end}}
 footer b{font-family:var(--display);color:var(--paper);font-size:1.05rem;font-weight:700;display:block;margin-bottom:.3rem}
 footer a{color:var(--yellow)}
-.doclinks{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin:.6rem 0 0;padding:0;list-style:none;font-size:.84rem}
+.doclinks{display:flex;flex-wrap:wrap;gap:.2rem 1.2rem;margin:.6rem 0 0;padding:0;list-style:none;font-size:.84rem}
+.doclinks a{display:inline-block;padding-block:.5rem}
 
 /* ═══════════ motion ═══════════ */
 .js .rise{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
@@ -323,9 +335,9 @@ footer a{color:var(--yellow)}
         <p class="lede">เปิดพื้นที่สร้างสรรค์ใหม่ย่านเมืองเก่าตะกั่วป่า พังงา
           เชื่อมศิลปะ ผู้คน ย่าน วัฒนธรรม เข้าไว้ด้วยกันตลอดห้าวัน</p>
         <dl class="meaning">
-          <div><dt lang="en">P</dt><dd><span class="en">PEOPLE</span><span class="th">ผู้คน</span></dd></div>
-          <div><dt lang="en">O</dt><dd><span class="en">OLD TOWN</span><span class="th">เมืองเก่า</span></dd></div>
-          <div><dt lang="en">H</dt><dd><span class="en">HUB</span><span class="th">ศูนย์รวม</span></dd></div>
+          <div><dt lang="en">P</dt><dd><span class="en" lang="en">PEOPLE</span><span class="th">ผู้คน</span></dd></div>
+          <div><dt lang="en">O</dt><dd><span class="en" lang="en">OLD TOWN</span><span class="th">เมืองเก่า</span></dd></div>
+          <div><dt lang="en">H</dt><dd><span class="en" lang="en">HUB</span><span class="th">ศูนย์รวม</span></dd></div>
         </dl>
         <p class="meaning-note"><b lang="en">POH</b> หรือ <b>โพ้</b> คือจุดรวมของผู้คนในย่านเมืองเก่า
           เพราะโพ้คือจุดเชื่อมผู้คนทุกวัย ศิลปะสร้างสรรค์ และวัฒนธรรมของย่าน</p>
@@ -573,7 +585,7 @@ footer a{color:var(--yellow)}
  "address":{"@type":"PostalAddress","addressLocality":"ตะกั่วป่า","addressRegion":"พังงา","addressCountry":"TH"}},
 "organizer":{"@type":"Organization","name":"กั่วป่าโพ้","telephone":"+66618749198",
  "url":"https://www.facebook.com/profile.php?id=61590430773715"},
-"image":"images/og-image.jpg"}
+"image":"https://kuapapoh.pages.dev/images/og-image.jpg"}
 </script>
 <script>
 document.documentElement.classList.add('js');
@@ -581,6 +593,19 @@ const io = new IntersectionObserver((es) => {
   es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
 }, {threshold:.1, rootMargin:'0px 0px -6% 0px'});
 document.querySelectorAll('.rise').forEach(el => io.observe(el));
+
+/* เมนูบนสุดซ่อน scrollbar ไว้ · ติด fade ขอบขวาเฉพาะตอนที่ยังปัดต่อได้จริง
+   ไม่มี JS = ไม่มี fade แต่เมนูยังเลื่อนได้ตามปกติ */
+const topnav = document.querySelector('.topbar nav');
+if (topnav) {
+  const syncFade = () => {
+    const more = topnav.scrollWidth - topnav.clientWidth - topnav.scrollLeft;
+    topnav.classList.toggle('scrollable', more > 4);
+  };
+  syncFade();
+  topnav.addEventListener('scroll', syncFade, {passive:true});
+  addEventListener('resize', syncFade, {passive:true});
+}
 </script>
 </body>
 </html>

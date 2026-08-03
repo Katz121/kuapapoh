@@ -32,8 +32,8 @@ ACTIONS = [
     ("โพ้พาเที่ยว", {"type": "uri", "uri": f"{SITE}/#schedule"}),
     ("โพ้รวมทีม", {"type": "uri", "uri": f"{SITE}/#houses"}),
     ("โพ้พานำ", {"type": "uri", "uri": MAPS}),
-    ("เว็บไซต์โครงการ", {"type": "uri", "uri": f"{SITE}/"}),
-    ("เพจกั่วป่าโพ้", {"type": "uri", "uri": FB}),
+    ("โพ้ชวนแล", {"type": "uri", "uri": f"{SITE}/"}),
+    ("โพ้บอกข่าว", {"type": "uri", "uri": FB}),
     # ยังไม่มีลิงก์ร้าน · ให้ส่งข้อความเข้าแชทไปก่อน แอดมินตอบเองใน OA Manager
     ("โพ้ช้อป", {"type": "message", "text": "สนใจโพ้ช้อป"}),
 ]

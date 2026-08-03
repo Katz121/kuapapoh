@@ -15,8 +15,9 @@ body{
 .en{
   font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:500;
   font-size:15px;letter-spacing:.2em;text-transform:uppercase;
+  line-height:1.2;margin-bottom:20px;   /* เผื่อที่ให้สระ/วรรณยุกต์บนของบรรทัดไทย */
 }
 .th{
   font-family:'Bai Jamjuree','IBM Plex Sans Thai',sans-serif;font-weight:700;
-  font-size:34px;line-height:1.25;letter-spacing:.01em;
+  font-size:34px;line-height:1.45;letter-spacing:.01em;
 }

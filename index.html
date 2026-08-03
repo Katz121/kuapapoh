@@ -128,9 +128,26 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .dates span{color:var(--ink);font-size:clamp(1.05rem,2.3vw,1.6rem);display:block;
   letter-spacing:0;line-height:1.35;margin-top:.15em}
 .tracks{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));
-  gap:.5rem;margin:1.5rem 0 0;padding:0;list-style:none}
+  gap:.5rem;margin:.75rem 0 0;padding:0;list-style:none}
 .tracks li{background:var(--yellow);border:1.5px solid var(--ink);padding:.55em .9em}
 .tracks b{display:block;font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.14em}
+/* ความหมายของชื่อ · ตัวอักษรนำ P-O-H */
+.meaning{display:grid;grid-template-columns:repeat(auto-fit,minmax(154px,1fr));
+  gap:.5rem;margin:1.6rem 0 0;padding:0}
+.meaning>div{display:flex;align-items:baseline;gap:.7rem;
+  border:1.5px solid var(--ink);background:var(--yellow);padding:.7em .9em}
+.meaning dt{font-family:var(--display);font-weight:700;font-size:1.9rem;line-height:1;
+  color:var(--magenta);flex:0 0 auto}
+.meaning dd{margin:0}
+.meaning .en{display:block;font-family:var(--mono);font-weight:500;font-size:.68rem;
+  letter-spacing:.13em;color:var(--cobalt)}
+.meaning .th{display:block;font-weight:600;font-size:1.02rem;line-height:1.35;margin-top:.15em}
+/* คำอธิบายชื่อ · กรอบเหลืองยาวเต็มคอลัมน์ ต่อจากการ์ด P-O-H */
+.meaning-note{margin:.5rem 0 0;background:var(--yellow);border:1.5px solid var(--ink);
+  border-left-width:7px;padding:.95em 1.15em;font-size:1.02rem;line-height:1.62}
+.meaning-note b{font-weight:700;color:var(--magenta-text)}
+.subhead{font-family:var(--body);font-weight:600;font-size:.82rem;letter-spacing:.04em;
+  color:var(--muted);margin:1.7rem 0 0}
 
 /* ═══════════ ตารางกิจกรรมรายวัน ═══════════ */
 .days{display:grid;gap:clamp(28px,4vw,52px);margin-top:2.2rem}
@@ -297,13 +314,19 @@ footer a{color:var(--yellow)}
         <h2 class="dates">12-16<span><time datetime="2026-08-12">สิงหาคม 2569</time> · เดอะ กั่วป่าโพ้</span></h2>
         <p class="lede">เปิดพื้นที่สร้างสรรค์ใหม่ย่านเมืองเก่าตะกั่วป่า พังงา
           เชื่อมศิลปะ ผู้คน ย่าน วัฒนธรรม เข้าไว้ด้วยกันตลอดห้าวัน</p>
-        <ul class="tracks">
-          <li><b lang="en">P · PEOPLE</b>ผู้คน</li>
-          <li><b lang="en">O · OLD TOWN</b>เมืองเก่า</li>
-          <li><b lang="en">H · HUB</b>ศูนย์รวม</li>
-        </ul>
-        <p class="lede" style="margin-top:1.1rem">POH หรือ โพ้ คือจุดรวมของผู้คนในย่านเมืองเก่า
+        <dl class="meaning">
+          <div><dt lang="en">P</dt><dd><span class="en">PEOPLE</span><span class="th">ผู้คน</span></dd></div>
+          <div><dt lang="en">O</dt><dd><span class="en">OLD TOWN</span><span class="th">เมืองเก่า</span></dd></div>
+          <div><dt lang="en">H</dt><dd><span class="en">HUB</span><span class="th">ศูนย์รวม</span></dd></div>
+        </dl>
+        <p class="meaning-note"><b lang="en">POH</b> หรือ <b>โพ้</b> คือจุดรวมของผู้คนในย่านเมืองเก่า
           เพราะโพ้คือจุดเชื่อมผู้คนทุกวัย ศิลปะสร้างสรรค์ และวัฒนธรรมของย่าน</p>
+
+        <p class="subhead">กิจกรรมหลักในงาน</p>
+        <ul class="tracks">
+          <li><b lang="en">POH TALK</b>วงคุยเรื่องเมือง</li>
+          <li><b lang="en">POH WORKSHOP</b>เวิร์กช็อปงานฝีมือ</li>
+        </ul>
         <div class="hero-cta" style="margin-top:1.6rem">
           <a class="btn on-paper" href="#schedule">ดูตารางกิจกรรมรายวัน</a>
           <a class="btn on-paper" href="https://www.facebook.com/profile.php?id=61590430773715"

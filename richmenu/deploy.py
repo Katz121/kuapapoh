@@ -29,7 +29,7 @@ W, H = 2500, 1686
 CW, CH = 833, 843  # ช่องละ 1/3 กว้าง · ครึ่งสูง (ช่องขวาสุดกว้าง 834 ให้เต็มพอดี)
 
 ACTIONS = [
-    ("โพ้พาเที่ยว", {"type": "uri", "uri": f"{SITE}/#schedule"}),
+    ("โพ้ชม", {"type": "uri", "uri": f"{SITE}/#schedule"}),
     ("โพ้รวมทีม", {"type": "uri", "uri": f"{SITE}/#houses"}),
     ("โพ้พานำ", {"type": "uri", "uri": MAPS}),
     ("โพ้ชวนแล", {"type": "uri", "uri": f"{SITE}/"}),

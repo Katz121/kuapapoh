@@ -62,7 +62,7 @@ ART = {
 }
 
 CELLS = [
-    ("__poster__", "POH TOUR", "โพ้พาเที่ยว"),
+    ("__poster__", "SCHEDULE", "โพ้ชม"),
     ("__line78__", "POH TEAM", "โพ้รวมทีม"),
     ("map", "POH MAP", "โพ้พานำ"),
     ("__mark__", "POH WEB", "โพ้ชวนแล"),

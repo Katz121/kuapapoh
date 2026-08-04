@@ -8,3 +8,6 @@ _scrape/
 # ไฟล์งานแบรนด์ POH · ภาพเจนขนาดใหญ่ เก็บไว้ในเครื่อง
 poh-brand/assets/
 poh-brand/*.png
+poh-brand/a3/art/
+poh-brand/a3/*.png
+poh-brand/a3/*.jpg

@@ -1,0 +1,204 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Serif+Thai:wght@300;400;500;600&family=IBM+Plex+Sans+Thai:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   POH · เมื่อเมืองท่ากลับมาผลิบาน
+   A3 โปสเตอร์หลัก · 1754×2480 CSS px → render 2x = 3508×4960 (300dpi)
+   ขวด = ภาพถ่ายจริง · งานศิลป์ = Codex gpt-image-2 (ไม่มีตัวอักษร)
+   ตัวอักษรไทยทั้งหมดเรนเดอร์ใน HTML
+   ══════════════════════════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#12246C; --navy-2:#2C3F7E; --ink:#3A4257;
+  --coral:#C1435A; --coral-soft:#E06A72;
+  --gold:#C9A227; --sage:#7E9A6E;
+  --paper:#FBF3E2; --rule:rgba(18,36,108,.22);
+  --th-serif:'Noto Serif Thai',serif;
+  --th-sans:'IBM Plex Sans Thai',sans-serif;
+  --en:'Cormorant Garamond',serif;
+}
+html,body{width:1754px;height:2480px;overflow:hidden}
+body{background:var(--paper);color:var(--ink);position:relative;
+     font-family:var(--th-sans);font-weight:300}
+
+/* ── ชั้นกระดาษ + เกรน ── */
+.grain{position:absolute;left:0;top:0;width:1754px;height:2480px;z-index:6;
+  pointer-events:none;opacity:.30;mix-blend-mode:multiply}
+.tint{position:absolute;inset:0;z-index:5;pointer-events:none;
+  background:radial-gradient(72% 55% at 50% 34%,rgba(255,255,255,.55),rgba(255,255,255,0) 70%)}
+
+/* ── กรอบเส้นบาง ── */
+.frame{position:absolute;z-index:4;inset:56px;border:1px solid rgba(18,36,108,.16);pointer-events:none}
+.frame::after{content:"";position:absolute;inset:12px;border:1px solid rgba(201,162,39,.34)}
+
+/* ── งานศิลป์ ── */
+.art{position:absolute;mix-blend-mode:multiply;pointer-events:none}
+#canopy{z-index:1;left:50%;transform:translateX(-50%);top:432px;width:900px;opacity:.97}
+#town{z-index:1;left:0;right:0;top:1372px;width:100%;opacity:.88;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.5) 16%,#000 38%,#000 76%,transparent 100%),
+                     linear-gradient(90deg,transparent 0%,#000 8%,#000 92%,transparent 100%);
+  -webkit-mask-composite:source-in;mask-composite:intersect}
+
+/* ── แถบวัตถุดิบ 6 ชนิด · ชิดเส้นฐานเดียวกัน ── */
+.ingr{position:absolute;z-index:3;left:112px;right:112px;top:2028px;height:210px;
+  display:flex;align-items:flex-end}
+.ingr span{flex:1;display:flex;justify-content:center;align-items:flex-end}
+.ingr img{max-height:210px;width:auto;mix-blend-mode:multiply;
+  filter:drop-shadow(0 5px 7px rgba(18,36,108,.10))}
+/* ม่านครีมใต้แถบวัตถุดิบ · กันลายแกะสลักเมืองตีกับตัวอย่างพืช */
+.ingr-veil{position:absolute;z-index:2;left:0;right:0;top:1960px;height:330px;
+  background:linear-gradient(180deg,rgba(251,243,226,0) 0%,rgba(251,243,226,.86) 26%,
+             rgba(251,243,226,.96) 52%,rgba(251,243,226,1) 100%)}
+
+/* ── ขวดจริง ── */
+.hero{position:absolute;z-index:3;left:50%;top:560px;transform:translateX(-50%);
+  width:520px;text-align:center}
+.hero img{height:930px;width:auto;mix-blend-mode:multiply;
+  filter:drop-shadow(0 26px 34px rgba(18,36,108,.20)) saturate(1.03)}
+.hero::after{content:"";position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);
+  width:430px;height:30px;border-radius:50%;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(18,36,108,.22),rgba(18,36,108,0) 72%)}
+
+/* ── หัวโปสเตอร์ ── */
+.head{position:absolute;z-index:4;left:0;right:0;top:132px;text-align:center}
+.eyebrow{font-family:var(--en);letter-spacing:.52em;font-size:17px;font-weight:500;
+  color:var(--gold);text-transform:uppercase;padding-left:.52em}
+.wordmark{display:flex;align-items:center;justify-content:center;gap:34px;margin-top:26px}
+.mark{font-family:var(--en);font-weight:300;color:var(--navy);
+  letter-spacing:.16em;line-height:.9;font-size:158px;padding-left:.16em}
+.bar{width:1px;height:96px;background:var(--rule)}
+.mark-th{font-family:var(--th-serif);font-weight:400;color:var(--navy);
+  font-size:96px;line-height:1.1}
+.motto{font-family:var(--th-serif);font-weight:400;color:var(--coral);
+  font-size:38px;line-height:1.5;margin-top:14px;letter-spacing:.01em}
+.rulewrap{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:22px}
+.rulewrap i{display:block;width:120px;height:1px;background:var(--gold);opacity:.75}
+.rulewrap b{font-family:var(--en);font-weight:400;color:var(--gold);font-size:19px}
+.spec{margin-top:16px;font-family:var(--en);letter-spacing:.4em;font-size:17px;
+  color:var(--navy-2);text-transform:uppercase;padding-left:.4em}
+
+/* ── คอลัมน์เรื่องเล่า ── */
+.col{position:absolute;z-index:4;width:392px}
+/* ม่านกระดาษบาง ๆ หลังคอลัมน์ · กันดอกไม้กวนตัวหนังสือ (เทคนิคงานพิมพ์) */
+.col::before{content:"";position:absolute;z-index:-1;left:-70px;right:-70px;top:-60px;bottom:-60px;
+  background:radial-gradient(52% 48% at 50% 50%,rgba(251,243,226,.96) 0%,rgba(251,243,226,.88) 52%,rgba(251,243,226,.55) 78%,rgba(251,243,226,0) 100%)}
+#col-l{left:112px;top:614px}
+#col-r{right:112px;top:614px}
+.blk + .blk{margin-top:52px}
+.blk .no{font-family:var(--en);font-size:17px;letter-spacing:.3em;color:var(--gold)}
+.blk h3{font-family:var(--th-serif);font-weight:500;color:var(--navy);
+  font-size:29px;line-height:1.35;margin-top:4px}
+.blk .hr{height:1px;background:var(--rule);margin:13px 0 15px}
+.blk p{font-size:18.5px;line-height:2.02;font-weight:300;color:var(--ink)}
+.blk p + p{margin-top:13px}
+.pull{margin-top:20px;font-family:var(--th-serif);font-weight:400;
+  color:var(--coral);font-size:21px;line-height:1.78;
+  border-left:2px solid rgba(193,67,90,.4);padding-left:16px}
+
+/* ── แถบวัตถุดิบ ── */
+.ingr-cap{position:absolute;z-index:4;left:112px;right:112px;top:2252px;
+  display:flex;justify-content:space-between}
+.ingr-cap span{flex:1;text-align:center;font-family:var(--th-serif);font-weight:400;
+  color:var(--navy);font-size:23px;letter-spacing:.02em}
+.ingr-cap span i{display:block;width:26px;height:1px;background:var(--gold);
+  margin:0 auto 11px;opacity:.8;font-style:normal}
+
+/* ── แถบแนวคิด ── */
+.idea{position:absolute;z-index:4;left:112px;right:112px;top:2310px;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  padding:20px 0 18px;display:flex;justify-content:space-between;align-items:stretch}
+.idea div{flex:1;text-align:center;position:relative}
+.idea div + div::before{content:"";position:absolute;left:0;top:6px;bottom:6px;
+  width:1px;background:var(--rule)}
+.idea b{display:block;font-family:var(--en);font-size:16px;letter-spacing:.32em;
+  color:var(--gold);font-weight:500;padding-left:.32em}
+.idea em{display:block;margin-top:10px;font-style:normal;font-family:var(--th-serif);
+  font-weight:400;font-size:26px;color:var(--navy)}
+
+/* ── บทปิด + ท้ายโปสเตอร์ ── */
+.close{position:absolute;z-index:4;left:0;right:0;top:2356px;text-align:center;
+  font-family:var(--th-serif);font-weight:400;color:var(--coral);
+  font-size:24px;line-height:1.6}
+.foot{position:absolute;z-index:4;left:112px;right:112px;top:2418px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--en);font-size:16px;letter-spacing:.26em;color:var(--navy-2)}
+.foot span{padding-left:.26em}
+</style></head><body>
+
+<img class="art" id="canopy" src="art/canopy.png"    alt="">
+<img class="art" id="town"   src="art/town_band.png" alt="">
+
+<div class="ingr-veil"></div>
+<div class="ingr">
+  <span><img src="art/ing1.png" alt=""></span><span><img src="art/ing2.png" alt=""></span>
+  <span><img src="art/ing3.png" alt=""></span><span><img src="art/ing4.png" alt=""></span>
+  <span><img src="art/ing5.png" alt=""></span><span><img src="art/ing6.png" alt=""></span>
+</div>
+
+<div class="hero"><img src="../assets/real-bottle-cut@2x.png" alt=""></div>
+
+<div class="head">
+  <div class="eyebrow">Takua Pa · Phang-nga</div>
+  <div class="wordmark">
+    <div class="mark">POH</div><div class="bar"></div><div class="mark-th">โพ้</div>
+  </div>
+  <div class="motto">เมื่อเมืองท่ากลับมาผลิบาน</div>
+  <div class="rulewrap"><i></i><b>Sparkling Tea</b><i></i></div>
+  <div class="spec">275 ml · 0% Alcohol</div>
+</div>
+
+<div class="col" id="col-l">
+  <div class="blk">
+    <div class="no">01</div>
+    <h3>ท่าเรือที่ชื่อโพ้</h3><div class="hr"></div>
+    <p>ครั้งหนึ่ง “โพ้” คือท่าเรือของตะกั่วป่า สถานที่ที่ผู้คน เรือสินค้า ภาษา และวัฒนธรรมจากหลายดินแดนเดินทางมาพบกัน เมืองเล็กแห่งนี้เคยเต็มไปด้วยชีวิตและการแลกเปลี่ยน จนกลายเป็นหนึ่งในเมืองที่รุ่งเรืองที่สุดของชายฝั่งอันดามัน</p>
+    <p>กาลเวลาผ่านไป เรืออาจไม่จอดที่ท่าเหมือนเดิม แต่ผู้คนรุ่นใหม่ยังคงเดินทางเข้ามา พร้อมความคิดสร้างสรรค์ใหม่ ๆ ที่ทำให้เมืองเก่ามีชีวิตอีกครั้ง</p>
+  </div>
+  <div class="blk">
+    <div class="no">02</div>
+    <h3>รสชาติแห่งการเดินทาง</h3><div class="hr"></div>
+    <p>POH เริ่มต้นจากใบชาที่ดื่มในอดีต ชาที่อยู่ในความทรงจำของคนตะกั่วป่า ก่อนจะเติมชีวิตใหม่ด้วยวัตถุดิบจากพังงา ทั้งดาหลา ส้มแขก ลูกจันทน์ มิ้น และกระเจี๊ยบ จนเกิดเป็นสีชมพูอ่อนที่ไม่เคยมีอยู่ในอดีต</p>
+    <div class="pull">เพราะเราไม่ได้ต้องการย้อนเวลากลับไป<br>แต่ต้องการให้ความทรงจำเดินหน้าต่อ</div>
+  </div>
+</div>
+
+<div class="col" id="col-r">
+  <div class="blk">
+    <div class="no">03</div>
+    <h3>ดอกดาหลา</h3><div class="hr"></div>
+    <p>ดาหลาไม่ได้เป็นเพียงวัตถุดิบของเครื่องดื่ม แต่เป็นสัญลักษณ์ของการผลิบาน ดอกไม้พื้นถิ่นที่เติบโตบนผืนดินเดียวกับเรื่องราวของเมือง เปรียบเสมือนคนรุ่นใหม่ที่เข้ามาสร้างสีสันให้ตะกั่วป่า โดยยังหยั่งรากอยู่บนประวัติศาสตร์เดิม</p>
+  </div>
+  <div class="blk">
+    <div class="no">04</div>
+    <h3>สีน้ำเงินบนฉลาก</h3><div class="hr"></div>
+    <p>สีน้ำเงินคือสีของทะเลอันดามัน ทะเลที่ครั้งหนึ่งนำเรือสินค้า ผู้คน และวัฒนธรรมเข้ามาสู่เมืองท่าแห่งนี้ แต่ในอีกความหมายหนึ่ง ยังแทนความสงบ ความลึก และกาลเวลาที่โอบอุ้มเรื่องราวของตะกั่วป่า<span style="white-space:nowrap">มานานนับร้อยปี</span></p>
+  </div>
+  <div class="blk">
+    <div class="no">05</div>
+    <h3>สีชมพูของเครื่องดื่ม</h3><div class="hr"></div>
+    <p>สีชมพูไม่ได้เกิดจากการแต่งสี แต่เกิดจากการผสมผสานของวัตถุดิบธรรมชาติ เช่นเดียวกับตะกั่วป่าในวันนี้ ที่สีสันของเมืองเกิดจากการหลอมรวมรากเดิมเข้ากับผู้คนและความคิดของคนรุ่นใหม่</p>
+  </div>
+</div>
+
+<div class="ingr-cap">
+  <span><i>·</i>ใบชา</span><span><i>·</i>ดาหลา</span><span><i>·</i>ส้มแขก</span>
+  <span><i>·</i>ลูกจันทน์</span><span><i>·</i>มิ้น</span><span><i>·</i>กระเจี๊ยบ</span>
+</div>
+
+<div class="idea">
+  <div><b>Roots</b><em>อดีตคือรากเหง้า</em></div>
+  <div><b>Route</b><em>ทะเลคือเส้นทาง</em></div>
+  <div><b>Bloom</b><em>ดาหลาคือการผลิบาน</em></div>
+  <div><b>Today</b><em>สีชมพูคือสีสันของวันนี้</em></div>
+</div>
+
+<div class="tint"></div>
+<svg class="grain" xmlns="http://www.w3.org/2000/svg">
+  <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.86" numOctaves="4" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/></filter>
+  <rect width="100%" height="100%" filter="url(#n)" opacity="0.5"/>
+</svg>
+<div class="frame"></div>
+</body></html>

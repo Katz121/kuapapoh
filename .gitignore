@@ -11,3 +11,7 @@ poh-brand/*.png
 poh-brand/a3/art/
 poh-brand/a3/*.png
 poh-brand/a3/*.jpg
+
+# งานภาพ/พรอมต์ที่ทำในเครื่อง · ไม่ต้องขึ้นเว็บ
+outputs/
+prompts/

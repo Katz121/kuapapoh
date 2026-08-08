@@ -308,8 +308,11 @@ html.ws-lock{overflow:hidden}
 
 .ws-body{display:grid;min-height:0}
 @media(min-width:900px){.ws-body{grid-template-columns:1.34fr 1fr}}
-.ws-main{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-height:0;
+.ws-main{position:relative;display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-height:0;
   padding:clamp(14px,2.1vw,24px);gap:clamp(10px,1.3vw,14px)}
+/* ลายกระเบื้องจาง ๆ บนกระดาษฝั่งซ้าย · แค่ให้รู้สึกเป็นกระดาษพิมพ์ ไม่กินความอ่านง่าย */
+.ws-main>.ws-tile{opacity:.018;z-index:0}
+.ws-main>*:not(.ws-tile){position:relative;z-index:1}
 
 .ws-topline{display:flex;align-items:center;gap:1rem}
 .ws-kicker{margin:0;color:var(--cobalt)}
@@ -382,39 +385,51 @@ html.ws-lock{overflow:hidden}
 /* ── ปกใบปลิว (ประดับล้วน · มือถือตัดทิ้ง) ── */
 .ws-cover{display:none}
 @media(min-width:900px){
-  .ws-cover{display:grid;grid-template-rows:minmax(0,1fr) auto;position:relative;overflow:hidden;
-    background:var(--yellow);border-left:3px solid var(--ink)}
+  .ws-cover{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto auto;position:relative;
+    overflow:hidden;background:var(--yellow);border-left:3px solid var(--ink)}
 }
+/* 1 · แถบลายทางการ · ตัดขอบล่างด้วยเส้นหมึกหนา ให้เป็นชั้นที่จบในตัว */
+.ws-patstrip{position:relative;height:clamp(120px,17vh,168px);overflow:hidden;
+  border-bottom:3px solid var(--ink)}
+.ws-patstrip img{width:100%;height:100%;object-fit:cover;object-position:center 38%}
+.ws-objs-label{margin:0 0 .5rem;padding:0 var(--ws-gut);
+  font-family:var(--mono);font-weight:500;font-size:.64rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--cobalt)}
+.ws-patstrip .ws-m-star{top:-30px;left:-30px;width:112px;height:112px;color:var(--paper)}
+
+/* 3 · แถวของ 5 วง · ชิดกริดขอบเดียวกับตัวอักษร ไม่มีการหมุน */
+.ws-objs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;list-style:none;
+  margin:0;padding:0 var(--ws-gut) 18px}
+.ws-objs li{position:relative;min-width:0;background:var(--paper);border:2px solid var(--ink);
+  aspect-ratio:1;padding:7px}
+.ws-objs img{width:100%;height:100%;object-fit:contain}
+.ws-objs b{position:absolute;left:-2px;bottom:-2px;background:var(--cobalt);color:var(--yellow);
+  font-family:var(--mono);font-weight:500;font-size:.6rem;letter-spacing:.06em;
+  padding:2px 5px;border:2px solid var(--ink)}
+.ws-cover{--ws-gut:clamp(20px,2.6vw,30px)}
 .ws-sprite{position:absolute;width:0;height:0;overflow:hidden}
 /* ลายประดับวางกระจายแบบโปสเตอร์รายวัน · ทุกชิ้นเป็น <use> ของ symbol ชุดเดียวกัน */
 .ws-m{position:absolute;pointer-events:none}
-.ws-m-star{top:-30px;left:-34px;width:126px;height:126px;color:var(--paper)}
-.ws-m-rays{top:12px;right:-40px;width:104px;height:104px;color:var(--magenta)}
-.ws-m-dia {top:56%;left:-44px;width:96px;height:96px;color:var(--magenta)}
-.ws-m-win {top:30%;right:14px;width:88px;height:66px;color:var(--magenta)}
-.ws-m-wave{bottom:52px;left:34%;width:112px;height:74px;color:var(--magenta);opacity:.9}
+/* พื้นลายจาง ๆ บนกระดาษฝั่งซ้าย · แค่ให้รู้สึกเป็นกระดาษพิมพ์ */
+.ws-tile{position:absolute;inset:0;width:100%;height:100%;color:var(--ink);opacity:.026}
 
-/* ภาพประกอบ riso · วางเอียงเล็กน้อยแบบแปะกระดาษ ไม่มีเงา (งานพิมพ์ไม่มีเงาฟุ้ง) */
-.ws-ill{position:absolute;pointer-events:none;height:auto}
-.ws-ill-lantern{top:-6px;left:44%;width:104px;transform:rotate(3deg)}
-.ws-ill-key{bottom:74px;left:2px;width:124px;transform:rotate(-8deg)}
-.ws-ill-pan{bottom:58px;right:-10px;width:146px;transform:rotate(4deg)}
-/* วงจุด halftone ทำด้วย gradient · ถูกกว่าวางวงกลมหลายร้อยวงเป็น SVG */
-.ws-halftone{position:absolute;top:-36px;right:-28px;width:172px;height:172px;
-  background-image:radial-gradient(var(--paper) 2.6px,transparent 2.8px);background-size:11px 11px;
-  -webkit-mask-image:radial-gradient(circle,#000 40%,transparent 70%);
-  mask-image:radial-gradient(circle,#000 40%,transparent 70%)}
+/* โคมไฟเป็นพระเอกชิ้นเดียวของบล็อกตัวอักษร · ไม่หมุน ไม่ทับตัวหนังสือ */
+.ws-hero{position:absolute;top:5%;right:calc(var(--ws-gut) - 10px);width:92px;height:auto}
+/* ตึกชิโนโปรตุกีสเป็นลายน้ำหลังสุด · ให้แผงมีความลึกโดยไม่แย่งสายตา */
+.ws-watermark{position:absolute;right:-64px;bottom:-76px;width:224px;height:auto;
+  opacity:.13;pointer-events:none}
 
 /* ตัวอักษรพิกเซล 5x6 · ระบายผ่าน mask เลยเปลี่ยนสีตามพาเลตได้โดยไม่ต้องมีไฟล์หลายเวอร์ชัน */
-.ws-poster{position:relative;z-index:1;align-self:center;justify-self:stretch;
-  padding:0 clamp(20px,2.6vw,32px);display:grid;justify-items:start;gap:.45rem}
+/* 2 · บล็อกตัวอักษร · ทุกบรรทัดชิดขอบซ้ายเดียวกัน (--ws-gut) คือกริดของทั้งแผง */
+.ws-poster{position:relative;z-index:1;align-self:center;justify-self:stretch;overflow:hidden;
+  padding:clamp(18px,2.4vw,26px) var(--ws-gut);display:grid;justify-items:start;gap:.45rem}
 .ws-type{display:block;width:100%;background-color:currentColor;
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
   -webkit-mask-size:contain;mask-size:contain;
   -webkit-mask-position:left center;mask-position:left center}
-.ws-t-poh {max-width:96px;aspect-ratio:17/6;color:var(--magenta);
+.ws-t-poh {max-width:112px;aspect-ratio:17/6;color:var(--magenta);
   -webkit-mask-image:url('images/ws/type-poh.svg');mask-image:url('images/ws/type-poh.svg')}
-.ws-t-work{max-width:232px;aspect-ratio:47/6;color:var(--ink);
+.ws-t-work{max-width:262px;aspect-ratio:47/6;color:var(--ink);
   -webkit-mask-image:url('images/ws/type-workshop.svg');mask-image:url('images/ws/type-workshop.svg')}
 .ws-t-date{max-width:216px;aspect-ratio:64/6;color:var(--cobalt);margin-top:.2rem;
   -webkit-mask-image:url('images/ws/type-dateline.svg');mask-image:url('images/ws/type-dateline.svg')}
@@ -868,6 +883,9 @@ if (topnav) {
           <line x1="164" y1="90" x2="224" y2="90" stroke="currentColor" stroke-width="5"/>
           <line x1="164" y1="125" x2="224" y2="125" stroke="currentColor" stroke-width="5"/>
         </symbol>
+        <symbol id="m-squiggle" viewBox="0 0 100 240">
+          <path d="M 50,12 C 80.8,15 80.8,21 50,24 C 19.2,27 19.2,33 50,36 C 80.8,39 80.8,45 50,48 C 19.2,51 19.2,57 50,60 C 80.8,63 80.8,69 50,72 C 19.2,75 19.2,81 50,84 C 80.8,87 80.8,93 50,96 C 19.2,99 19.2,105 50,108 C 80.8,111 80.8,117 50,120 C 19.2,123 19.2,129 50,132 C 80.8,135 80.8,141 50,144 C 19.2,147 19.2,153 50,156 C 80.8,159 80.8,165 50,168 C 19.2,171 19.2,177 50,180 C 80.8,183 80.8,189 50,192 C 19.2,195 19.2,201 50,204 C 80.8,207 80.8,213 50,216 C 19.2,219 19.2,225 50,228" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
+        </symbol>
         <symbol id="m-rays" viewBox="0 0 200 200">
           <g stroke="currentColor" stroke-width="8" stroke-linecap="round">
             <line x1="58.6" y1="65.3" x2="32.6" y2="43.4"/><line x1="71.0" y1="54.5" x2="52.7" y2="25.8"/>
@@ -881,6 +899,31 @@ if (topnav) {
             <line x1="58.6" y1="134.7" x2="32.6" y2="156.6"/>
           </g>
         </symbol>
+        <!-- ลายกระเบื้องเปอรานากันกับซุ้มหง่อคาขี่ · ต่อกันไร้รอยต่อ ใช้ระบายเป็นพื้นลาย -->
+        <pattern id="p-peranakan" width="72" height="72" patternUnits="userSpaceOnUse" viewBox="0 0 200 200">
+          <rect x="0" y="0" width="200" height="200" fill="none" stroke="currentColor" stroke-width="12"/>
+          <rect x="24" y="24" width="152" height="152" fill="none" stroke="currentColor" stroke-width="6"/>
+          <circle cx="100" cy="100" r="16" fill="currentColor"/>
+          <circle cx="100" cy="100" r="24" fill="none" stroke="currentColor" stroke-width="4"/>
+          <path d="M 100 76 C 72 65 72 38 100 38 C 128 38 128 65 100 76 Z" fill="currentColor"/>
+          <path d="M 100 124 C 72 135 72 162 100 162 C 128 162 128 135 100 124 Z" fill="currentColor"/>
+          <path d="M 76 100 C 65 72 38 72 38 100 C 38 128 65 128 76 100 Z" fill="currentColor"/>
+          <path d="M 124 100 C 135 72 162 72 162 100 C 162 128 135 128 124 100 Z" fill="currentColor"/>
+          <path d="M 24 50 C 45 50 50 45 50 24 C 34 24 24 34 24 50 Z" fill="currentColor"/>
+          <path d="M 176 50 C 155 50 150 45 150 24 C 166 24 176 34 176 50 Z" fill="currentColor"/>
+          <path d="M 24 150 C 45 150 50 155 50 176 C 34 176 24 166 24 150 Z" fill="currentColor"/>
+          <path d="M 176 150 C 155 150 150 155 150 176 C 166 176 176 166 176 150 Z" fill="currentColor"/>
+        </pattern>
+        <pattern id="p-arcade" width="96" height="48" patternUnits="userSpaceOnUse" viewBox="0 0 200 100">
+          <path d="M 8 48 A 42 42 0 0 1 92 48 L 92 90 H 76 L 76 48 A 26 26 0 0 0 24 48 L 24 90 H 8 Z" fill="currentColor"/>
+          <path d="M 108 48 A 42 42 0 0 1 192 48 L 192 90 H 176 L 176 48 A 26 26 0 0 0 124 48 L 124 90 H 108 Z" fill="currentColor"/>
+          <rect x="0" y="0" width="8" height="90" fill="currentColor"/>
+          <rect x="92" y="0" width="16" height="90" fill="currentColor"/>
+          <rect x="192" y="0" width="8" height="90" fill="currentColor"/>
+          <rect x="44" y="2" width="12" height="10" fill="currentColor"/>
+          <rect x="144" y="2" width="12" height="10" fill="currentColor"/>
+          <rect x="0" y="90" width="200" height="10" fill="currentColor"/>
+        </pattern>
       </defs></svg>
 
       <div class="ws-marquee" aria-hidden="true">
@@ -892,14 +935,15 @@ if (topnav) {
 
       <div class="ws-body">
         <div class="ws-main">
+          <svg class="ws-tile" preserveAspectRatio="none" aria-hidden="true"><rect width="100%" height="100%" fill="url(#p-peranakan)"/></svg>
           <div class="ws-head">
             <div class="ws-topline">
               <p class="ws-kicker label-en" lang="en">Poh Workshop · 13-16 Aug 2026</p>
               <button type="button" class="ws-x" data-ws-close
                       aria-label="ปิดใบปลิวลงชื่อเวิร์กช็อป">✕</button>
             </div>
-            <h2 id="ws-title">งานทำมือของย่าน เลือกวงที่อยากลองไว้ก่อนนะ</h2>
-            <p class="ws-sub">เวิร์กช็อป 5 วง กระจายอยู่ทั้ง 13 ถึง 16 สิงหาคม · บอกไว้ก่อนได้ว่าสนใจวงไหน</p>
+            <h2 id="ws-title">แวะมาลองของทำมือในย่านกันไหม</h2>
+            <p class="ws-sub">ห้าวง ตั้งแต่ 13 ถึง 16 สิงหาคม · เลือกไว้ก่อนได้ว่าจะแวะวงไหน พวกเราจะได้รอถูกวัน</p>
           </div>
 
           <div class="ws-list" id="ws-list"></div>
@@ -916,29 +960,40 @@ if (topnav) {
         <!-- แผงขวา = โปสเตอร์ POH WORKSHOP · ประกอบด้วยชุดลายเดียวกับโปสเตอร์รายวัน
              ตัวอักษรพิกเซลเป็นไฟล์ SVG ที่วาดจากกริด 5x6 ของโปสเตอร์ต้นฉบับ
              ระบายสีผ่าน mask-image เลยเปลี่ยนสีตามพาเลตได้โดยไม่ต้องมีไฟล์หลายเวอร์ชัน -->
+        <!-- แผงขวา = โปสเตอร์ POH WORKSHOP · วางเป็นชั้นชัดเจนสี่ชั้นจากบนลงล่าง
+             แถบลายทางการ / บล็อกตัวอักษร / แถวของ 5 วง / แถบท้าย
+             ไม่วางของลอยสุ่ม ทุกชิ้นชิดกริดขอบเดียวกับตัวอักษร -->
         <div class="ws-cover" aria-hidden="true">
-          <span class="ws-halftone"></span>
-          <svg class="ws-m ws-m-star" viewBox="0 0 200 200"><use href="#m-starburst"/></svg>
-          <svg class="ws-m ws-m-rays" viewBox="0 0 200 200"><use href="#m-rays"/></svg>
-          <svg class="ws-m ws-m-win"  viewBox="0 0 240 180"><use href="#m-windows"/></svg>
-          <svg class="ws-m ws-m-wave" viewBox="0 0 240 160"><use href="#m-wave"/></svg>
 
-          <!-- ภาพประกอบ riso สองสี (มาเจนต้า+น้ำเงิน) เจนขึ้นเฉพาะงานนี้ · ของจริงในเวิร์กช็อปทั้งสามวง
-               อยู่ใน <template> เลยยังไม่ถูกโหลดจนกว่าป๊อปอัปจะเปิด -->
-          <img class="ws-ill ws-ill-lantern" src="images/ws/ws-lantern.webp" loading="lazy"
-               width="350" height="520" alt="" decoding="async">
-          <img class="ws-ill ws-ill-key" src="images/ws/ws-keychain.webp" loading="lazy"
-               width="520" height="520" alt="" decoding="async">
-          <img class="ws-ill ws-ill-pan" src="images/ws/ws-pan.webp" loading="lazy"
-               width="520" height="459" alt="" decoding="async">
+          <!-- 1 · แถบลาย 高埠巴 ของงานจริง (รวมรูป/โปสเตอร์1.jpg) เต็มความกว้าง -->
+          <div class="ws-patstrip">
+            <img src="images/ws/ws-pattern-poh.webp" loading="lazy"
+                 width="760" height="1013" alt="" decoding="async">
+            <svg class="ws-m ws-m-star" viewBox="0 0 200 200"><use href="#m-starburst"/></svg>
+          </div>
 
+          <!-- 2 · บล็อกตัวอักษร · พื้นเหลืองโล่ง ให้ตัวพิมพ์ได้หายใจ -->
           <div class="ws-poster">
             <span class="ws-type ws-t-poh"></span>
             <span class="ws-type ws-t-work"></span>
             <p class="ws-poster-th">โพ้เวิร์คช้อป</p>
             <span class="ws-type ws-t-date"></span>
-            <p class="ws-poster-note">งานทำมือ 5 วง ย่านเมืองเก่าตะกั่วป่า</p>
+            <p class="ws-poster-note">ห้าวง ที่ย่านเมืองเก่าตะกั่วป่า</p>
+            <img class="ws-hero" src="images/ws/ws-lantern.webp" loading="lazy"
+                 width="350" height="520" alt="" decoding="async">
+            <img class="ws-watermark" src="images/ws/ws-shophouse.webp" loading="lazy"
+                 width="620" height="620" alt="" decoding="async">
           </div>
+
+          <!-- 3 · ของจากทั้ง 5 วง เรียงเป็นแถวเดียว ตรงกับตั๋วฝั่งซ้าย -->
+          <p class="ws-objs-label" lang="en">Five workshops</p>
+          <ul class="ws-objs">
+            <li><img src="images/ws/ws-keychain.webp" loading="lazy" width="520" height="520" alt="" decoding="async"><b lang="en">13</b></li>
+            <li><img src="images/ws/ws-lantern.webp" loading="lazy" width="350" height="520" alt="" decoding="async"><b lang="en">14</b></li>
+            <li><img src="images/ws/ws-pan.webp" loading="lazy" width="520" height="459" alt="" decoding="async"><b lang="en">15</b></li>
+            <li><img src="images/ws/ws-frames.webp" loading="lazy" width="420" height="420" alt="" decoding="async"><b lang="en">16</b></li>
+            <li><img src="images/ws/ws-scissors.webp" loading="lazy" width="417" height="420" alt="" decoding="async"><b lang="en">16</b></li>
+          </ul>
 
           <div class="ws-band" lang="en">Kuapapoh · Creative Cultural District</div>
         </div>

@@ -287,6 +287,13 @@ html.ws-lock{overflow:hidden}
   background-image:radial-gradient(rgba(251,247,236,.15) 1px,transparent 1.2px);
   background-size:14px 14px}
 
+/* สเกลตัวอักษรและระยะของกล่องนี้ · ประกาศที่เดียว ห้ามใส่ค่าดิบที่อื่น
+   ระยะอนุญาตแค่ 4 8 12 16 24 32 48 · ตัวเลขอื่นถือว่าผิด (ยกเว้นความหนาเส้นกับ offset เงา) */
+.ws-flyer{
+  --fs-h1:34px; --fs-poster:30px; --fs-stub:28px; --fs-cta:19px; --fs-lead:17px;
+  --fs-item:16px; --fs-state:14px; --fs-meta:13px; --fs-micro:12px; --fs-label:11px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px; --s12:48px;
+}
 .ws-flyer{position:relative;width:min(980px,100%);max-height:92vh;max-height:92dvh;
   background:var(--paper);color:var(--ink);border:3px solid var(--ink);
   display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;
@@ -302,54 +309,62 @@ html.ws-lock{overflow:hidden}
 /* แถบวิ่ง · อังกฤษล้วน เพราะ mono + tracking ทำสระไทยลอย */
 .ws-marquee{background:var(--yellow);border-bottom:3px solid var(--ink);overflow:hidden}
 .ws-marquee-track{display:flex;width:max-content;animation:ws-run 30s linear infinite}
-.ws-marquee span{font-family:var(--mono);font-weight:500;font-size:.7rem;letter-spacing:.22em;
-  text-transform:uppercase;padding:.6rem 1.2rem .6rem 0;white-space:nowrap}
+.ws-marquee span{font-family:var(--mono);font-weight:500;font-size:var(--fs-micro);letter-spacing:.24em;
+  text-transform:uppercase;padding:var(--s3) var(--s6) var(--s3) 0;white-space:nowrap}
 @keyframes ws-run{to{transform:translateX(-50%)}}
 
 .ws-body{display:grid;min-height:0}
-@media(min-width:900px){.ws-body{grid-template-columns:1.34fr 1fr}}
+/* minmax(0,…) กันชื่อเวิร์กช็อปยาว ๆ ดันคอลัมน์ซ้ายบวมเกิน 980 */
+@media(min-width:900px){.ws-body{grid-template-columns:minmax(0,1.34fr) minmax(0,1fr)}}
 .ws-main{position:relative;display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-height:0;
-  padding:clamp(14px,2.1vw,24px);gap:clamp(10px,1.3vw,14px)}
+  padding:var(--s6);gap:var(--s4)}
 /* ลายกระเบื้องจาง ๆ บนกระดาษฝั่งซ้าย · แค่ให้รู้สึกเป็นกระดาษพิมพ์ ไม่กินความอ่านง่าย */
 .ws-main>.ws-tile{opacity:.018;z-index:0}
 .ws-main>*:not(.ws-tile){position:relative;z-index:1}
 
-.ws-topline{display:flex;align-items:center;gap:1rem}
-.ws-kicker{margin:0;color:var(--cobalt)}
+.ws-topline{display:flex;align-items:center;gap:var(--s4)}
+.ws-kicker{margin:0;color:var(--cobalt);font-size:var(--fs-label)}
+/* ปุ่มทิ้งต้องเบาที่สุดในกล่องเสมอ · ก่อนหน้านี้กรอบหนักเท่าการ์ดตั๋วเลยแข่งกับหัวเรื่อง */
 .ws-x{margin-left:auto;flex:none;width:44px;height:44px;display:grid;place-items:center;
-  background:transparent;border:2px solid var(--ink);color:var(--ink);
-  font:inherit;font-size:1rem;line-height:1;cursor:pointer;transition:background .2s,color .2s}
-.ws-x:hover{background:var(--ink);color:var(--yellow)}
-.ws-head h2{font-family:var(--display);font-weight:700;color:var(--magenta);
-  font-size:clamp(1.32rem,2.7vw,2.05rem);line-height:1.3;margin:.85rem 0 .45rem;text-wrap:balance}
-.ws-sub{margin:0;color:var(--muted);font-size:.94rem;max-width:44ch;line-height:1.6}
+  background:transparent;border:2px solid rgba(16,21,56,.28);color:var(--muted);
+  font:inherit;font-size:1rem;line-height:1;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.ws-x:hover{background:var(--ink);border-color:var(--ink);color:var(--yellow)}
+.ws-head h2{font-family:var(--display);font-weight:700;color:var(--magenta-text);
+  font-size:var(--fs-h1);line-height:1.22;margin:var(--s4) 0 var(--s2);text-wrap:balance}
+.ws-sub{margin:0;color:var(--ink);font-weight:500;font-size:var(--fs-lead);max-width:42ch;line-height:1.6}
+.ws-sub b{color:var(--magenta-text);font-weight:700}
+.ws-sub span{display:block;color:var(--muted);font-weight:400;font-size:var(--fs-meta)}
 
 /* ── ตั๋ว 5 ใบ · เป็น checkbox แท้ที่ถูกครอบด้วย label ── */
-.ws-list{display:grid;gap:.5rem;align-content:start;overflow-y:auto;min-height:0;
-  overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:2px}
+/* padding 4 กับ margin -4 หักกัน · ขอบซ้ายตั๋วเลยตรงแนวเดียวกับหัวเรื่องเป๊ะ
+   แต่เงา hover ยังไม่ถูกครอป (ก่อนหน้านี้ padding 2px ทำให้ตั๋วเยื้องขวา 2px) */
+.ws-list{display:grid;gap:var(--s2);align-content:start;overflow-y:auto;min-height:0;
+  overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:var(--s1);margin:calc(var(--s1) * -1)}
 /* ถ้ายังเลื่อนดูได้อีก ต้องบอกให้รู้ · ไม่งั้นตั๋วใบท้ายหายไปเฉย ๆ บนจอเตี้ย */
 .ws-list.more{-webkit-mask-image:linear-gradient(to bottom,#000 80%,rgba(0,0,0,.15) 100%);
   mask-image:linear-gradient(to bottom,#000 80%,rgba(0,0,0,.15) 100%)}
-.ws-more{margin:0;font-family:var(--mono);font-weight:500;font-size:.7rem;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--cobalt)}
+/* เป็นข้อความไทย ห้ามใส่ mono + letter-spacing (สระกับวรรณยุกต์จะลอย) */
+.ws-more{margin:0;font-weight:600;font-size:var(--fs-label);color:var(--cobalt)}
 .ws-more[hidden]{display:none}
-.ws-tk{display:grid;grid-template-columns:62px minmax(0,1fr) 46px;align-items:stretch;
-  background:var(--paper);border:2px solid var(--ink);cursor:pointer;
+/* ตั๋วต้องอ่านเป็น "วัตถุที่กดได้" ตั้งแต่ยังไม่ hover · ขอบ 3px เท่าขอบใบปลิว + เงาพัก */
+.ws-tk{display:grid;grid-template-columns:62px minmax(0,1fr) 48px;align-items:stretch;
+  background:var(--paper);border:3px solid var(--ink);cursor:pointer;
+  box-shadow:3px 3px 0 rgba(16,21,56,.16);
   transition:transform .12s,box-shadow .12s}
-.ws-tk:hover{transform:translateY(-2px);box-shadow:4px 4px 0 var(--ink)}
+.ws-tk:hover{transform:translateY(-2px);box-shadow:5px 5px 0 var(--ink)}
 .ws-tk input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
-.ws-stub{background:var(--cobalt);color:var(--yellow);border-right:2px solid var(--ink);
-  display:grid;place-content:center;text-align:center;padding:.5rem .2rem}
+.ws-stub{background:var(--cobalt);color:var(--yellow);border-right:3px solid var(--ink);
+  display:grid;place-content:center;text-align:center;padding:var(--s3) var(--s2)}
 /* เงาขั้นบันไดแทนฟอนต์พิกเซลจริง · ได้ความรู้สึกหมึกเหลื่อมโดยไม่โหลดฟอนต์เพิ่ม */
-.ws-stub b{display:block;font-family:var(--display);font-weight:700;font-size:1.62rem;
+.ws-stub b{display:block;font-family:var(--display);font-weight:700;font-size:var(--fs-stub);
   line-height:1;text-shadow:2px 2px 0 var(--ink)}
-.ws-stub i{display:block;font-style:normal;font-size:.7rem;margin-top:.25rem}
-.ws-tx{padding:.5rem .2rem .5rem .85rem;display:grid;align-content:center;gap:.06rem;min-width:0}
-.ws-tx b{font-weight:600;font-size:.97rem;line-height:1.3}
-.ws-tx span{color:var(--muted);font-size:.84rem;line-height:1.45}
-.ws-box{align-self:center;justify-self:center;width:26px;height:26px;border:3px solid var(--ink);
+.ws-stub i{display:block;font-style:normal;font-size:var(--fs-label);margin-top:var(--s1)}
+.ws-tx{padding:var(--s3) var(--s4);display:grid;align-content:center;gap:var(--s1);min-width:0}
+.ws-tx b{font-weight:600;font-size:var(--fs-item);line-height:1.35}
+.ws-tx span{color:var(--muted);font-size:var(--fs-meta);line-height:1.45}
+.ws-box{align-self:center;justify-self:center;width:28px;height:28px;border:3px solid var(--ink);
   display:grid;place-items:center;transition:transform .12s cubic-bezier(.34,1.4,.64,1)}
-.ws-box::after{content:"";width:13px;height:7px;
+.ws-box::after{content:"";width:14px;height:7px;
   border-left:3px solid var(--yellow);border-bottom:3px solid var(--yellow);
   transform:rotate(-45deg) scale(0);transition:transform .12s cubic-bezier(.34,1.4,.64,1)}
 /* เลือกแล้ว = หมึกทับ เปลี่ยนทันทีไม่ transition สีพื้น */
@@ -364,23 +379,26 @@ html.ws-lock{overflow:hidden}
 
 /* ── ท้ายใบปลิว · ติดหนึบ ไม่เลื่อนตามลิสต์ ── */
 /* รอยปรุตั๋ว · ต้องเห็นชัดว่าเป็นรอยฉีก ไม่ใช่เส้นคั่นบาง ๆ */
-.ws-foot{display:grid;gap:.5rem;padding-top:1rem;margin-top:.2rem;
+.ws-foot{display:grid;gap:var(--s3);padding-top:var(--s4);margin-top:var(--s2);
   background-image:radial-gradient(circle,var(--ink) 2.4px,transparent 2.6px);
   background-size:15px 6px;background-repeat:repeat-x;background-position:top left}
-.ws-count{margin:0;font-size:.84rem;color:var(--muted)}
+/* ตัวนับกับคำใบ้เลื่อนอยู่แถวเดียวกัน · ก่อนหน้านี้เป็นสองบรรทัดจาง ๆ ขวางทางระหว่างลิสต์กับปุ่ม */
+.ws-statusline{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s2) var(--s3);margin:0}
+.ws-count{margin:0;font-size:var(--fs-state);font-weight:600;color:var(--ink)}
 /* ปุ่มเป็นบล็อกมุมตรงมีเงาหมึกเหลื่อม ไม่ใช่แคปซูลแบบแอป
    (ปุ่มมนของเว็บอยู่บนพื้นเว็บ · ในใบปลิวต้องเป็นภาษาสิ่งพิมพ์) */
-.ws-cta{display:inline-flex;align-items:center;justify-content:center;min-height:52px;
-  padding:.7em 1.5em;background:var(--ink);color:var(--yellow);text-decoration:none;
-  border:3px solid var(--ink);box-shadow:5px 5px 0 var(--magenta);
-  font-family:var(--display);font-weight:700;font-size:1.06rem;
+/* เงาปุ่มเป็นโคบอลต์ ไม่ใช่มาเจนต้า · มาเจนต้าสงวนไว้ให้ "สถานะเลือกแล้ว" อย่างเดียว */
+.ws-cta{display:inline-flex;align-items:center;justify-content:center;min-height:56px;
+  padding:var(--s3) var(--s6);background:var(--ink);color:var(--yellow);text-decoration:none;
+  border:3px solid var(--ink);box-shadow:5px 5px 0 var(--cobalt);
+  font-family:var(--display);font-weight:700;font-size:var(--fs-cta);
   transition:background .2s,color .2s,box-shadow .18s,transform .18s}
-.ws-cta:hover{background:var(--magenta);border-color:var(--ink);color:var(--paper);
+.ws-cta:hover{background:var(--magenta-text);border-color:var(--ink);color:var(--paper);
   transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
-.ws-soft{justify-self:start;min-height:44px;padding:.55rem 0;background:none;border:0;
-  font:inherit;font-size:.9rem;color:var(--muted);text-decoration:underline;cursor:pointer}
+.ws-soft{justify-self:start;min-height:44px;padding:var(--s3) 0;background:none;border:0;
+  font:inherit;font-size:var(--fs-meta);color:var(--muted);text-decoration:underline;cursor:pointer}
 .ws-soft:hover{color:var(--magenta-text)}
-.ws-note{margin:0;font-size:.76rem;color:var(--muted)}
+.ws-note{margin:0;font-size:var(--fs-micro);color:var(--muted)}
 
 /* ── ปกใบปลิว (ประดับล้วน · มือถือตัดทิ้ง) ── */
 .ws-cover{display:none}
@@ -389,24 +407,27 @@ html.ws-lock{overflow:hidden}
     overflow:hidden;background:var(--yellow);border-left:3px solid var(--ink)}
 }
 /* 1 · แถบลายทางการ · ตัดขอบล่างด้วยเส้นหมึกหนา ให้เป็นชั้นที่จบในตัว */
-.ws-patstrip{position:relative;height:clamp(120px,17vh,168px);overflow:hidden;
+/* แถบสูงขึ้นเพื่อให้เห็นตัว 高埠巴 เต็มตัว ไม่ใช่เศษลายกลางตัว · และกินพื้นเหลืองว่างไปด้วย */
+.ws-patstrip{position:relative;height:clamp(150px,22vh,200px);overflow:hidden;
   border-bottom:3px solid var(--ink)}
-.ws-patstrip img{width:100%;height:100%;object-fit:cover;object-position:center 38%}
-.ws-objs-label{margin:0 0 .5rem;padding:0 var(--ws-gut);
-  font-family:var(--mono);font-weight:500;font-size:.64rem;letter-spacing:.2em;
+.ws-patstrip img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.ws-objs-label{margin:0 0 var(--s2);padding:0 var(--ws-gut);
+  font-family:var(--mono);font-weight:500;font-size:var(--fs-label);letter-spacing:.2em;
   text-transform:uppercase;color:var(--cobalt)}
 .ws-patstrip .ws-m-star{top:-30px;left:-30px;width:112px;height:112px;color:var(--paper)}
 
 /* 3 · แถวของ 5 วง · ชิดกริดขอบเดียวกับตัวอักษร ไม่มีการหมุน */
-.ws-objs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;list-style:none;
-  margin:0;padding:0 var(--ws-gut) 18px}
+.ws-objs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s2);list-style:none;
+  margin:0;padding:0 var(--ws-gut) var(--s6)}
 .ws-objs li{position:relative;min-width:0;background:var(--paper);border:2px solid var(--ink);
-  aspect-ratio:1;padding:7px}
+  aspect-ratio:1;padding:var(--s2)}
 .ws-objs img{width:100%;height:100%;object-fit:contain}
-.ws-objs b{position:absolute;left:-2px;bottom:-2px;background:var(--cobalt);color:var(--yellow);
-  font-family:var(--mono);font-weight:500;font-size:.6rem;letter-spacing:.06em;
-  padding:2px 5px;border:2px solid var(--ink)}
-.ws-cover{--ws-gut:clamp(20px,2.6vw,30px)}
+/* ป้ายเลขไม่ยื่นออกนอกกรอบ ไม่งั้นตาอ่านแนวซ้ายของแถวเยื้องจากคอลัมน์ตัวอักษร */
+.ws-objs b{position:absolute;left:0;bottom:0;background:var(--cobalt);color:var(--yellow);
+  font-family:var(--mono);font-weight:500;font-size:var(--fs-label);
+  padding:2px 6px;border:2px solid var(--ink)}
+/* ขอบในแผงขวาต้องเท่ากับ padding ฝั่งซ้าย ไม่งั้นอ่านเป็นสองไฟล์มาแปะกัน */
+.ws-cover{--ws-gut:var(--s6)}
 .ws-sprite{position:absolute;width:0;height:0;overflow:hidden}
 /* ลายประดับวางกระจายแบบโปสเตอร์รายวัน · ทุกชิ้นเป็น <use> ของ symbol ชุดเดียวกัน */
 .ws-m{position:absolute;pointer-events:none}
@@ -414,31 +435,40 @@ html.ws-lock{overflow:hidden}
 .ws-tile{position:absolute;inset:0;width:100%;height:100%;color:var(--ink);opacity:.026}
 
 /* โคมไฟเป็นพระเอกชิ้นเดียวของบล็อกตัวอักษร · ไม่หมุน ไม่ทับตัวหนังสือ */
-.ws-hero{position:absolute;top:5%;right:calc(var(--ws-gut) - 10px);width:92px;height:auto}
-/* ตึกชิโนโปรตุกีสเป็นลายน้ำหลังสุด · ให้แผงมีความลึกโดยไม่แย่งสายตา */
-.ws-watermark{position:absolute;right:-64px;bottom:-76px;width:224px;height:auto;
-  opacity:.13;pointer-events:none}
+/* โคมไฟห้อยคร่อมเส้นแบ่งแถบลาย · สร้างชั้นหน้า-หลังโดยไม่ทับตัวอักษร */
+.ws-hero{position:absolute;top:-72px;right:var(--ws-gut);width:88px;height:auto;z-index:2}
+/* ลายน้ำตึกชิโนโปรตุกีส · ใช้ภาพเป็น mask แล้วระบายสีเดียว
+   ถ้าปล่อยเป็น <img> จาง ๆ หมึกสองสีจะผสมกับพื้นเหลืองออกมาขุ่นนอกพาเลต */
+.ws-watermark{position:absolute;right:-48px;bottom:-64px;width:280px;height:280px;
+  background-color:var(--ink);opacity:.11;pointer-events:none;
+  -webkit-mask:url('images/ws/ws-shophouse.webp') no-repeat center/contain;
+  mask:url('images/ws/ws-shophouse.webp') no-repeat center/contain}
 
 /* ตัวอักษรพิกเซล 5x6 · ระบายผ่าน mask เลยเปลี่ยนสีตามพาเลตได้โดยไม่ต้องมีไฟล์หลายเวอร์ชัน */
 /* 2 · บล็อกตัวอักษร · ทุกบรรทัดชิดขอบซ้ายเดียวกัน (--ws-gut) คือกริดของทั้งแผง */
-.ws-poster{position:relative;z-index:1;align-self:center;justify-self:stretch;overflow:hidden;
-  padding:clamp(18px,2.4vw,26px) var(--ws-gut);display:grid;justify-items:start;gap:.45rem}
+/* align-self:start · เก็บที่ว่างที่เหลือไว้ก้อนเดียวใต้บล็อกนี้
+   ของเดิม center ทำให้เหลืองว่างแตกเป็นสองก้อน บน 120px ล่าง 118px */
+.ws-poster{position:relative;z-index:1;align-self:start;justify-self:stretch;
+  padding:var(--s8) var(--ws-gut);display:grid;justify-items:start;gap:var(--s2)}
 .ws-type{display:block;width:100%;background-color:currentColor;
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
   -webkit-mask-size:contain;mask-size:contain;
   -webkit-mask-position:left center;mask-position:left center}
-.ws-t-poh {max-width:112px;aspect-ratio:17/6;color:var(--magenta);
+.ws-t-poh {max-width:112px;aspect-ratio:17/6;color:var(--magenta-text);
   -webkit-mask-image:url('images/ws/type-poh.svg');mask-image:url('images/ws/type-poh.svg')}
 .ws-t-work{max-width:262px;aspect-ratio:47/6;color:var(--ink);
   -webkit-mask-image:url('images/ws/type-workshop.svg');mask-image:url('images/ws/type-workshop.svg')}
-.ws-t-date{max-width:216px;aspect-ratio:64/6;color:var(--cobalt);margin-top:.2rem;
+.ws-t-date{max-width:216px;aspect-ratio:64/6;color:var(--cobalt);margin-top:var(--s1);
   -webkit-mask-image:url('images/ws/type-dateline.svg');mask-image:url('images/ws/type-dateline.svg')}
-.ws-poster-th{margin:.4rem 0 0;font-family:var(--display);font-weight:700;
-  font-size:clamp(1.5rem,2.4vw,2rem);line-height:1.25;color:var(--ink)}
-.ws-poster-note{margin:.45rem 0 0;font-size:.84rem;line-height:1.55;color:var(--ink);max-width:24ch}
-.ws-band{background:var(--magenta);color:var(--paper);border-top:3px solid var(--ink);
-  padding:.65rem 1rem;text-align:center;
-  font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase}
+/* ต้องเล็กกว่าหัวเรื่องฝั่งซ้ายเสมอ · แผงนี้เป็นของประดับ (aria-hidden) ห้ามชนะเนื้อหา */
+.ws-poster-th{margin:var(--s1) 0 0;font-family:var(--display);font-weight:700;
+  font-size:var(--fs-poster);line-height:1.2;color:var(--ink)}
+.ws-poster-note{margin:var(--s1) 0 0;font-size:var(--fs-meta);line-height:1.5;
+  color:var(--muted);max-width:24ch}
+/* magenta-text แทน magenta · ขาวบน #EC0A72 ได้ 4.33:1 ตก AA · บน #C4005D ได้ 6.4:1 ผ่าน */
+.ws-band{background:var(--magenta-text);color:var(--paper);border-top:3px solid var(--ink);
+  padding:var(--s3) var(--s4);text-align:center;
+  font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.2em;text-transform:uppercase}
 
 /* ── แท็บเรียกกลับมุมจอ ── */
 .ws-tab{position:fixed;right:14px;bottom:14px;z-index:60;min-height:44px;
@@ -447,7 +477,8 @@ html.ws-lock{overflow:hidden}
   font:inherit;font-weight:600;font-size:.9rem;cursor:pointer;
   transform:translateY(140%);transition:transform .26s cubic-bezier(.2,.8,.25,1),background .2s,color .2s}
 .ws-tab.in{transform:translateY(0)}
-.ws-tab:hover{background:var(--magenta);color:var(--paper)}
+/* magenta-text · #EC0A72 สงวนไว้ให้ "สถานะเลือกแล้ว" ในกล่องอย่างเดียว */
+.ws-tab:hover{background:var(--magenta-text);color:var(--paper)}
 .ws-tab[hidden]{display:none}
 @media(max-width:520px){.ws-tab{right:10px;bottom:10px;font-size:.84rem}}
 
@@ -458,11 +489,26 @@ html.ws-lock{overflow:hidden}
     transform:translateY(26px) rotate(0) scale(1)}
   .ws-veil.in .ws-flyer{transform:none;box-shadow:none}
   .ws-veil.out .ws-flyer{transform:translateY(14px) rotate(0)}
+  /* สเกลชุดเดียวกัน แค่ลดหนึ่งขั้น · gutter 16 แทน 24
+     คำนวณที่ 375x667 · หัว 195 + ท้าย 159 → เหลือให้ลิสต์ 246px = ตั๋ว 4 ใบ
+     ปุ่มหลักอยู่ในจอเสมอ */
+  .ws-flyer{--fs-h1:26px;--fs-cta:18px;--fs-lead:15px;--fs-item:15px;--fs-meta:12px}
+  .ws-main{padding:var(--s4);gap:var(--s3)}
+  .ws-head h2{margin:var(--s3) 0 var(--s2);line-height:1.25}
+  .ws-sub{max-width:none;line-height:1.55}
+  .ws-tk{grid-template-columns:56px minmax(0,1fr) 44px}
+  .ws-stub b{font-size:24px}
+  .ws-tx{padding:var(--s2) var(--s3)}
+  .ws-note{display:none}
 }
-/* จอแนวนอนเตี้ยมาก · ยุบหัวเรื่องให้ปุ่มยังอยู่ในจอ */
+/* จอแนวนอนเตี้ยมาก · ยุบหัวเรื่องให้ปุ่มยังอยู่ในจอ
+   ห้ามซ่อน .ws-sub · มันคือประโยคที่ทำให้กล่องนี้เป็น "คำเชิญ" ไม่ใช่ "ประกาศ"
+   ย่อเหลือ 2 บรรทัดแทนการตัดทิ้ง */
 @media(max-height:440px){
-  .ws-head h2{font-size:1.08rem;margin:.5rem 0 .3rem}
-  .ws-sub,.ws-note{display:none}
+  .ws-flyer{--fs-h1:22px;--fs-lead:14px}
+  .ws-head h2{margin:var(--s2) 0 var(--s1);line-height:1.2}
+  .ws-sub{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+  .ws-note{display:none}
 }
 @media(prefers-reduced-motion:reduce){
   .ws-veil,.ws-flyer,.ws-tk,.ws-box,.ws-box::after,.ws-tab{transition:none!important}
@@ -942,16 +988,20 @@ if (topnav) {
               <button type="button" class="ws-x" data-ws-close
                       aria-label="ปิดใบปลิวลงชื่อเวิร์กช็อป">✕</button>
             </div>
-            <h2 id="ws-title">แวะมาลองของทำมือในย่านกันไหม</h2>
-            <p class="ws-sub">ห้าวง ตั้งแต่ 13 ถึง 16 สิงหาคม · เลือกไว้ก่อนได้ว่าจะแวะวงไหน พวกเราจะได้รอถูกวัน</p>
+            <h2 id="ws-title">มาลองทำอะไรสนุก ๆ ในย่านกัน</h2>
+            <p class="ws-sub"><b>4 วัน 5 เวิร์กช็อป</b>
+              ชวนมาลงมือทำ เรียนรู้ และฟังเรื่องราวจากคนในย่าน
+              <span>ชอบอันไหนก็เลือก แล้วมาเจอกัน</span></p>
           </div>
 
           <div class="ws-list" id="ws-list"></div>
 
           <div class="ws-foot">
-            <p class="ws-more" id="ws-more" hidden>↓ เลื่อนดูวงที่เหลือ</p>
-            <p class="ws-count" id="ws-count" aria-live="polite">ยังไม่ได้เลือก เลือกได้หลายวงนะ</p>
-            <a class="ws-cta" id="ws-cta" href="#schedule">ดูตารางเวิร์กช็อปทั้งหมด</a>
+            <div class="ws-statusline">
+              <p class="ws-count" id="ws-count" aria-live="polite">ยังไม่ได้เลือก เลือกได้หลายวงนะ</p>
+              <p class="ws-more" id="ws-more" hidden>↓ เลื่อนดูวงที่เหลือ</p>
+            </div>
+            <a class="ws-cta" id="ws-cta" href="#schedule">ดูเวิร์กช็อปทั้งหมด</a>
             <button type="button" class="ws-soft" data-ws-later>ขอดูตารางงานก่อน</button>
             <p class="ws-note">ปิดไปก่อนก็ได้ ปุ่มลงชื่ออยู่มุมจอตลอดงาน</p>
           </div>
@@ -978,11 +1028,10 @@ if (topnav) {
             <span class="ws-type ws-t-work"></span>
             <p class="ws-poster-th">โพ้เวิร์คช้อป</p>
             <span class="ws-type ws-t-date"></span>
-            <p class="ws-poster-note">ห้าวง ที่ย่านเมืองเก่าตะกั่วป่า</p>
+            <p class="ws-poster-note">4 วัน 5 เวิร์กช็อป ที่ย่านเมืองเก่าตะกั่วป่า</p>
             <img class="ws-hero" src="images/ws/ws-lantern.webp" loading="lazy"
                  width="350" height="520" alt="" decoding="async">
-            <img class="ws-watermark" src="images/ws/ws-shophouse.webp" loading="lazy"
-                 width="620" height="620" alt="" decoding="async">
+            <span class="ws-watermark"></span>
           </div>
 
           <!-- 3 · ของจากทั้ง 5 วง เรียงเป็นแถวเดียว ตรงกับตั๋วฝั่งซ้าย -->
@@ -1111,10 +1160,10 @@ if (topnav) {
       /* ถ้าลืมใส่ FORM_ENTRY ค่าที่ติ๊กไว้จะไม่ถูกส่งไปกับลิงก์
          ห้ามพูดว่า "ลงชื่อทั้ง N วง" ทั้งที่ฟอร์มเปิดมาว่าง ให้บอกตรง ๆ ว่าต้องเลือกในฟอร์มเอง */
       const carries = !!FORM_ENTRY;
-      cta.textContent = !ids.length ? 'ไปกรอกใบลงชื่อ →'
-                      : !carries ? 'ไปกรอกใบลงชื่อ →'
-                      : ids.length > 1 ? 'ลงชื่อทั้ง ' + ids.length + ' วงเลย →'
-                      : 'ลงชื่อไว้เลย →';
+      cta.textContent = !ids.length ? 'สมัครเลย →'
+                      : !carries ? 'สมัครเลย →'
+                      : ids.length > 1 ? 'สมัครทั้ง ' + ids.length + ' วงเลย →'
+                      : 'สมัครเลย →';
       if (ids.length && !carries) count.textContent += ' · เลือกอีกครั้งในฟอร์มด้วยนะ';
     }
     state.picked = ids;

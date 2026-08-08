@@ -362,6 +362,9 @@ html.ws-lock{overflow:hidden}
 .ws-tx{padding:var(--s3) var(--s4);display:grid;align-content:center;gap:var(--s1);min-width:0}
 .ws-tx b{font-weight:600;font-size:var(--fs-item);line-height:1.35}
 .ws-tx span{color:var(--muted);font-size:var(--fs-meta);line-height:1.45}
+/* จำนวนที่รับ · เป็นข้อจำกัดจริง ต้องอ่านออกก่อนกดเลือก ไม่ใช่ meta จาง ๆ */
+.ws-tx i{font-style:normal;font-size:var(--fs-label);font-weight:600;color:var(--cobalt);
+  justify-self:start;margin-top:2px}
 .ws-box{align-self:center;justify-self:center;width:28px;height:28px;border:3px solid var(--ink);
   display:grid;place-items:center;transition:transform .12s cubic-bezier(.34,1.4,.64,1)}
 .ws-box::after{content:"";width:14px;height:7px;
@@ -998,9 +1001,9 @@ if (topnav) {
               <button type="button" class="ws-x" data-ws-close
                       aria-label="ปิดใบปลิวลงชื่อเวิร์กช็อป">✕</button>
             </div>
-            <h2 id="ws-title">มาลองทำอะไรสนุก ๆ ในย่านกัน</h2>
+            <h2 id="ws-title">ลงทะเบียนโพ้เวิร์คช้อป</h2>
             <p class="ws-sub"><b>4 วัน 5 เวิร์กช็อป</b>
-              ชวนมาลงมือทำ เรียนรู้ และฟังเรื่องราวจากคนในย่าน
+              มาลองทำอะไรสนุก ๆ ในย่านกัน ลงมือทำ เรียนรู้ และฟังเรื่องราวจากคนในย่าน
               <span>ชอบอันไหนก็เลือก แล้วมาเจอกัน</span></p>
           </div>
 
@@ -1008,8 +1011,8 @@ if (topnav) {
 
           <div class="ws-foot">
             <div class="ws-statusline">
-              <p class="ws-count" id="ws-count" aria-live="polite">ยังไม่ได้เลือก เลือกได้หลายวงนะ</p>
-              <p class="ws-more" id="ws-more" hidden>↓ เลื่อนดูวงที่เหลือ</p>
+              <p class="ws-count" id="ws-count" aria-live="polite">ติ๊กอันที่สนใจไว้ได้เลย เลือกกี่อันก็ได้</p>
+              <p class="ws-more" id="ws-more" hidden>↓ เลื่อนดูที่เหลือ</p>
             </div>
             <a class="ws-cta" id="ws-cta" href="#schedule">ดูเวิร์กช็อปทั้งหมด</a>
             <button type="button" class="ws-soft" data-ws-later>ขอดูตารางงานก่อน</button>
@@ -1079,17 +1082,21 @@ if (topnav) {
   const DELAY = 1100;                                     /* ให้ hero อ่านได้ก่อน · กัน intrusive interstitial */
 
   /* ค่า v ต้องสะกดตรงกับตัวเลือกใน Google Form ทุกตัวอักษร ไม่งั้น Google ปัดทิ้งเงียบ ๆ */
+  /* cap = จำนวนที่รับ · ข้อมูลจากทีมงานเมื่อ 8 ส.ค. 2569 · ร่อนแร่ไม่จำกัดจำนวน */
   const WORKSHOPS = [
-    {id:'w1', d:'13', dow:'ศ.',  t:'10:30',           name:'ทำพวงกุญแจผ้าปาเต๊ะ',        place:'หน้าบ้านอี๋จู้'},
-    {id:'w2', d:'14', dow:'ส.',  t:'13:00',           name:'ทำโคมไฟโบราณเฉลิม กับลุงเรน', place:'ย่านเมืองเก่า'},
-    {id:'w3', d:'15', dow:'อา.', t:'10:30',           name:'สาธิตการร่อนแร่จากผู้รู้',    place:'เหมืองมิวเซียม (บ้าน 78)'},
-    {id:'w4', d:'16', dow:'จ.',  t:'9:30 และ 13:00',  name:'มินิแกลอรี่',                place:'ดาดฟ้าบ้าน 104'},
-    {id:'w5', d:'16', dow:'จ.',  t:'14:00',           name:'“ตัดแปะแวะศิลป์”',           place:'โรงเรียนเต้าหมิง (บ้าน 305)'}
+    {id:'w1', d:'13', dow:'ศ.',  t:'10:30',           name:'ทำพวงกุญแจผ้าปาเต๊ะ',        place:'หน้าบ้านอี๋จู้',           cap:'รับ 20 คน'},
+    {id:'w2', d:'14', dow:'ส.',  t:'13:00',           name:'ทำโคมไฟโบราณเฉลิม กับลุงเรน', place:'ย่านเมืองเก่า',            cap:'รับ 20 คน'},
+    {id:'w3', d:'15', dow:'อา.', t:'10:30',           name:'สาธิตการร่อนแร่จากผู้รู้',    place:'เหมืองมิวเซียม (บ้าน 78)', cap:'ไม่จำกัดจำนวน'},
+    /* มินิแกลอรี่แยกสองรอบ เพราะที่นั่งนับแยกรอบละ 15 · รวมเป็นแถวเดียวแล้วนับไม่ได้ */
+    {id:'w4a',d:'16', dow:'จ.',  t:'9:30',            name:'มินิแกลอรี่ รอบเช้า',        place:'ดาดฟ้าบ้าน 104',          cap:'รับ 15 คน'},
+    {id:'w4b',d:'16', dow:'จ.',  t:'13:00',           name:'มินิแกลอรี่ รอบบ่าย',        place:'ดาดฟ้าบ้าน 104',          cap:'รับ 15 คน'},
+    {id:'w5', d:'16', dow:'จ.',  t:'14:00',           name:'“ตัดแปะแวะศิลป์”',           place:'โรงเรียนเต้าหมิง (บ้าน 305)', cap:'รับ 20 คน'}
   ];
   const valueOf = w => w.d + ' ส.ค. ' + w.t + ' ' + w.name;
 
   const tpl = document.getElementById('ws-tpl');
-  if (!tpl || Date.now() > END) return;
+  const forced = location.hash === '#ws';
+  if (!tpl || (Date.now() > END && !forced)) return;
 
   /* อ่าน state แบบไม่เชื่อของที่เก็บไว้ · ถ้าค่าเพี้ยน (deploy เก่า/ส่วนขยายล้างข้อมูล)
      แล้วปล่อยให้ throw ตรงนี้ ป๊อปอัปกับปุ่มมุมจอจะไม่ถูกแทรกเลยทั้งคู่ */
@@ -1116,7 +1123,7 @@ if (topnav) {
     l.className = 'ws-tk';
     l.innerHTML = '<input type="checkbox">' +
       '<span class="ws-stub"><b></b><i></i></span>' +
-      '<span class="ws-tx"><b></b><span></span></span>' +
+      '<span class="ws-tx"><b></b><span></span><i></i></span>' +
       '<span class="ws-box"></span>';
     const cb = l.querySelector('input');
     cb.value = w.id;
@@ -1125,6 +1132,7 @@ if (topnav) {
     l.querySelector('.ws-stub i').textContent = w.dow;
     l.querySelector('.ws-tx b').textContent = w.name;
     l.querySelector('.ws-tx span').textContent = w.t + ' · ' + w.place;
+    l.querySelector('.ws-tx i').textContent = w.cap;
     cb.addEventListener('change', sync);
     list.appendChild(l);
   });
@@ -1160,8 +1168,8 @@ if (topnav) {
       l => l.classList.toggle('is-on', l.querySelector('input').checked));
 
     count.textContent = ids.length
-      ? 'เลือกไว้ ' + ids.length + ' วง'
-      : 'ยังไม่ได้เลือก เลือกได้หลายวงนะ';
+      ? 'เลือกไว้ ' + ids.length + ' อัน'
+      : 'ติ๊กอันที่สนใจไว้ได้เลย เลือกกี่อันก็ได้';
 
     if (FORM_URL){
       cta.href = formUrl(ids);
@@ -1172,7 +1180,7 @@ if (topnav) {
       const carries = !!FORM_ENTRY;
       cta.textContent = !ids.length ? 'สมัครเลย →'
                       : !carries ? 'สมัครเลย →'
-                      : ids.length > 1 ? 'สมัครทั้ง ' + ids.length + ' วงเลย →'
+                      : ids.length > 1 ? 'สมัครทั้ง ' + ids.length + ' อันเลย →'
                       : 'สมัครเลย →';
       if (ids.length && !carries) count.textContent += ' · เลือกอีกครั้งในฟอร์มด้วยนะ';
     }
@@ -1262,7 +1270,10 @@ if (topnav) {
   document.body.appendChild(tab);
   sync();
 
-  if (state.closed) showTab();
+  /* #ws = บังคับให้เด้งทันที ข้ามทั้ง localStorage และวันหมดอายุ (ดูประกาศตัวแปรด้านบน)
+     ใช้ตอนตรวจงานหรือส่งลิงก์ให้คนอื่นดูกล่องนี้โดยเฉพาะ */
+  if (forced) addEventListener('load', () => setTimeout(open, 200));
+  else if (state.closed) showTab();
   else addEventListener('load', () => setTimeout(open, DELAY));
 })();
 </script>

@@ -1092,7 +1092,9 @@ if (topnav) {
     {id:'w4b',d:'16', dow:'จ.',  t:'13:00',           name:'มินิแกลอรี่ รอบบ่าย',        place:'ดาดฟ้าบ้าน 104',          cap:'รับ 15 คน'},
     {id:'w5', d:'16', dow:'จ.',  t:'14:00',           name:'“ตัดแปะแวะศิลป์”',           place:'โรงเรียนเต้าหมิง (บ้าน 305)', cap:'รับ 20 คน'}
   ];
-  const valueOf = w => w.d + ' ส.ค. ' + w.t + ' ' + w.name;
+  /* ต้องตรงกับตัวเลือกใน Google Form ทุกตัวอักษร รวมวงเล็บจำนวนที่รับ
+     ถ้าไม่ตรง Google จะเปิดฟอร์มเปล่าโดยไม่บอกอะไรเลย */
+  const valueOf = w => w.d + ' ส.ค. ' + w.t + ' ' + w.name + ' (' + w.cap + ')';
 
   const tpl = document.getElementById('ws-tpl');
   const forced = location.hash === '#ws';

@@ -1,0 +1,394 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="m-halftone" viewBox="0 0 200 200">
+    <circle cx="72.4" cy="17.2" r="0.79" fill="currentColor"/>
+    <circle cx="81.6" cy="17.2" r="1.05" fill="currentColor"/>
+    <circle cx="90.8" cy="17.2" r="1.20" fill="currentColor"/>
+    <circle cx="100.0" cy="17.2" r="1.25" fill="currentColor"/>
+    <circle cx="109.2" cy="17.2" r="1.20" fill="currentColor"/>
+    <circle cx="118.4" cy="17.2" r="1.05" fill="currentColor"/>
+    <circle cx="127.6" cy="17.2" r="0.79" fill="currentColor"/>
+    <circle cx="54.0" cy="26.4" r="0.85" fill="currentColor"/>
+    <circle cx="63.2" cy="26.4" r="1.29" fill="currentColor"/>
+    <circle cx="72.4" cy="26.4" r="1.61" fill="currentColor"/>
+    <circle cx="81.6" cy="26.4" r="1.82" fill="currentColor"/>
+    <circle cx="90.8" cy="26.4" r="1.94" fill="currentColor"/>
+    <circle cx="100.0" cy="26.4" r="1.98" fill="currentColor"/>
+    <circle cx="109.2" cy="26.4" r="1.94" fill="currentColor"/>
+    <circle cx="118.4" cy="26.4" r="1.82" fill="currentColor"/>
+    <circle cx="127.6" cy="26.4" r="1.61" fill="currentColor"/>
+    <circle cx="136.8" cy="26.4" r="1.29" fill="currentColor"/>
+    <circle cx="146.0" cy="26.4" r="0.85" fill="currentColor"/>
+    <circle cx="44.8" cy="35.6" r="1.05" fill="currentColor"/>
+    <circle cx="54.0" cy="35.6" r="1.56" fill="currentColor"/>
+    <circle cx="63.2" cy="35.6" r="1.94" fill="currentColor"/>
+    <circle cx="72.4" cy="35.6" r="2.22" fill="currentColor"/>
+    <circle cx="81.6" cy="35.6" r="2.41" fill="currentColor"/>
+    <circle cx="90.8" cy="35.6" r="2.53" fill="currentColor"/>
+    <circle cx="100.0" cy="35.6" r="2.57" fill="currentColor"/>
+    <circle cx="109.2" cy="35.6" r="2.53" fill="currentColor"/>
+    <circle cx="118.4" cy="35.6" r="2.41" fill="currentColor"/>
+    <circle cx="127.6" cy="35.6" r="2.22" fill="currentColor"/>
+    <circle cx="136.8" cy="35.6" r="1.94" fill="currentColor"/>
+    <circle cx="146.0" cy="35.6" r="1.56" fill="currentColor"/>
+    <circle cx="155.2" cy="35.6" r="1.05" fill="currentColor"/>
+    <circle cx="35.6" cy="44.8" r="1.05" fill="currentColor"/>
+    <circle cx="44.8" cy="44.8" r="1.65" fill="currentColor"/>
+    <circle cx="54.0" cy="44.8" r="2.10" fill="currentColor"/>
+    <circle cx="63.2" cy="44.8" r="2.45" fill="currentColor"/>
+    <circle cx="72.4" cy="44.8" r="2.72" fill="currentColor"/>
+    <circle cx="81.6" cy="44.8" r="2.91" fill="currentColor"/>
+    <circle cx="90.8" cy="44.8" r="3.02" fill="currentColor"/>
+    <circle cx="100.0" cy="44.8" r="3.06" fill="currentColor"/>
+    <circle cx="109.2" cy="44.8" r="3.02" fill="currentColor"/>
+    <circle cx="118.4" cy="44.8" r="2.91" fill="currentColor"/>
+    <circle cx="127.6" cy="44.8" r="2.72" fill="currentColor"/>
+    <circle cx="136.8" cy="44.8" r="2.45" fill="currentColor"/>
+    <circle cx="146.0" cy="44.8" r="2.10" fill="currentColor"/>
+    <circle cx="155.2" cy="44.8" r="1.65" fill="currentColor"/>
+    <circle cx="164.4" cy="44.8" r="1.05" fill="currentColor"/>
+    <circle cx="26.4" cy="54.0" r="0.85" fill="currentColor"/>
+    <circle cx="35.6" cy="54.0" r="1.56" fill="currentColor"/>
+    <circle cx="44.8" cy="54.0" r="2.10" fill="currentColor"/>
+    <circle cx="54.0" cy="54.0" r="2.53" fill="currentColor"/>
+    <circle cx="63.2" cy="54.0" r="2.87" fill="currentColor"/>
+    <circle cx="72.4" cy="54.0" r="3.13" fill="currentColor"/>
+    <circle cx="81.6" cy="54.0" r="3.32" fill="currentColor"/>
+    <circle cx="90.8" cy="54.0" r="3.44" fill="currentColor"/>
+    <circle cx="100.0" cy="54.0" r="3.48" fill="currentColor"/>
+    <circle cx="109.2" cy="54.0" r="3.44" fill="currentColor"/>
+    <circle cx="118.4" cy="54.0" r="3.32" fill="currentColor"/>
+    <circle cx="127.6" cy="54.0" r="3.13" fill="currentColor"/>
+    <circle cx="136.8" cy="54.0" r="2.87" fill="currentColor"/>
+    <circle cx="146.0" cy="54.0" r="2.53" fill="currentColor"/>
+    <circle cx="155.2" cy="54.0" r="2.10" fill="currentColor"/>
+    <circle cx="164.4" cy="54.0" r="1.56" fill="currentColor"/>
+    <circle cx="173.6" cy="54.0" r="0.85" fill="currentColor"/>
+    <circle cx="26.4" cy="63.2" r="1.29" fill="currentColor"/>
+    <circle cx="35.6" cy="63.2" r="1.94" fill="currentColor"/>
+    <circle cx="44.8" cy="63.2" r="2.45" fill="currentColor"/>
+    <circle cx="54.0" cy="63.2" r="2.87" fill="currentColor"/>
+    <circle cx="63.2" cy="63.2" r="3.21" fill="currentColor"/>
+    <circle cx="72.4" cy="63.2" r="3.48" fill="currentColor"/>
+    <circle cx="81.6" cy="63.2" r="3.67" fill="currentColor"/>
+    <circle cx="90.8" cy="63.2" r="3.79" fill="currentColor"/>
+    <circle cx="100.0" cy="63.2" r="3.83" fill="currentColor"/>
+    <circle cx="109.2" cy="63.2" r="3.79" fill="currentColor"/>
+    <circle cx="118.4" cy="63.2" r="3.67" fill="currentColor"/>
+    <circle cx="127.6" cy="63.2" r="3.48" fill="currentColor"/>
+    <circle cx="136.8" cy="63.2" r="3.21" fill="currentColor"/>
+    <circle cx="146.0" cy="63.2" r="2.87" fill="currentColor"/>
+    <circle cx="155.2" cy="63.2" r="2.45" fill="currentColor"/>
+    <circle cx="164.4" cy="63.2" r="1.94" fill="currentColor"/>
+    <circle cx="173.6" cy="63.2" r="1.29" fill="currentColor"/>
+    <circle cx="17.2" cy="72.4" r="0.79" fill="currentColor"/>
+    <circle cx="26.4" cy="72.4" r="1.61" fill="currentColor"/>
+    <circle cx="35.6" cy="72.4" r="2.22" fill="currentColor"/>
+    <circle cx="44.8" cy="72.4" r="2.72" fill="currentColor"/>
+    <circle cx="54.0" cy="72.4" r="3.13" fill="currentColor"/>
+    <circle cx="63.2" cy="72.4" r="3.48" fill="currentColor"/>
+    <circle cx="72.4" cy="72.4" r="3.75" fill="currentColor"/>
+    <circle cx="81.6" cy="72.4" r="3.95" fill="currentColor"/>
+    <circle cx="90.8" cy="72.4" r="4.08" fill="currentColor"/>
+    <circle cx="100.0" cy="72.4" r="4.12" fill="currentColor"/>
+    <circle cx="109.2" cy="72.4" r="4.08" fill="currentColor"/>
+    <circle cx="118.4" cy="72.4" r="3.95" fill="currentColor"/>
+    <circle cx="127.6" cy="72.4" r="3.75" fill="currentColor"/>
+    <circle cx="136.8" cy="72.4" r="3.48" fill="currentColor"/>
+    <circle cx="146.0" cy="72.4" r="3.13" fill="currentColor"/>
+    <circle cx="155.2" cy="72.4" r="2.72" fill="currentColor"/>
+    <circle cx="164.4" cy="72.4" r="2.22" fill="currentColor"/>
+    <circle cx="173.6" cy="72.4" r="1.61" fill="currentColor"/>
+    <circle cx="182.8" cy="72.4" r="0.79" fill="currentColor"/>
+    <circle cx="17.2" cy="81.6" r="1.05" fill="currentColor"/>
+    <circle cx="26.4" cy="81.6" r="1.82" fill="currentColor"/>
+    <circle cx="35.6" cy="81.6" r="2.41" fill="currentColor"/>
+    <circle cx="44.8" cy="81.6" r="2.91" fill="currentColor"/>
+    <circle cx="54.0" cy="81.6" r="3.32" fill="currentColor"/>
+    <circle cx="63.2" cy="81.6" r="3.67" fill="currentColor"/>
+    <circle cx="72.4" cy="81.6" r="3.95" fill="currentColor"/>
+    <circle cx="81.6" cy="81.6" r="4.16" fill="currentColor"/>
+    <circle cx="90.8" cy="81.6" r="4.30" fill="currentColor"/>
+    <circle cx="100.0" cy="81.6" r="4.35" fill="currentColor"/>
+    <circle cx="109.2" cy="81.6" r="4.30" fill="currentColor"/>
+    <circle cx="118.4" cy="81.6" r="4.16" fill="currentColor"/>
+    <circle cx="127.6" cy="81.6" r="3.95" fill="currentColor"/>
+    <circle cx="136.8" cy="81.6" r="3.67" fill="currentColor"/>
+    <circle cx="146.0" cy="81.6" r="3.32" fill="currentColor"/>
+    <circle cx="155.2" cy="81.6" r="2.91" fill="currentColor"/>
+    <circle cx="164.4" cy="81.6" r="2.41" fill="currentColor"/>
+    <circle cx="173.6" cy="81.6" r="1.82" fill="currentColor"/>
+    <circle cx="182.8" cy="81.6" r="1.05" fill="currentColor"/>
+    <circle cx="17.2" cy="90.8" r="1.20" fill="currentColor"/>
+    <circle cx="26.4" cy="90.8" r="1.94" fill="currentColor"/>
+    <circle cx="35.6" cy="90.8" r="2.53" fill="currentColor"/>
+    <circle cx="44.8" cy="90.8" r="3.02" fill="currentColor"/>
+    <circle cx="54.0" cy="90.8" r="3.44" fill="currentColor"/>
+    <circle cx="63.2" cy="90.8" r="3.79" fill="currentColor"/>
+    <circle cx="72.4" cy="90.8" r="4.08" fill="currentColor"/>
+    <circle cx="81.6" cy="90.8" r="4.30" fill="currentColor"/>
+    <circle cx="90.8" cy="90.8" r="4.46" fill="currentColor"/>
+    <circle cx="100.0" cy="90.8" r="4.52" fill="currentColor"/>
+    <circle cx="109.2" cy="90.8" r="4.46" fill="currentColor"/>
+    <circle cx="118.4" cy="90.8" r="4.30" fill="currentColor"/>
+    <circle cx="127.6" cy="90.8" r="4.08" fill="currentColor"/>
+    <circle cx="136.8" cy="90.8" r="3.79" fill="currentColor"/>
+    <circle cx="146.0" cy="90.8" r="3.44" fill="currentColor"/>
+    <circle cx="155.2" cy="90.8" r="3.02" fill="currentColor"/>
+    <circle cx="164.4" cy="90.8" r="2.53" fill="currentColor"/>
+    <circle cx="173.6" cy="90.8" r="1.94" fill="currentColor"/>
+    <circle cx="182.8" cy="90.8" r="1.20" fill="currentColor"/>
+    <circle cx="17.2" cy="100.0" r="1.25" fill="currentColor"/>
+    <circle cx="26.4" cy="100.0" r="1.98" fill="currentColor"/>
+    <circle cx="35.6" cy="100.0" r="2.57" fill="currentColor"/>
+    <circle cx="44.8" cy="100.0" r="3.06" fill="currentColor"/>
+    <circle cx="54.0" cy="100.0" r="3.48" fill="currentColor"/>
+    <circle cx="63.2" cy="100.0" r="3.83" fill="currentColor"/>
+    <circle cx="72.4" cy="100.0" r="4.12" fill="currentColor"/>
+    <circle cx="81.6" cy="100.0" r="4.35" fill="currentColor"/>
+    <circle cx="90.8" cy="100.0" r="4.52" fill="currentColor"/>
+    <circle cx="100.0" cy="100.0" r="4.60" fill="currentColor"/>
+    <circle cx="109.2" cy="100.0" r="4.52" fill="currentColor"/>
+    <circle cx="118.4" cy="100.0" r="4.35" fill="currentColor"/>
+    <circle cx="127.6" cy="100.0" r="4.12" fill="currentColor"/>
+    <circle cx="136.8" cy="100.0" r="3.83" fill="currentColor"/>
+    <circle cx="146.0" cy="100.0" r="3.48" fill="currentColor"/>
+    <circle cx="155.2" cy="100.0" r="3.06" fill="currentColor"/>
+    <circle cx="164.4" cy="100.0" r="2.57" fill="currentColor"/>
+    <circle cx="173.6" cy="100.0" r="1.98" fill="currentColor"/>
+    <circle cx="182.8" cy="100.0" r="1.25" fill="currentColor"/>
+    <circle cx="17.2" cy="109.2" r="1.20" fill="currentColor"/>
+    <circle cx="26.4" cy="109.2" r="1.94" fill="currentColor"/>
+    <circle cx="35.6" cy="109.2" r="2.53" fill="currentColor"/>
+    <circle cx="44.8" cy="109.2" r="3.02" fill="currentColor"/>
+    <circle cx="54.0" cy="109.2" r="3.44" fill="currentColor"/>
+    <circle cx="63.2" cy="109.2" r="3.79" fill="currentColor"/>
+    <circle cx="72.4" cy="109.2" r="4.08" fill="currentColor"/>
+    <circle cx="81.6" cy="109.2" r="4.30" fill="currentColor"/>
+    <circle cx="90.8" cy="109.2" r="4.46" fill="currentColor"/>
+    <circle cx="100.0" cy="109.2" r="4.52" fill="currentColor"/>
+    <circle cx="109.2" cy="109.2" r="4.46" fill="currentColor"/>
+    <circle cx="118.4" cy="109.2" r="4.30" fill="currentColor"/>
+    <circle cx="127.6" cy="109.2" r="4.08" fill="currentColor"/>
+    <circle cx="136.8" cy="109.2" r="3.79" fill="currentColor"/>
+    <circle cx="146.0" cy="109.2" r="3.44" fill="currentColor"/>
+    <circle cx="155.2" cy="109.2" r="3.02" fill="currentColor"/>
+    <circle cx="164.4" cy="109.2" r="2.53" fill="currentColor"/>
+    <circle cx="173.6" cy="109.2" r="1.94" fill="currentColor"/>
+    <circle cx="182.8" cy="109.2" r="1.20" fill="currentColor"/>
+    <circle cx="17.2" cy="118.4" r="1.05" fill="currentColor"/>
+    <circle cx="26.4" cy="118.4" r="1.82" fill="currentColor"/>
+    <circle cx="35.6" cy="118.4" r="2.41" fill="currentColor"/>
+    <circle cx="44.8" cy="118.4" r="2.91" fill="currentColor"/>
+    <circle cx="54.0" cy="118.4" r="3.32" fill="currentColor"/>
+    <circle cx="63.2" cy="118.4" r="3.67" fill="currentColor"/>
+    <circle cx="72.4" cy="118.4" r="3.95" fill="currentColor"/>
+    <circle cx="81.6" cy="118.4" r="4.16" fill="currentColor"/>
+    <circle cx="90.8" cy="118.4" r="4.30" fill="currentColor"/>
+    <circle cx="100.0" cy="118.4" r="4.35" fill="currentColor"/>
+    <circle cx="109.2" cy="118.4" r="4.30" fill="currentColor"/>
+    <circle cx="118.4" cy="118.4" r="4.16" fill="currentColor"/>
+    <circle cx="127.6" cy="118.4" r="3.95" fill="currentColor"/>
+    <circle cx="136.8" cy="118.4" r="3.67" fill="currentColor"/>
+    <circle cx="146.0" cy="118.4" r="3.32" fill="currentColor"/>
+    <circle cx="155.2" cy="118.4" r="2.91" fill="currentColor"/>
+    <circle cx="164.4" cy="118.4" r="2.41" fill="currentColor"/>
+    <circle cx="173.6" cy="118.4" r="1.82" fill="currentColor"/>
+    <circle cx="182.8" cy="118.4" r="1.05" fill="currentColor"/>
+    <circle cx="17.2" cy="127.6" r="0.79" fill="currentColor"/>
+    <circle cx="26.4" cy="127.6" r="1.61" fill="currentColor"/>
+    <circle cx="35.6" cy="127.6" r="2.22" fill="currentColor"/>
+    <circle cx="44.8" cy="127.6" r="2.72" fill="currentColor"/>
+    <circle cx="54.0" cy="127.6" r="3.13" fill="currentColor"/>
+    <circle cx="63.2" cy="127.6" r="3.48" fill="currentColor"/>
+    <circle cx="72.4" cy="127.6" r="3.75" fill="currentColor"/>
+    <circle cx="81.6" cy="127.6" r="3.95" fill="currentColor"/>
+    <circle cx="90.8" cy="127.6" r="4.08" fill="currentColor"/>
+    <circle cx="100.0" cy="127.6" r="4.12" fill="currentColor"/>
+    <circle cx="109.2" cy="127.6" r="4.08" fill="currentColor"/>
+    <circle cx="118.4" cy="127.6" r="3.95" fill="currentColor"/>
+    <circle cx="127.6" cy="127.6" r="3.75" fill="currentColor"/>
+    <circle cx="136.8" cy="127.6" r="3.48" fill="currentColor"/>
+    <circle cx="146.0" cy="127.6" r="3.13" fill="currentColor"/>
+    <circle cx="155.2" cy="127.6" r="2.72" fill="currentColor"/>
+    <circle cx="164.4" cy="127.6" r="2.22" fill="currentColor"/>
+    <circle cx="173.6" cy="127.6" r="1.61" fill="currentColor"/>
+    <circle cx="182.8" cy="127.6" r="0.79" fill="currentColor"/>
+    <circle cx="26.4" cy="136.8" r="1.29" fill="currentColor"/>
+    <circle cx="35.6" cy="136.8" r="1.94" fill="currentColor"/>
+    <circle cx="44.8" cy="136.8" r="2.45" fill="currentColor"/>
+    <circle cx="54.0" cy="136.8" r="2.87" fill="currentColor"/>
+    <circle cx="63.2" cy="136.8" r="3.21" fill="currentColor"/>
+    <circle cx="72.4" cy="136.8" r="3.48" fill="currentColor"/>
+    <circle cx="81.6" cy="136.8" r="3.67" fill="currentColor"/>
+    <circle cx="90.8" cy="136.8" r="3.79" fill="currentColor"/>
+    <circle cx="100.0" cy="136.8" r="3.83" fill="currentColor"/>
+    <circle cx="109.2" cy="136.8" r="3.79" fill="currentColor"/>
+    <circle cx="118.4" cy="136.8" r="3.67" fill="currentColor"/>
+    <circle cx="127.6" cy="136.8" r="3.48" fill="currentColor"/>
+    <circle cx="136.8" cy="136.8" r="3.21" fill="currentColor"/>
+    <circle cx="146.0" cy="136.8" r="2.87" fill="currentColor"/>
+    <circle cx="155.2" cy="136.8" r="2.45" fill="currentColor"/>
+    <circle cx="164.4" cy="136.8" r="1.94" fill="currentColor"/>
+    <circle cx="173.6" cy="136.8" r="1.29" fill="currentColor"/>
+    <circle cx="26.4" cy="146.0" r="0.85" fill="currentColor"/>
+    <circle cx="35.6" cy="146.0" r="1.56" fill="currentColor"/>
+    <circle cx="44.8" cy="146.0" r="2.10" fill="currentColor"/>
+    <circle cx="54.0" cy="146.0" r="2.53" fill="currentColor"/>
+    <circle cx="63.2" cy="146.0" r="2.87" fill="currentColor"/>
+    <circle cx="72.4" cy="146.0" r="3.13" fill="currentColor"/>
+    <circle cx="81.6" cy="146.0" r="3.32" fill="currentColor"/>
+    <circle cx="90.8" cy="146.0" r="3.44" fill="currentColor"/>
+    <circle cx="100.0" cy="146.0" r="3.48" fill="currentColor"/>
+    <circle cx="109.2" cy="146.0" r="3.44" fill="currentColor"/>
+    <circle cx="118.4" cy="146.0" r="3.32" fill="currentColor"/>
+    <circle cx="127.6" cy="146.0" r="3.13" fill="currentColor"/>
+    <circle cx="136.8" cy="146.0" r="2.87" fill="currentColor"/>
+    <circle cx="146.0" cy="146.0" r="2.53" fill="currentColor"/>
+    <circle cx="155.2" cy="146.0" r="2.10" fill="currentColor"/>
+    <circle cx="164.4" cy="146.0" r="1.56" fill="currentColor"/>
+    <circle cx="173.6" cy="146.0" r="0.85" fill="currentColor"/>
+    <circle cx="35.6" cy="155.2" r="1.05" fill="currentColor"/>
+    <circle cx="44.8" cy="155.2" r="1.65" fill="currentColor"/>
+    <circle cx="54.0" cy="155.2" r="2.10" fill="currentColor"/>
+    <circle cx="63.2" cy="155.2" r="2.45" fill="currentColor"/>
+    <circle cx="72.4" cy="155.2" r="2.72" fill="currentColor"/>
+    <circle cx="81.6" cy="155.2" r="2.91" fill="currentColor"/>
+    <circle cx="90.8" cy="155.2" r="3.02" fill="currentColor"/>
+    <circle cx="100.0" cy="155.2" r="3.06" fill="currentColor"/>
+    <circle cx="109.2" cy="155.2" r="3.02" fill="currentColor"/>
+    <circle cx="118.4" cy="155.2" r="2.91" fill="currentColor"/>
+    <circle cx="127.6" cy="155.2" r="2.72" fill="currentColor"/>
+    <circle cx="136.8" cy="155.2" r="2.45" fill="currentColor"/>
+    <circle cx="146.0" cy="155.2" r="2.10" fill="currentColor"/>
+    <circle cx="155.2" cy="155.2" r="1.65" fill="currentColor"/>
+    <circle cx="164.4" cy="155.2" r="1.05" fill="currentColor"/>
+    <circle cx="44.8" cy="164.4" r="1.05" fill="currentColor"/>
+    <circle cx="54.0" cy="164.4" r="1.56" fill="currentColor"/>
+    <circle cx="63.2" cy="164.4" r="1.94" fill="currentColor"/>
+    <circle cx="72.4" cy="164.4" r="2.22" fill="currentColor"/>
+    <circle cx="81.6" cy="164.4" r="2.41" fill="currentColor"/>
+    <circle cx="90.8" cy="164.4" r="2.53" fill="currentColor"/>
+    <circle cx="100.0" cy="164.4" r="2.57" fill="currentColor"/>
+    <circle cx="109.2" cy="164.4" r="2.53" fill="currentColor"/>
+    <circle cx="118.4" cy="164.4" r="2.41" fill="currentColor"/>
+    <circle cx="127.6" cy="164.4" r="2.22" fill="currentColor"/>
+    <circle cx="136.8" cy="164.4" r="1.94" fill="currentColor"/>
+    <circle cx="146.0" cy="164.4" r="1.56" fill="currentColor"/>
+    <circle cx="155.2" cy="164.4" r="1.05" fill="currentColor"/>
+    <circle cx="54.0" cy="173.6" r="0.85" fill="currentColor"/>
+    <circle cx="63.2" cy="173.6" r="1.29" fill="currentColor"/>
+    <circle cx="72.4" cy="173.6" r="1.61" fill="currentColor"/>
+    <circle cx="81.6" cy="173.6" r="1.82" fill="currentColor"/>
+    <circle cx="90.8" cy="173.6" r="1.94" fill="currentColor"/>
+    <circle cx="100.0" cy="173.6" r="1.98" fill="currentColor"/>
+    <circle cx="109.2" cy="173.6" r="1.94" fill="currentColor"/>
+    <circle cx="118.4" cy="173.6" r="1.82" fill="currentColor"/>
+    <circle cx="127.6" cy="173.6" r="1.61" fill="currentColor"/>
+    <circle cx="136.8" cy="173.6" r="1.29" fill="currentColor"/>
+    <circle cx="146.0" cy="173.6" r="0.85" fill="currentColor"/>
+    <circle cx="72.4" cy="182.8" r="0.79" fill="currentColor"/>
+    <circle cx="81.6" cy="182.8" r="1.05" fill="currentColor"/>
+    <circle cx="90.8" cy="182.8" r="1.20" fill="currentColor"/>
+    <circle cx="100.0" cy="182.8" r="1.25" fill="currentColor"/>
+    <circle cx="109.2" cy="182.8" r="1.20" fill="currentColor"/>
+    <circle cx="118.4" cy="182.8" r="1.05" fill="currentColor"/>
+    <circle cx="127.6" cy="182.8" r="0.79" fill="currentColor"/>
+  </symbol>
+  <symbol id="m-starburst" viewBox="0 0 200 200">
+    <path d="M 100.0,4.0 L 110.7,53.2 L 141.7,13.5 L 129.9,62.5 L 175.1,40.1 L 143.2,79.2 L 193.6,78.6 L 148.0,100.0 L 193.6,121.4 L 143.2,120.8 L 175.1,159.9 L 129.9,137.5 L 141.7,186.5 L 110.7,146.8 L 100.0,196.0 L 89.3,146.8 L 58.3,186.5 L 70.1,137.5 L 24.9,159.9 L 56.8,120.8 L 6.4,121.4 L 52.0,100.0 L 6.4,78.6 L 56.8,79.2 L 24.9,40.1 L 70.1,62.5 L 58.3,13.5 L 89.3,53.2 Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="m-diamond" viewBox="0 0 200 200">
+    <polygon points="100,16 184,100 100,184 16,100" fill="none" stroke="currentColor" stroke-width="28" stroke-linejoin="miter"/>
+  </symbol>
+  <symbol id="m-arch" viewBox="0 0 200 200">
+    <path d="M 32,180 L 32,70 A 68,68 0 0,1 168,70 L 168,180 H 132 L 132,70 A 32,32 0 0,0 68,70 L 68,180 Z M 41,180 L 41,152 A 9,9 0 0,1 59,152 L 59,180 Z M 14,180 H 186 V 195 H 14 Z" fill="currentColor" fill-rule="evenodd"/>
+  </symbol>
+  <symbol id="m-wave" viewBox="0 0 240 160">
+    <path d="M 15,38 C 35,14 55,14 75,38 C 95,62 115,62 135,38 C 155,14 175,14 195,38 C 210,58 220,58 225,38" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 15,80 C 35,56 55,56 75,80 C 95,104 115,104 135,80 C 155,56 175,56 195,80 C 210,100 220,100 225,80" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 15,122 C 35,98 55,98 75,122 C 95,146 115,146 135,122 C 155,98 175,98 195,122 C 210,142 220,142 225,122" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="m-windows" viewBox="0 0 240 180">
+    <path d="M 16,160 L 16,50 A 30,30 0 0,1 76,50 L 76,160 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="46" y1="26" x2="46" y2="160" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <line x1="16" y1="55" x2="76" y2="55" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <line x1="16" y1="90" x2="76" y2="90" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <line x1="16" y1="125" x2="76" y2="125" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 90,160 L 90,50 A 30,30 0 0,1 150,50 L 150,160 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="120" y1="26" x2="120" y2="160" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <line x1="90" y1="55" x2="150" y2="55" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <line x1="90" y1="90" x2="150" y2="90" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <line x1="90" y1="125" x2="150" y2="125" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 164,160 L 164,50 A 30,30 0 0,1 224,50 L 224,160 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="194" y1="26" x2="194" y2="160" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <line x1="164" y1="55" x2="224" y2="55" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <line x1="164" y1="90" x2="224" y2="90" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <line x1="164" y1="125" x2="224" y2="125" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="m-cube" viewBox="0 0 220 220">
+    <polygon points="110,25 134,39 110,53 86,39" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="86,39 110,53 110,83 86,69" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <polygon points="134,39 110,53 110,83 134,69" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <line x1="116.7" y1="61.4" x2="134.0" y2="47.4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="122.5" y1="68.6" x2="134.0" y2="54.6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="128.2" y1="75.8" x2="134.0" y2="61.8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <polygon points="62,55 86,69 62,83 38,69" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="38,69 62,83 62,113 38,99" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <polygon points="86,69 62,83 62,113 86,99" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <line x1="68.7" y1="91.4" x2="86.0" y2="77.4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="74.5" y1="98.6" x2="86.0" y2="84.6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="80.2" y1="105.8" x2="86.0" y2="91.8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <polygon points="158,55 182,69 158,83 134,69" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="134,69 158,83 158,113 134,99" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <polygon points="182,69 158,83 158,113 182,99" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <line x1="164.7" y1="91.4" x2="182.0" y2="77.4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="170.5" y1="98.6" x2="182.0" y2="84.6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="176.2" y1="105.8" x2="182.0" y2="91.8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <polygon points="110,85 134,99 110,113 86,99" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="86,99 110,113 110,143 86,129" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <polygon points="134,99 110,113 110,143 134,129" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <line x1="116.7" y1="121.4" x2="134.0" y2="107.4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="122.5" y1="128.6" x2="134.0" y2="114.6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="128.2" y1="135.8" x2="134.0" y2="121.8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <polygon points="62,115 86,129 62,143 38,129" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="38,129 62,143 62,173 38,159" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <polygon points="86,129 62,143 62,173 86,159" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <line x1="68.7" y1="151.4" x2="86.0" y2="137.4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="74.5" y1="158.6" x2="86.0" y2="144.6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="80.2" y1="165.8" x2="86.0" y2="151.8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <polygon points="158,115 182,129 158,143 134,129" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="134,129 158,143 158,173 134,159" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <polygon points="182,129 158,143 158,173 182,159" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <line x1="164.7" y1="151.4" x2="182.0" y2="137.4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="170.5" y1="158.6" x2="182.0" y2="144.6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="176.2" y1="165.8" x2="182.0" y2="151.8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <polygon points="110,145 134,159 110,173 86,159" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="86,159 110,173 110,203 86,189" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <polygon points="134,159 110,173 110,203 134,189" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    <line x1="116.7" y1="181.4" x2="134.0" y2="167.4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="122.5" y1="188.6" x2="134.0" y2="174.6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <line x1="128.2" y1="195.8" x2="134.0" y2="181.8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="m-rays" viewBox="0 0 200 200">
+    <line x1="58.6" y1="65.3" x2="32.6" y2="43.4" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="71.0" y1="54.5" x2="52.7" y2="25.8" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="86.0" y1="47.8" x2="77.2" y2="15.0" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="102.4" y1="46.1" x2="103.8" y2="12.1" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="118.5" y1="49.3" x2="130.1" y2="17.3" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="132.9" y1="57.2" x2="153.6" y2="30.2" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="144.2" y1="69.0" x2="172.1" y2="49.5" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="151.5" y1="83.8" x2="183.9" y2="73.5" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="154.0" y1="100.0" x2="188.0" y2="100.0" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="151.5" y1="116.2" x2="183.9" y2="126.5" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="144.2" y1="131.0" x2="172.1" y2="150.5" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="132.9" y1="142.8" x2="153.6" y2="169.8" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="118.5" y1="150.7" x2="130.1" y2="182.7" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="102.4" y1="153.9" x2="103.8" y2="187.9" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="86.0" y1="152.2" x2="77.2" y2="185.0" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="71.0" y1="145.5" x2="52.7" y2="174.2" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+    <line x1="58.6" y1="134.7" x2="32.6" y2="156.6" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="m-squiggle" viewBox="0 0 100 240">
+    <path d="M 50,12.0 C 80.8,15.0 80.8,21.0 50,24.0 C 19.2,27.0 19.2,33.0 50,36.0 C 80.8,39.0 80.8,45.0 50,48.0 C 19.2,51.0 19.2,57.0 50,60.0 C 80.8,63.0 80.8,69.0 50,72.0 C 19.2,75.0 19.2,81.0 50,84.0 C 80.8,87.0 80.8,93.0 50,96.0 C 19.2,99.0 19.2,105.0 50,108.0 C 80.8,111.0 80.8,117.0 50,120.0 C 19.2,123.0 19.2,129.0 50,132.0 C 80.8,135.0 80.8,141.0 50,144.0 C 19.2,147.0 19.2,153.0 50,156.0 C 80.8,159.0 80.8,165.0 50,168.0 C 19.2,171.0 19.2,177.0 50,180.0 C 80.8,183.0 80.8,189.0 50,192.0 C 19.2,195.0 19.2,201.0 50,204.0 C 80.8,207.0 80.8,213.0 50,216.0 C 19.2,219.0 19.2,225.0 50,228.0" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>

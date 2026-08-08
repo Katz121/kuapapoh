@@ -270,8 +270,194 @@ footer a{color:var(--yellow)}
 }
 :focus-visible{outline:3px solid var(--yellow);outline-offset:2px;
   box-shadow:0 0 0 6px rgba(16,21,56,.75)}
+/* ═══════════════════════════════════════════════════
+   ใบปลิวลงชื่อโพ้เวิร์คช้อป · ป๊อปอัปหน้าแรก
+   พูดภาษาเดียวกับโปสเตอร์ riso ของงาน · บล็อกสีทึบ ขอบหมึกหนา
+   เงาเป็น offset ทึบแบบพิมพ์เหลื่อมเพลท ไม่ใช้ blur ไม่ใช้ gradient มุมมน
+   ═══════════════════════════════════════════════════ */
+html.ws-lock{overflow:hidden}
+
+.ws-veil{position:fixed;inset:0;z-index:200;background:rgba(16,21,56,.9);
+  display:grid;place-items:center;padding:clamp(10px,3vw,34px);
+  opacity:0;transition:opacity .18s linear}
+.ws-veil.in{opacity:1}
+.ws-veil[hidden]{display:none}
+/* จุด halftone จางบนฉากหลัง · กันไม่ให้พื้นหมึกแบนเป็นแผ่นเดียว */
+.ws-veil::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(251,247,236,.15) 1px,transparent 1.2px);
+  background-size:14px 14px}
+
+.ws-flyer{position:relative;width:min(980px,100%);max-height:92vh;max-height:92dvh;
+  background:var(--paper);color:var(--ink);border:3px solid var(--ink);
+  display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;
+  opacity:0;transform:translateY(26px) rotate(-2.4deg) scale(.974);box-shadow:0 0 0 var(--ink);
+  transition:opacity .32s cubic-bezier(.2,.8,.25,1),transform .32s cubic-bezier(.2,.8,.25,1),
+             box-shadow .32s cubic-bezier(.2,.8,.25,1)}
+/* มุมค้างที่ -0.6deg ไม่กลับเป็น 0 · จุดนี้คือสิ่งที่ทำให้เป็นใบปลิว ไม่ใช่ modal */
+.ws-veil.in .ws-flyer{opacity:1;transform:translateY(0) rotate(-.6deg) scale(1);
+  box-shadow:10px 10px 0 var(--ink)}
+.ws-veil.out .ws-flyer{opacity:0;transform:translateY(12px) rotate(-.6deg);
+  transition-duration:.2s;transition-timing-function:cubic-bezier(.4,0,1,1)}
+
+/* แถบวิ่ง · อังกฤษล้วน เพราะ mono + tracking ทำสระไทยลอย */
+.ws-marquee{background:var(--yellow);border-bottom:3px solid var(--ink);overflow:hidden}
+.ws-marquee-track{display:flex;width:max-content;animation:ws-run 30s linear infinite}
+.ws-marquee span{font-family:var(--mono);font-weight:500;font-size:.7rem;letter-spacing:.22em;
+  text-transform:uppercase;padding:.6rem 1.2rem .6rem 0;white-space:nowrap}
+@keyframes ws-run{to{transform:translateX(-50%)}}
+
+.ws-body{display:grid;min-height:0}
+@media(min-width:900px){.ws-body{grid-template-columns:1.34fr 1fr}}
+.ws-main{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-height:0;
+  padding:clamp(14px,2.1vw,24px);gap:clamp(10px,1.3vw,14px)}
+
+.ws-topline{display:flex;align-items:center;gap:1rem}
+.ws-kicker{margin:0;color:var(--cobalt)}
+.ws-x{margin-left:auto;flex:none;width:44px;height:44px;display:grid;place-items:center;
+  background:transparent;border:2px solid var(--ink);color:var(--ink);
+  font:inherit;font-size:1rem;line-height:1;cursor:pointer;transition:background .2s,color .2s}
+.ws-x:hover{background:var(--ink);color:var(--yellow)}
+.ws-head h2{font-family:var(--display);font-weight:700;color:var(--magenta);
+  font-size:clamp(1.32rem,2.7vw,2.05rem);line-height:1.3;margin:.85rem 0 .45rem;text-wrap:balance}
+.ws-sub{margin:0;color:var(--muted);font-size:.94rem;max-width:44ch;line-height:1.6}
+
+/* ── ตั๋ว 5 ใบ · เป็น checkbox แท้ที่ถูกครอบด้วย label ── */
+.ws-list{display:grid;gap:.5rem;align-content:start;overflow-y:auto;min-height:0;
+  overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:2px}
+/* ถ้ายังเลื่อนดูได้อีก ต้องบอกให้รู้ · ไม่งั้นตั๋วใบท้ายหายไปเฉย ๆ บนจอเตี้ย */
+.ws-list.more{-webkit-mask-image:linear-gradient(to bottom,#000 80%,rgba(0,0,0,.15) 100%);
+  mask-image:linear-gradient(to bottom,#000 80%,rgba(0,0,0,.15) 100%)}
+.ws-more{margin:0;font-family:var(--mono);font-weight:500;font-size:.7rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--cobalt)}
+.ws-more[hidden]{display:none}
+.ws-tk{display:grid;grid-template-columns:62px minmax(0,1fr) 46px;align-items:stretch;
+  background:var(--paper);border:2px solid var(--ink);cursor:pointer;
+  transition:transform .12s,box-shadow .12s}
+.ws-tk:hover{transform:translateY(-2px);box-shadow:4px 4px 0 var(--ink)}
+.ws-tk input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.ws-stub{background:var(--cobalt);color:var(--yellow);border-right:2px solid var(--ink);
+  display:grid;place-content:center;text-align:center;padding:.5rem .2rem}
+/* เงาขั้นบันไดแทนฟอนต์พิกเซลจริง · ได้ความรู้สึกหมึกเหลื่อมโดยไม่โหลดฟอนต์เพิ่ม */
+.ws-stub b{display:block;font-family:var(--display);font-weight:700;font-size:1.62rem;
+  line-height:1;text-shadow:2px 2px 0 var(--ink)}
+.ws-stub i{display:block;font-style:normal;font-size:.7rem;margin-top:.25rem}
+.ws-tx{padding:.5rem .2rem .5rem .85rem;display:grid;align-content:center;gap:.06rem;min-width:0}
+.ws-tx b{font-weight:600;font-size:.97rem;line-height:1.3}
+.ws-tx span{color:var(--muted);font-size:.84rem;line-height:1.45}
+.ws-box{align-self:center;justify-self:center;width:26px;height:26px;border:3px solid var(--ink);
+  display:grid;place-items:center;transition:transform .12s cubic-bezier(.34,1.4,.64,1)}
+.ws-box::after{content:"";width:13px;height:7px;
+  border-left:3px solid var(--yellow);border-bottom:3px solid var(--yellow);
+  transform:rotate(-45deg) scale(0);transition:transform .12s cubic-bezier(.34,1.4,.64,1)}
+/* เลือกแล้ว = หมึกทับ เปลี่ยนทันทีไม่ transition สีพื้น */
+.ws-tk.is-on{background:var(--yellow);box-shadow:4px 4px 0 var(--ink)}
+.ws-tk.is-on .ws-stub{background:var(--magenta)}
+.ws-tk.is-on .ws-box{background:var(--magenta);border-color:var(--magenta)}
+.ws-tk.is-on .ws-box::after{transform:rotate(-45deg) scale(1)}
+/* โฟกัสในกล่อง: วงเหลืองของเว็บมองไม่เห็นบนพื้นกระดาษ/พื้นเหลือง ใช้มาเจนต้าแทน */
+.ws-tk:has(input:focus-visible){outline:3px solid var(--magenta);outline-offset:2px;box-shadow:none}
+.ws-flyer :focus-visible{outline:3px solid var(--magenta);outline-offset:2px;box-shadow:none}
+.ws-flyer:focus{outline:none}
+
+/* ── ท้ายใบปลิว · ติดหนึบ ไม่เลื่อนตามลิสต์ ── */
+/* รอยปรุตั๋ว · ต้องเห็นชัดว่าเป็นรอยฉีก ไม่ใช่เส้นคั่นบาง ๆ */
+.ws-foot{display:grid;gap:.5rem;padding-top:1rem;margin-top:.2rem;
+  background-image:radial-gradient(circle,var(--ink) 2.4px,transparent 2.6px);
+  background-size:15px 6px;background-repeat:repeat-x;background-position:top left}
+.ws-count{margin:0;font-size:.84rem;color:var(--muted)}
+/* ปุ่มเป็นบล็อกมุมตรงมีเงาหมึกเหลื่อม ไม่ใช่แคปซูลแบบแอป
+   (ปุ่มมนของเว็บอยู่บนพื้นเว็บ · ในใบปลิวต้องเป็นภาษาสิ่งพิมพ์) */
+.ws-cta{display:inline-flex;align-items:center;justify-content:center;min-height:52px;
+  padding:.7em 1.5em;background:var(--ink);color:var(--yellow);text-decoration:none;
+  border:3px solid var(--ink);box-shadow:5px 5px 0 var(--magenta);
+  font-family:var(--display);font-weight:700;font-size:1.06rem;
+  transition:background .2s,color .2s,box-shadow .18s,transform .18s}
+.ws-cta:hover{background:var(--magenta);border-color:var(--ink);color:var(--paper);
+  transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+.ws-soft{justify-self:start;min-height:44px;padding:.55rem 0;background:none;border:0;
+  font:inherit;font-size:.9rem;color:var(--muted);text-decoration:underline;cursor:pointer}
+.ws-soft:hover{color:var(--magenta-text)}
+.ws-note{margin:0;font-size:.76rem;color:var(--muted)}
+
+/* ── ปกใบปลิว (ประดับล้วน · มือถือตัดทิ้ง) ── */
+.ws-cover{display:none}
+@media(min-width:900px){
+  .ws-cover{display:grid;grid-template-rows:minmax(0,1fr) auto;position:relative;overflow:hidden;
+    background:var(--yellow);border-left:3px solid var(--ink)}
+}
+.ws-sprite{position:absolute;width:0;height:0;overflow:hidden}
+/* ลายประดับวางกระจายแบบโปสเตอร์รายวัน · ทุกชิ้นเป็น <use> ของ symbol ชุดเดียวกัน */
+.ws-m{position:absolute;pointer-events:none}
+.ws-m-star{top:-30px;left:-34px;width:126px;height:126px;color:var(--paper)}
+.ws-m-rays{top:12px;right:-40px;width:104px;height:104px;color:var(--magenta)}
+.ws-m-dia {top:56%;left:-44px;width:96px;height:96px;color:var(--magenta)}
+.ws-m-win {top:30%;right:14px;width:88px;height:66px;color:var(--magenta)}
+.ws-m-wave{bottom:52px;left:34%;width:112px;height:74px;color:var(--magenta);opacity:.9}
+
+/* ภาพประกอบ riso · วางเอียงเล็กน้อยแบบแปะกระดาษ ไม่มีเงา (งานพิมพ์ไม่มีเงาฟุ้ง) */
+.ws-ill{position:absolute;pointer-events:none;height:auto}
+.ws-ill-lantern{top:-6px;left:44%;width:104px;transform:rotate(3deg)}
+.ws-ill-key{bottom:74px;left:2px;width:124px;transform:rotate(-8deg)}
+.ws-ill-pan{bottom:58px;right:-10px;width:146px;transform:rotate(4deg)}
+/* วงจุด halftone ทำด้วย gradient · ถูกกว่าวางวงกลมหลายร้อยวงเป็น SVG */
+.ws-halftone{position:absolute;top:-36px;right:-28px;width:172px;height:172px;
+  background-image:radial-gradient(var(--paper) 2.6px,transparent 2.8px);background-size:11px 11px;
+  -webkit-mask-image:radial-gradient(circle,#000 40%,transparent 70%);
+  mask-image:radial-gradient(circle,#000 40%,transparent 70%)}
+
+/* ตัวอักษรพิกเซล 5x6 · ระบายผ่าน mask เลยเปลี่ยนสีตามพาเลตได้โดยไม่ต้องมีไฟล์หลายเวอร์ชัน */
+.ws-poster{position:relative;z-index:1;align-self:center;justify-self:stretch;
+  padding:0 clamp(20px,2.6vw,32px);display:grid;justify-items:start;gap:.45rem}
+.ws-type{display:block;width:100%;background-color:currentColor;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-position:left center;mask-position:left center}
+.ws-t-poh {max-width:96px;aspect-ratio:17/6;color:var(--magenta);
+  -webkit-mask-image:url('images/ws/type-poh.svg');mask-image:url('images/ws/type-poh.svg')}
+.ws-t-work{max-width:232px;aspect-ratio:47/6;color:var(--ink);
+  -webkit-mask-image:url('images/ws/type-workshop.svg');mask-image:url('images/ws/type-workshop.svg')}
+.ws-t-date{max-width:216px;aspect-ratio:64/6;color:var(--cobalt);margin-top:.2rem;
+  -webkit-mask-image:url('images/ws/type-dateline.svg');mask-image:url('images/ws/type-dateline.svg')}
+.ws-poster-th{margin:.4rem 0 0;font-family:var(--display);font-weight:700;
+  font-size:clamp(1.5rem,2.4vw,2rem);line-height:1.25;color:var(--ink)}
+.ws-poster-note{margin:.45rem 0 0;font-size:.84rem;line-height:1.55;color:var(--ink);max-width:24ch}
+.ws-band{background:var(--magenta);color:var(--paper);border-top:3px solid var(--ink);
+  padding:.65rem 1rem;text-align:center;
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase}
+
+/* ── แท็บเรียกกลับมุมจอ ── */
+.ws-tab{position:fixed;right:14px;bottom:14px;z-index:60;min-height:44px;
+  padding:.6rem 1.05rem;background:var(--yellow);color:var(--ink);
+  border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);
+  font:inherit;font-weight:600;font-size:.9rem;cursor:pointer;
+  transform:translateY(140%);transition:transform .26s cubic-bezier(.2,.8,.25,1),background .2s,color .2s}
+.ws-tab.in{transform:translateY(0)}
+.ws-tab:hover{background:var(--magenta);color:var(--paper)}
+.ws-tab[hidden]{display:none}
+@media(max-width:520px){.ws-tab{right:10px;bottom:10px;font-size:.84rem}}
+
+/* ── มือถือ · ยึดขอบล่างเป็นแผ่นกระดาษ ไม่เอียง (เอียงแล้วขอบขาวโผล่) ── */
+@media(max-width:899px){
+  .ws-veil{place-items:end center;padding:14px 10px 0}
+  .ws-flyer{width:100%;max-height:90dvh;border-width:3px 3px 0;
+    transform:translateY(26px) rotate(0) scale(1)}
+  .ws-veil.in .ws-flyer{transform:none;box-shadow:none}
+  .ws-veil.out .ws-flyer{transform:translateY(14px) rotate(0)}
+}
+/* จอแนวนอนเตี้ยมาก · ยุบหัวเรื่องให้ปุ่มยังอยู่ในจอ */
+@media(max-height:440px){
+  .ws-head h2{font-size:1.08rem;margin:.5rem 0 .3rem}
+  .ws-sub,.ws-note{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .ws-veil,.ws-flyer,.ws-tk,.ws-box,.ws-box::after,.ws-tab{transition:none!important}
+  .ws-flyer,.ws-veil.in .ws-flyer,.ws-veil.out .ws-flyer{transform:none!important}
+  .ws-marquee-track{animation:none}
+  .ws-tab{transform:none}
+}
+
 @media print{
-  .topbar,.patternband,.hero-row{display:none}
+  .topbar,.patternband,.hero-row,.ws-veil,.ws-tab{display:none}
   body,.hero,.six,.contact{background:#fff!important;color:#000!important}
   .six h2,.six .tag,.six-item b,.contact .tag{color:#000!important}
 }
@@ -641,6 +827,330 @@ if (topnav) {
   topnav.addEventListener('scroll', syncFade, {passive:true});
   addEventListener('resize', syncFade, {passive:true});
 }
+</script>
+
+<!-- ═══════════ ใบปลิวลงชื่อโพ้เวิร์คช้อป ═══════════
+     อยู่ใน <template> ทั้งก้อน · ไม่มี JS = ไม่มีอะไรถูกแทรกเข้า DOM
+     เว็บทำงานปกติ 100% ไม่มีอะไรมาบังเนื้อหา -->
+<template id="ws-tpl">
+  <div class="ws-veil" hidden>
+    <div class="ws-flyer" role="dialog" aria-modal="true" aria-labelledby="ws-title" tabindex="-1">
+      <!-- ชุดลายประดับถอดจากโปสเตอร์รายวัน · เก็บเป็น symbol แล้วเรียกด้วย <use> -->
+      <svg class="ws-sprite" aria-hidden="true" focusable="false"><defs>
+        <symbol id="m-starburst" viewBox="0 0 200 200">
+          <path d="M 100.0,4.0 L 110.7,53.2 L 141.7,13.5 L 129.9,62.5 L 175.1,40.1 L 143.2,79.2 L 193.6,78.6 L 148.0,100.0 L 193.6,121.4 L 143.2,120.8 L 175.1,159.9 L 129.9,137.5 L 141.7,186.5 L 110.7,146.8 L 100.0,196.0 L 89.3,146.8 L 58.3,186.5 L 70.1,137.5 L 24.9,159.9 L 56.8,120.8 L 6.4,121.4 L 52.0,100.0 L 6.4,78.6 L 56.8,79.2 L 24.9,40.1 L 70.1,62.5 L 58.3,13.5 L 89.3,53.2 Z" fill="currentColor"/>
+        </symbol>
+        <symbol id="m-diamond" viewBox="0 0 200 200">
+          <polygon points="100,16 184,100 100,184 16,100" fill="none" stroke="currentColor" stroke-width="28" stroke-linejoin="miter"/>
+        </symbol>
+        <symbol id="m-arch" viewBox="0 0 200 200">
+          <path d="M 32,180 L 32,70 A 68,68 0 0,1 168,70 L 168,180 H 132 L 132,70 A 32,32 0 0,0 68,70 L 68,180 Z M 41,180 L 41,152 A 9,9 0 0,1 59,152 L 59,180 Z M 14,180 H 186 V 195 H 14 Z" fill="currentColor" fill-rule="evenodd"/>
+        </symbol>
+        <symbol id="m-wave" viewBox="0 0 240 160">
+          <path d="M 15,38 C 35,14 55,14 75,38 C 95,62 115,62 135,38 C 155,14 175,14 195,38 C 210,58 220,58 225,38" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+          <path d="M 15,80 C 35,56 55,56 75,80 C 95,104 115,104 135,80 C 155,56 175,56 195,80 C 210,100 220,100 225,80" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+          <path d="M 15,122 C 35,98 55,98 75,122 C 95,146 115,146 135,122 C 155,98 175,98 195,122 C 210,142 220,142 225,122" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="m-windows" viewBox="0 0 240 180">
+          <path d="M 16,160 L 16,50 A 30,30 0 0,1 76,50 L 76,160 Z" fill="none" stroke="currentColor" stroke-width="6"/>
+          <line x1="46" y1="26" x2="46" y2="160" stroke="currentColor" stroke-width="5"/>
+          <line x1="16" y1="55" x2="76" y2="55" stroke="currentColor" stroke-width="5"/>
+          <line x1="16" y1="90" x2="76" y2="90" stroke="currentColor" stroke-width="5"/>
+          <line x1="16" y1="125" x2="76" y2="125" stroke="currentColor" stroke-width="5"/>
+          <path d="M 90,160 L 90,50 A 30,30 0 0,1 150,50 L 150,160 Z" fill="none" stroke="currentColor" stroke-width="6"/>
+          <line x1="120" y1="26" x2="120" y2="160" stroke="currentColor" stroke-width="5"/>
+          <line x1="90" y1="55" x2="150" y2="55" stroke="currentColor" stroke-width="5"/>
+          <line x1="90" y1="90" x2="150" y2="90" stroke="currentColor" stroke-width="5"/>
+          <line x1="90" y1="125" x2="150" y2="125" stroke="currentColor" stroke-width="5"/>
+          <path d="M 164,160 L 164,50 A 30,30 0 0,1 224,50 L 224,160 Z" fill="none" stroke="currentColor" stroke-width="6"/>
+          <line x1="194" y1="26" x2="194" y2="160" stroke="currentColor" stroke-width="5"/>
+          <line x1="164" y1="55" x2="224" y2="55" stroke="currentColor" stroke-width="5"/>
+          <line x1="164" y1="90" x2="224" y2="90" stroke="currentColor" stroke-width="5"/>
+          <line x1="164" y1="125" x2="224" y2="125" stroke="currentColor" stroke-width="5"/>
+        </symbol>
+        <symbol id="m-rays" viewBox="0 0 200 200">
+          <g stroke="currentColor" stroke-width="8" stroke-linecap="round">
+            <line x1="58.6" y1="65.3" x2="32.6" y2="43.4"/><line x1="71.0" y1="54.5" x2="52.7" y2="25.8"/>
+            <line x1="86.0" y1="47.8" x2="77.2" y2="15.0"/><line x1="102.4" y1="46.1" x2="103.8" y2="12.1"/>
+            <line x1="118.5" y1="49.3" x2="130.1" y2="17.3"/><line x1="132.9" y1="57.2" x2="153.6" y2="30.2"/>
+            <line x1="144.2" y1="69.0" x2="172.1" y2="49.5"/><line x1="151.5" y1="83.8" x2="183.9" y2="73.5"/>
+            <line x1="154.0" y1="100.0" x2="188.0" y2="100.0"/><line x1="151.5" y1="116.2" x2="183.9" y2="126.5"/>
+            <line x1="144.2" y1="131.0" x2="172.1" y2="150.5"/><line x1="132.9" y1="142.8" x2="153.6" y2="169.8"/>
+            <line x1="118.5" y1="150.7" x2="130.1" y2="182.7"/><line x1="102.4" y1="153.9" x2="103.8" y2="187.9"/>
+            <line x1="86.0" y1="152.2" x2="77.2" y2="185.0"/><line x1="71.0" y1="145.5" x2="52.7" y2="174.2"/>
+            <line x1="58.6" y1="134.7" x2="32.6" y2="156.6"/>
+          </g>
+        </symbol>
+      </defs></svg>
+
+      <div class="ws-marquee" aria-hidden="true">
+        <div class="ws-marquee-track">
+          <span lang="en">POH WORKSHOP · 13-16 AUG 2026 · TAKUA PA OLD TOWN · KUAPAPOH · POH WORKSHOP · 13-16 AUG 2026 · TAKUA PA OLD TOWN · KUAPAPOH · </span>
+          <span lang="en">POH WORKSHOP · 13-16 AUG 2026 · TAKUA PA OLD TOWN · KUAPAPOH · POH WORKSHOP · 13-16 AUG 2026 · TAKUA PA OLD TOWN · KUAPAPOH · </span>
+        </div>
+      </div>
+
+      <div class="ws-body">
+        <div class="ws-main">
+          <div class="ws-head">
+            <div class="ws-topline">
+              <p class="ws-kicker label-en" lang="en">Poh Workshop · 13-16 Aug 2026</p>
+              <button type="button" class="ws-x" data-ws-close
+                      aria-label="ปิดใบปลิวลงชื่อเวิร์กช็อป">✕</button>
+            </div>
+            <h2 id="ws-title">งานทำมือของย่าน เลือกวงที่อยากลองไว้ก่อนนะ</h2>
+            <p class="ws-sub">เวิร์กช็อป 5 วง กระจายอยู่ทั้ง 13 ถึง 16 สิงหาคม · บอกไว้ก่อนได้ว่าสนใจวงไหน</p>
+          </div>
+
+          <div class="ws-list" id="ws-list"></div>
+
+          <div class="ws-foot">
+            <p class="ws-more" id="ws-more" hidden>↓ เลื่อนดูวงที่เหลือ</p>
+            <p class="ws-count" id="ws-count" aria-live="polite">ยังไม่ได้เลือก เลือกได้หลายวงนะ</p>
+            <a class="ws-cta" id="ws-cta" href="#schedule">ดูตารางเวิร์กช็อปทั้งหมด</a>
+            <button type="button" class="ws-soft" data-ws-later>ขอดูตารางงานก่อน</button>
+            <p class="ws-note">ปิดไปก่อนก็ได้ ปุ่มลงชื่ออยู่มุมจอตลอดงาน</p>
+          </div>
+        </div>
+
+        <!-- แผงขวา = โปสเตอร์ POH WORKSHOP · ประกอบด้วยชุดลายเดียวกับโปสเตอร์รายวัน
+             ตัวอักษรพิกเซลเป็นไฟล์ SVG ที่วาดจากกริด 5x6 ของโปสเตอร์ต้นฉบับ
+             ระบายสีผ่าน mask-image เลยเปลี่ยนสีตามพาเลตได้โดยไม่ต้องมีไฟล์หลายเวอร์ชัน -->
+        <div class="ws-cover" aria-hidden="true">
+          <span class="ws-halftone"></span>
+          <svg class="ws-m ws-m-star" viewBox="0 0 200 200"><use href="#m-starburst"/></svg>
+          <svg class="ws-m ws-m-rays" viewBox="0 0 200 200"><use href="#m-rays"/></svg>
+          <svg class="ws-m ws-m-win"  viewBox="0 0 240 180"><use href="#m-windows"/></svg>
+          <svg class="ws-m ws-m-wave" viewBox="0 0 240 160"><use href="#m-wave"/></svg>
+
+          <!-- ภาพประกอบ riso สองสี (มาเจนต้า+น้ำเงิน) เจนขึ้นเฉพาะงานนี้ · ของจริงในเวิร์กช็อปทั้งสามวง
+               อยู่ใน <template> เลยยังไม่ถูกโหลดจนกว่าป๊อปอัปจะเปิด -->
+          <img class="ws-ill ws-ill-lantern" src="images/ws/ws-lantern.webp" loading="lazy"
+               width="350" height="520" alt="" decoding="async">
+          <img class="ws-ill ws-ill-key" src="images/ws/ws-keychain.webp" loading="lazy"
+               width="520" height="520" alt="" decoding="async">
+          <img class="ws-ill ws-ill-pan" src="images/ws/ws-pan.webp" loading="lazy"
+               width="520" height="459" alt="" decoding="async">
+
+          <div class="ws-poster">
+            <span class="ws-type ws-t-poh"></span>
+            <span class="ws-type ws-t-work"></span>
+            <p class="ws-poster-th">โพ้เวิร์คช้อป</p>
+            <span class="ws-type ws-t-date"></span>
+            <p class="ws-poster-note">งานทำมือ 5 วง ย่านเมืองเก่าตะกั่วป่า</p>
+          </div>
+
+          <div class="ws-band" lang="en">Kuapapoh · Creative Cultural District</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="ws-tab" hidden aria-label="เปิดใบปลิวลงชื่อเวิร์กช็อป">ลงชื่อเวิร์กช็อป</button>
+</template>
+
+<script>
+/* ใบปลิวลงชื่อโพ้เวิร์คช้อป
+   ─────────────────────────────────────────────────────────────
+   ตั้งค่า 2 บรรทัดนี้เมื่อมี Google Form จริง
+   FORM_URL   = ลิงก์ viewform ของฟอร์ม
+   FORM_ENTRY = id ของคำถามที่ให้ติ๊กเวิร์กช็อป เช่น 'entry.1234567890'
+   วิธีหา: ในฟอร์มกด "รับลิงก์ที่กรอกไว้ล่วงหน้า" ติ๊กตัวอย่างแล้วดู entry.xxx ใน URL ที่ได้
+   ถ้า FORM_URL ว่าง ปุ่มจะกลายเป็น "ดูตารางเวิร์กช็อปทั้งหมด" แทน ไม่มีปุ่มตาย */
+(function(){
+  const FORM_URL   = '';
+  const FORM_ENTRY = '';
+
+  const KEY = 'kuapapoh.ws.popup.v1';
+  const END = Date.parse('2026-08-16T23:59:59+07:00');   /* งานจบแล้วไม่ต้องเด้งอีก */
+  const DELAY = 1100;                                     /* ให้ hero อ่านได้ก่อน · กัน intrusive interstitial */
+
+  /* ค่า v ต้องสะกดตรงกับตัวเลือกใน Google Form ทุกตัวอักษร ไม่งั้น Google ปัดทิ้งเงียบ ๆ */
+  const WORKSHOPS = [
+    {id:'w1', d:'13', dow:'ศ.',  t:'10:30',           name:'ทำพวงกุญแจผ้าปาเต๊ะ',        place:'หน้าบ้านอี๋จู้'},
+    {id:'w2', d:'14', dow:'ส.',  t:'13:00',           name:'ทำโคมไฟโบราณเฉลิม กับลุงเรน', place:'ย่านเมืองเก่า'},
+    {id:'w3', d:'15', dow:'อา.', t:'10:30',           name:'สาธิตการร่อนแร่จากผู้รู้',    place:'เหมืองมิวเซียม (บ้าน 78)'},
+    {id:'w4', d:'16', dow:'จ.',  t:'9:30 และ 13:00',  name:'มินิแกลอรี่',                place:'ดาดฟ้าบ้าน 104'},
+    {id:'w5', d:'16', dow:'จ.',  t:'14:00',           name:'“ตัดแปะแวะศิลป์”',           place:'โรงเรียนเต้าหมิง (บ้าน 305)'}
+  ];
+  const valueOf = w => w.d + ' ส.ค. ' + w.t + ' ' + w.name;
+
+  const tpl = document.getElementById('ws-tpl');
+  if (!tpl || Date.now() > END) return;
+
+  /* อ่าน state แบบไม่เชื่อของที่เก็บไว้ · ถ้าค่าเพี้ยน (deploy เก่า/ส่วนขยายล้างข้อมูล)
+     แล้วปล่อยให้ throw ตรงนี้ ป๊อปอัปกับปุ่มมุมจอจะไม่ถูกแทรกเลยทั้งคู่ */
+  let state = {closed:false, picked:[]};
+  try {
+    const raw = JSON.parse(localStorage.getItem(KEY) || '{}');
+    if (raw && typeof raw === 'object'){
+      state.closed = raw.closed === true;
+      if (Array.isArray(raw.picked)) state.picked = raw.picked.filter(v => typeof v === 'string');
+    }
+  } catch(e){}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} };
+
+  const frag  = tpl.content.cloneNode(true);
+  const veil  = frag.querySelector('.ws-veil');
+  const tab   = frag.querySelector('.ws-tab');
+  const list  = frag.querySelector('#ws-list');
+  const count = frag.querySelector('#ws-count');
+  const more  = frag.querySelector('#ws-more');
+  const cta   = frag.querySelector('#ws-cta');
+
+  WORKSHOPS.forEach(w => {
+    const l = document.createElement('label');
+    l.className = 'ws-tk';
+    l.innerHTML = '<input type="checkbox">' +
+      '<span class="ws-stub"><b></b><i></i></span>' +
+      '<span class="ws-tx"><b></b><span></span></span>' +
+      '<span class="ws-box"></span>';
+    const cb = l.querySelector('input');
+    cb.value = w.id;
+    cb.checked = state.picked.indexOf(w.id) > -1;
+    l.querySelector('.ws-stub b').textContent = w.d;
+    l.querySelector('.ws-stub i').textContent = w.dow;
+    l.querySelector('.ws-tx b').textContent = w.name;
+    l.querySelector('.ws-tx span').textContent = w.t + ' · ' + w.place;
+    cb.addEventListener('change', sync);
+    list.appendChild(l);
+  });
+
+  const picked = () => Array.prototype.slice
+    .call(list.querySelectorAll('input:checked')).map(i => i.value);
+
+  /* ลิสต์เลื่อนได้อีกไหม · จอเตี้ยจะเห็นตั๋วไม่ครบ 5 ใบ ต้องมีสัญญาณบอก */
+  function syncMore(){
+    const left = list.scrollHeight - list.clientHeight - list.scrollTop;
+    list.classList.toggle('more', left > 8);
+    more.hidden = left <= 8;
+  }
+  list.addEventListener('scroll', syncMore, {passive:true});
+  addEventListener('resize', syncMore, {passive:true});
+
+  function formUrl(ids){
+    const u = new URL(FORM_URL);
+    if (FORM_ENTRY && ids.length){
+      u.searchParams.set('usp','pp_url');
+      /* ช่อง checkbox ของ Google Form รับหลายค่าด้วยการซ้ำ key เดิม ห้ามต่อด้วยจุลภาค */
+      ids.forEach(id => {
+        const w = WORKSHOPS.find(x => x.id === id);
+        if (w) u.searchParams.append(FORM_ENTRY, valueOf(w));
+      });
+    }
+    return u.toString();
+  }
+
+  function sync(){
+    const ids = picked();
+    Array.prototype.forEach.call(list.querySelectorAll('.ws-tk'),
+      l => l.classList.toggle('is-on', l.querySelector('input').checked));
+
+    count.textContent = ids.length
+      ? 'เลือกไว้ ' + ids.length + ' วง'
+      : 'ยังไม่ได้เลือก เลือกได้หลายวงนะ';
+
+    if (FORM_URL){
+      cta.href = formUrl(ids);
+      cta.target = '_blank';
+      cta.rel = 'noopener';
+      /* ถ้าลืมใส่ FORM_ENTRY ค่าที่ติ๊กไว้จะไม่ถูกส่งไปกับลิงก์
+         ห้ามพูดว่า "ลงชื่อทั้ง N วง" ทั้งที่ฟอร์มเปิดมาว่าง ให้บอกตรง ๆ ว่าต้องเลือกในฟอร์มเอง */
+      const carries = !!FORM_ENTRY;
+      cta.textContent = !ids.length ? 'ไปกรอกใบลงชื่อ →'
+                      : !carries ? 'ไปกรอกใบลงชื่อ →'
+                      : ids.length > 1 ? 'ลงชื่อทั้ง ' + ids.length + ' วงเลย →'
+                      : 'ลงชื่อไว้เลย →';
+      if (ids.length && !carries) count.textContent += ' · เลือกอีกครั้งในฟอร์มด้วยนะ';
+    }
+    state.picked = ids;
+    save();
+  }
+
+  /* ── เปิด/ปิด ── */
+  let lastFocus = null;
+  const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled])';
+
+  /* iOS Safari ไม่หยุดเลื่อนด้วย overflow:hidden อย่างเดียว ต้องตรึง body แล้วคืนตำแหน่งตอนปิด
+     ไม่งั้นคนที่อ่านค้างอยู่ตารางวันที่ 15 จะโดนดีดกลับหัวเว็บ */
+  let lockedY = 0;
+  function lock(){
+    lockedY = window.scrollY || 0;
+    document.documentElement.classList.add('ws-lock');
+    document.body.style.position = 'fixed';
+    document.body.style.top = (-lockedY) + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+  }
+  function unlock(){
+    document.documentElement.classList.remove('ws-lock');
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    window.scrollTo(0, lockedY);
+  }
+
+  function open(){
+    lastFocus = document.activeElement;
+    veil.hidden = false;
+    lock();
+    requestAnimationFrame(() => { veil.classList.add('in'); syncMore(); });
+    /* โฟกัสที่ตัวกล่อง ไม่ใช่ปุ่มกากบาท · screen reader จะอ่านหัวเรื่องก่อน
+       และคนใช้เมาส์ไม่เห็นวงโฟกัสค้างอยู่บนปุ่มปิดตั้งแต่เปิดมา */
+    veil.querySelector('.ws-flyer').focus();
+  }
+
+  function close(){
+    veil.classList.remove('in');
+    veil.classList.add('out');
+    unlock();
+    setTimeout(() => { veil.hidden = true; veil.classList.remove('out'); }, 220);
+    state.closed = true; save();
+    showTab();
+    if (lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus();
+    else tab.focus();
+  }
+
+  function showTab(){
+    tab.hidden = false;
+    requestAnimationFrame(() => tab.classList.add('in'));
+  }
+
+  veil.addEventListener('click', e => { if (e.target === veil) close(); });
+  veil.querySelector('[data-ws-close]').addEventListener('click', close);
+  veil.querySelector('[data-ws-later]').addEventListener('click', () => {
+    close();
+    location.hash = '#schedule';
+  });
+  cta.addEventListener('click', () => { if (!FORM_URL) close(); });
+  tab.addEventListener('click', open);
+
+  /* ESC ปิด · Tab วนอยู่ในกล่อง ไม่หลุดไปหน้าเว็บข้างหลัง */
+  veil.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){ e.preventDefault(); close(); return; }
+    if (e.key !== 'Tab') return;
+    const f = Array.prototype.slice.call(veil.querySelectorAll(FOCUSABLE))
+      .filter(el => el.offsetParent !== null || el.type === 'checkbox');
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    const at = document.activeElement;
+    /* ตอนเพิ่งเปิด โฟกัสอยู่ที่ตัวกล่องซึ่งไม่อยู่ในลิสต์ ถ้าไม่ดักไว้
+       การกด Shift+Tab ครั้งแรกจะหลุดไปหน้าเว็บข้างหลังทันที */
+    if (at === veil.querySelector('.ws-flyer') || !veil.contains(at)){
+      e.preventDefault();
+      (e.shiftKey ? last : first).focus();
+    }
+    else if (e.shiftKey && at === first){ e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && at === last){ e.preventDefault(); first.focus(); }
+  });
+
+  document.body.appendChild(veil);
+  document.body.appendChild(tab);
+  sync();
+
+  if (state.closed) showTab();
+  else addEventListener('load', () => setTimeout(open, DELAY));
+})();
 </script>
 </body>
 </html>

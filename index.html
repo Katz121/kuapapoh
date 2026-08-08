@@ -489,17 +489,27 @@ html.ws-lock{overflow:hidden}
     transform:translateY(26px) rotate(0) scale(1)}
   .ws-veil.in .ws-flyer{transform:none;box-shadow:none}
   .ws-veil.out .ws-flyer{transform:translateY(14px) rotate(0)}
-  /* สเกลชุดเดียวกัน แค่ลดหนึ่งขั้น · gutter 16 แทน 24
-     คำนวณที่ 375x667 · หัว 195 + ท้าย 159 → เหลือให้ลิสต์ 246px = ตั๋ว 4 ใบ
-     ปุ่มหลักอยู่ในจอเสมอ */
+  /* สเกลชุดเดียวกัน แค่ลดหนึ่งขั้น · gutter 16 แทน 24 */
   .ws-flyer{--fs-h1:26px;--fs-cta:18px;--fs-lead:15px;--fs-item:15px;--fs-meta:12px}
   .ws-main{padding:var(--s4);gap:var(--s3)}
+  /* kicker ต้องไม่ตกบรรทัด · ตกทีนึงกินที่ลิสต์ไปหนึ่งใบเต็ม ๆ
+     ที่ 375: กว้างที่ใช้ได้ = 375 − 32(padding) − 44(ปุ่มปิด) − 16(gap) = 283px */
+  .ws-kicker{font-size:10px;letter-spacing:.14em;white-space:nowrap}
   .ws-head h2{margin:var(--s3) 0 var(--s2);line-height:1.25}
   .ws-sub{max-width:none;line-height:1.55}
   .ws-tk{grid-template-columns:56px minmax(0,1fr) 44px}
   .ws-stub b{font-size:24px}
   .ws-tx{padding:var(--s2) var(--s3)}
   .ws-note{display:none}
+}
+/* จอมือถือเตี้ย (667 และต่ำกว่า) · หัวกล่องกินที่จนลิสต์เหลือใบครึ่ง
+   ตัดบรรทัดเสริมของ .ws-sub ทิ้ง แต่เก็บประโยคชวนหลักไว้ · ได้ตั๋วคืนมา 2 ใบ */
+@media(max-width:899px) and (max-height:720px){
+  .ws-flyer{--fs-h1:23px;--fs-lead:14px}
+  .ws-main{gap:var(--s2)}
+  .ws-head h2{margin:var(--s2) 0 var(--s1)}
+  .ws-sub span{display:none}
+  .ws-tx{padding:var(--s2)}
 }
 /* จอแนวนอนเตี้ยมาก · ยุบหัวเรื่องให้ปุ่มยังอยู่ในจอ
    ห้ามซ่อน .ws-sub · มันคือประโยคที่ทำให้กล่องนี้เป็น "คำเชิญ" ไม่ใช่ "ประกาศ"

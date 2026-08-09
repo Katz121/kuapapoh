@@ -1087,9 +1087,10 @@ if (topnav) {
     {id:'w1', d:'13', dow:'ศ.',  t:'10:30',           name:'ทำพวงกุญแจผ้าปาเต๊ะ',        place:'หน้าบ้านอี๋จู้',           cap:'รับ 20 คน'},
     {id:'w2', d:'14', dow:'ส.',  t:'13:00',           name:'ทำโคมไฟโบราณเฉลิม กับลุงเรน', place:'ย่านเมืองเก่า',            cap:'รับ 20 คน'},
     {id:'w3', d:'15', dow:'อา.', t:'10:30',           name:'สาธิตการร่อนแร่จากผู้รู้',    place:'เหมืองมิวเซียม (บ้าน 78)', cap:'ไม่จำกัดจำนวน'},
-    /* มินิแกลอรี่แยกสองรอบ เพราะที่นั่งนับแยกรอบละ 15 · รวมเป็นแถวเดียวแล้วนับไม่ได้ */
-    {id:'w4a',d:'16', dow:'จ.',  t:'9:30',            name:'มินิแกลอรี่ รอบเช้า',        place:'ดาดฟ้าบ้าน 104',          cap:'รับ 15 คน'},
-    {id:'w4b',d:'16', dow:'จ.',  t:'13:00',           name:'มินิแกลอรี่ รอบบ่าย',        place:'ดาดฟ้าบ้าน 104',          cap:'รับ 15 คน'},
+    /* มินิแกลอรี่แยกสองรอบ เพราะที่นั่งนับแยกรอบละ 15 · รวมเป็นแถวเดียวแล้วนับไม่ได้
+       label = ข้อความที่คนอ่านบนตั๋ว · name = ค่าที่ส่งเข้า Google Form ห้ามแตะ */
+    {id:'w4a',d:'16', dow:'จ.',  t:'9:30',            name:'มินิแกลอรี่ รอบเช้า',        label:'มินิแกลอรี่ รอบเช้า (ทำ Kokedama)', place:'ดาดฟ้าบ้าน 104',          cap:'รับ 15 คน'},
+    {id:'w4b',d:'16', dow:'จ.',  t:'13:00',           name:'มินิแกลอรี่ รอบบ่าย',        label:'มินิแกลอรี่ รอบบ่าย (ทำ Kokedama)', place:'ดาดฟ้าบ้าน 104',          cap:'รับ 15 คน'},
     {id:'w5', d:'16', dow:'จ.',  t:'14:00',           name:'“ตัดแปะแวะศิลป์”',           place:'โรงเรียนเต้าหมิง (บ้าน 305)', cap:'รับ 20 คน'}
   ];
   /* ต้องตรงกับตัวเลือกใน Google Form ทุกตัวอักษร รวมวงเล็บจำนวนที่รับ
@@ -1132,7 +1133,7 @@ if (topnav) {
     cb.checked = state.picked.indexOf(w.id) > -1;
     l.querySelector('.ws-stub b').textContent = w.d;
     l.querySelector('.ws-stub i').textContent = w.dow;
-    l.querySelector('.ws-tx b').textContent = w.name;
+    l.querySelector('.ws-tx b').textContent = w.label || w.name;
     l.querySelector('.ws-tx span').textContent = w.t + ' · ' + w.place;
     l.querySelector('.ws-tx i').textContent = w.cap;
     cb.addEventListener('change', sync);

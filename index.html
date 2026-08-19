@@ -337,6 +337,8 @@ footer a{color:var(--yellow)}
 /* ═══════════ Sticky Floating Heritage Merch Card ═══════════ */
 .sticky-merch-badge {
   position: fixed;
+  cursor: pointer;
+  text-decoration: none;
   bottom: 24px;
   right: 24px;
   background: rgba(255, 255, 255, 0.96);
@@ -917,7 +919,7 @@ document.querySelectorAll('.dialog-thumb').forEach(thumb => {
 <script src="cms-loader.js"></script>
 
 <!-- ═══════════ Sticky Floating Merch Card (การ์ดลอยติดตามหน้าจอ) ═══════════ -->
-<aside id="stickyMerchBadge" class="sticky-merch-badge" aria-label="Official Merch Floating Card">
+<a href="#shop" id="stickyMerchBadge" class="sticky-merch-badge" aria-label="ไปที่ส่วนของที่ระลึก POH SHOP">
   <div class="sticky-thumb">
     <img id="stickyBadgeImg" src="images/shirt-poh.webp" alt="เสื้อยืดกั่วป่าโพ้" width="60" height="60" loading="lazy">
   </div>
@@ -929,10 +931,10 @@ document.querySelectorAll('.dialog-thumb').forEach(thumb => {
     <span id="stickyBadgeTitle" class="sticky-title">เสื้อยืดกั่วป่าโพ้ KUAPAPOH</span>
     <div class="sticky-foot">
       <span id="stickyBadgePrice" class="sticky-price">฿350</span>
-      <a id="stickyBadgeCta" href="#shop" class="sticky-cta">สั่งซื้อ / ดูรายละเอียด →</a>
+      <span id="stickyBadgeCta" class="sticky-cta">สั่งซื้อ / ดูรายละเอียด →</span>
     </div>
   </div>
-</aside>
+</a>
 
 <script>
 // Floating Card scroll and dismiss logic
@@ -943,6 +945,7 @@ document.querySelectorAll('.dialog-thumb').forEach(thumb => {
   
   if (btnClose && badge) {
     btnClose.addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       badge.classList.add('is-hidden');
     });

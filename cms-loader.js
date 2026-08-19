@@ -155,19 +155,25 @@
             data.houses.items.forEach((item, idx) => {
               const art = document.createElement('article');
               art.className = 'house rise';
-              const logoHtml = item.logo ? `<figure><img class="logo" src="${item.logo}" width="300" height="300" loading="lazy" decoding="async" alt="${item.logoCap || 'ตราสัญลักษณ์'}"><figcaption>${item.logoCap || 'ตราสัญลักษณ์'}</figcaption></figure>` : '';
+              
+              const logoHtml = item.logo ? `
+                <img class="logo" src="${item.logo}" width="300" height="300" loading="lazy" decoding="async" alt="${item.logoCap || 'ตราสัญลักษณ์'}">
+                <p class="logo-cap">${item.logoCap || 'ตราสัญลักษณ์'}</p>
+              ` : '';
               const useHtml = item.use ? `<p class="use">${item.use}</p>` : '';
               const snapClass = item.no === '305' ? 'snap wide' : 'snap';
-              const snapW = item.no === '305' ? 400 : 400;
+              const snapW = 400;
               const snapH = item.no === '305' ? 300 : 533;
+              const lineW = item.no === '305' ? 388 : (item.no === '109' ? 226 : 237);
+              const lineH = item.no === '305' ? 250 : (item.no === '109' ? 334 : 403);
 
               art.innerHTML = `
-                <div class="plate">
-                  <div class="no">${item.no || (idx+1)} <small>${item.name || ''}</small></div>
-                  <figure>
-                    ${item.line ? `<img src="${item.line}" width="237" height="403" loading="lazy" decoding="async" alt="ภาพลายเส้น ${item.name || ''}">` : ''}
-                    ${item.photo ? `<img class="${snapClass}" src="${item.photo}" width="${snapW}" height="${snapH}" loading="lazy" decoding="async" alt="ภาพถ่าย ${item.name || ''}">` : ''}
-                  </figure>
+                <p class="no">${item.no || (idx+1)}<small>${item.name || ''}</small></p>
+                <div class="shotwrap">
+                  <div class="plate">
+                    ${item.line ? `<img src="${item.line}" width="${lineW}" height="${lineH}" loading="lazy" decoding="async" alt="ภาพลายเส้น ${item.name || ''}">` : ''}
+                  </div>
+                  ${item.photo ? `<img class="${snapClass}" src="${item.photo}" width="${snapW}" height="${snapH}" loading="lazy" decoding="async" alt="ภาพถ่าย ${item.name || ''}">` : ''}
                 </div>
                 <div class="body">
                   <h3>${item.title || item.name || ''}</h3>
@@ -180,7 +186,7 @@
             });
           }
 
-          const conclusion = hSec.querySelector('.wrap > p.rise:last-child');
+          const conclusion = hSec.querySelector('.wrap > p.rise:last-child, .wrap > p:last-child');
           if (conclusion && data.houses.conclusion) conclusion.innerHTML = data.houses.conclusion;
         }
       }

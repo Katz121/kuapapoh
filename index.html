@@ -183,6 +183,108 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .six-item b{font-family:var(--display);font-weight:700;font-size:1.55rem;color:var(--yellow);line-height:1.3}
 .six-item p{margin:.25rem 0 0;color:#d5d9ef;font-size:.95rem;max-width:44ch}
 
+/* ═══════════ POH SHOP (โพ้ช็อป) ═══════════ */
+.shop{background:var(--paper)}
+.shop-grid{display:grid;gap:clamp(20px,3vw,30px);margin-top:2.2rem}
+@media(min-width:600px){.shop-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1020px){.shop-grid{grid-template-columns:repeat(4,1fr)}}
+
+.shop-card{background:#fff;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);
+  display:flex;flex-direction:column;position:relative;transition:transform .2s,box-shadow .2s}
+.shop-card:hover{transform:translateY(-3px);box-shadow:8px 8px 0 var(--ink)}
+
+.shop-shot{position:relative;background:var(--yellow);border-bottom:3px solid var(--ink);
+  aspect-ratio:4/3;display:grid;place-items:center;padding:1rem;overflow:hidden}
+.shop-shot img{max-height:100%;width:auto;object-fit:contain;transition:transform .3s}
+.shop-card:hover .shop-shot img{transform:scale(1.06)}
+
+.shop-tag{position:absolute;top:10px;left:10px;z-index:2;background:var(--ink);color:var(--yellow);
+  font-family:var(--body);font-weight:600;font-size:.74rem;padding:.2em .65em;border:1.5px solid var(--ink)}
+
+.shop-body{padding:1.3rem;display:flex;flex-direction:column;flex:1;gap:.5rem}
+.shop-body h3{font-size:1.15rem;margin:0;color:var(--ink);line-height:1.35}
+.shop-desc{font-size:.88rem;color:var(--muted);margin:0;line-height:1.55;flex:1}
+.shop-meta{font-size:.78rem;font-weight:600;color:var(--cobalt);margin:0}
+
+.shop-more-btn{display:inline-flex;align-items:center;justify-content:flex-start;
+  font-size:.84rem;font-weight:600;color:var(--magenta-text);background:none;border:none;
+  padding:0;margin-top:.2rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;
+  transition:color .2s;text-align:left;font-family:inherit}
+.shop-more-btn:hover{color:var(--ink)}
+
+.shop-foot{margin-top:.6rem;padding-top:.85rem;border-top:1.5px dashed var(--rule);
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem}
+.shop-price{font-family:var(--mono);font-size:1.25rem;font-weight:700;color:var(--magenta-text)}
+.shop-buy{display:inline-flex;align-items:center;gap:.35em;font-size:.82rem;font-weight:600;
+  color:var(--ink);text-decoration:none;padding:.38em .85em;background:var(--yellow);
+  border:2px solid var(--ink);border-radius:999px;transition:background .2s,color .2s}
+.shop-buy:hover{background:var(--magenta-text);color:#fff;border-color:var(--magenta-text)}
+
+.shop-guide{margin-top:2.6rem;background:var(--yellow);border:3px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);padding:clamp(1.4rem,3.5vw,2.4rem)}
+.shop-guide h3{font-family:var(--display);font-weight:700;font-size:1.35rem;margin:0 0 1rem;color:var(--ink)}
+.shop-guide-grid{display:grid;gap:1.2rem;margin-bottom:1.5rem}
+@media(min-width:680px){.shop-guide-grid{grid-template-columns:1fr 1fr;gap:2rem}}
+.shop-guide-item b{display:block;font-size:1rem;color:var(--ink);margin-bottom:.25rem}
+.shop-guide-item p{font-size:.9rem;color:var(--ink);margin:0;line-height:1.55}
+
+/* ═══════════ SHOP MODAL (หน้าต่างดูรายละเอียด & ถ่ายแบบ) ═══════════ */
+.shop-dialog{border:3px solid var(--ink);padding:0;background:var(--paper);color:var(--ink);
+  width:min(980px,95vw);max-height:90vh;max-height:90dvh;box-shadow:12px 12px 0 var(--ink);
+  overflow:hidden;outline:none;margin:auto}
+.shop-dialog::backdrop{background:rgba(16,21,56,.85);backdrop-filter:blur(3px)}
+.shop-dialog[open]{display:grid;grid-template-rows:auto}
+
+.dialog-box{position:relative;overflow-y:auto;padding:clamp(1.2rem,3vw,2.2rem);max-height:calc(90vh - 6px)}
+.dialog-close{position:absolute;top:14px;right:14px;z-index:10;width:42px;height:42px;
+  background:var(--paper);border:2px solid var(--ink);font-size:1.2rem;font-weight:700;
+  cursor:pointer;display:grid;place-items:center;transition:background .2s,color .2s}
+.dialog-close:hover{background:var(--ink);color:var(--yellow)}
+
+.dialog-grid{display:grid;gap:clamp(1.4rem,3vw,2.4rem)}
+@media(min-width:760px){.dialog-grid{grid-template-columns:400px 1fr;align-items:start}}
+
+.dialog-gallery{display:flex;flex-direction:column;gap:.8rem}
+.dialog-main-img{background:#0e132c;border:2px solid var(--ink);border-radius:6px;
+  aspect-ratio:4/3;min-height:280px;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;padding:8px;position:relative;box-shadow:inset 0 0 20px rgba(0,0,0,.4)}
+.dialog-main-img img{max-width:100%;max-height:100%;width:auto;height:auto;
+  object-fit:contain;transition:opacity .2s ease-in-out;border-radius:3px}
+
+.dialog-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.dialog-thumb{background:#fff;border:2px solid var(--rule);padding:2px;aspect-ratio:1;
+  cursor:pointer;border-radius:3px;overflow:hidden;transition:border-color .2s,transform .15s;
+  position:relative;display:flex;align-items:center;justify-content:center}
+.dialog-thumb img{width:100%;height:100%;object-fit:cover}
+.dialog-thumb:hover{transform:translateY(-2px);border-color:var(--ink)}
+.dialog-thumb.is-active{border-color:var(--magenta-text);border-width:2.5px;box-shadow:2px 2px 0 var(--ink)}
+.dialog-thumb-badge{position:absolute;bottom:0;left:0;right:0;background:rgba(16,21,56,.85);
+  color:#fff;font-size:.62rem;font-weight:600;text-align:center;padding:1px 0;line-height:1.2}
+
+.dialog-content{display:flex;flex-direction:column;gap:.9rem}
+.dialog-content h3{font-size:clamp(1.35rem,2.5vw,1.75rem);margin:0;color:var(--ink);line-height:1.25}
+.dialog-price{font-family:var(--mono);font-size:1.55rem;font-weight:700;color:var(--magenta-text);margin:0}
+.dialog-price small{font-family:var(--body);font-size:.85rem;color:var(--muted);font-weight:400;margin-left:.6rem}
+.dialog-lead{font-size:.95rem;line-height:1.6;margin:0;color:var(--ink)}
+
+.dialog-section{border-top:1.5px dashed var(--rule);padding-top:.85rem}
+.dialog-section h4{font-size:.92rem;font-weight:700;margin:0 0 .4rem;color:var(--cobalt)}
+.dialog-icons{list-style:none;margin:0;padding:0;font-size:.86rem;line-height:1.55;display:grid;gap:.35rem}
+.dialog-icons b{color:var(--ink)}
+.dialog-icons span{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+
+.size-table-wrap{overflow-x:auto;margin-top:.4rem;border:1px solid var(--rule);border-radius:4px}
+.size-table{width:100%;border-collapse:collapse;font-size:.82rem;text-align:center}
+.size-table th,.size-table td{border:1px solid var(--rule);padding:.35rem .45rem}
+.size-table th{background:var(--yellow);font-weight:600;color:var(--ink)}
+.size-table tr:nth-child(even){background:rgba(16,21,56,.03)}
+.size-table td:first-child{font-weight:600;background:rgba(16,21,56,.05)}
+.dialog-note{font-size:.78rem;color:var(--muted);margin:.4rem 0 0}
+
+.dialog-actions{margin-top:.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:.8rem}
+.dialog-subnote{font-size:.8rem;color:var(--muted)}
+
+
 /* ═══════════ ติดต่อ ═══════════ */
 /* ใช้ magenta-text (เข้มกว่า) เพราะขาวบน --magenta ได้ contrast แค่ 4.33:1 · ตก WCAG AA */
 .contact{background:var(--magenta-text);color:#fff}
@@ -219,10 +321,131 @@ footer a{color:var(--yellow)}
   box-shadow:0 0 0 6px rgba(16,21,56,.75)}
 
 @media print{
-  .topbar,.patternband,.hero-row{display:none}
-  body,.hero,.six,.contact{background:#fff!important;color:#000!important}
-  .six h2,.six .tag,.six-item b,.contact .tag{color:#000!important}
+  .topbar,.patternband,.hero-row,.shop-buy,.shop-dialog{display:none}
+  body,.hero,.six,.contact,.shop{background:#fff!important;color:#000!important}
+  .six h2,.six .tag,.six-item b,.contact .tag,.shop h2,.shop .tag{color:#000!important}
 }
+
+/* ═══════════ Sticky Floating Heritage Merch Card ═══════════ */
+.sticky-merch-badge {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 2.5px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: .7rem .9rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  z-index: 95;
+  max-width: 320px;
+  color: var(--ink);
+  transition: transform .25s cubic-bezier(.2,.7,.3,1), box-shadow .2s ease, opacity .25s ease;
+  backdrop-filter: blur(8px);
+}
+.sticky-merch-badge:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.sticky-merch-badge.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+}
+.sticky-thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 6px;
+  border: 1.5px solid var(--ink);
+  background: #0e132c;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  flex: none;
+}
+.sticky-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.sticky-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+.sticky-tag-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .4rem;
+}
+.sticky-tag {
+  background: var(--magenta);
+  color: #fff;
+  font-size: .65rem;
+  font-weight: 700;
+  padding: .12em .45em;
+  border-radius: 3px;
+  display: inline-block;
+}
+.sticky-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  font-weight: 700;
+  transition: color .15s;
+}
+.sticky-close:hover {
+  color: var(--danger);
+}
+.sticky-title {
+  font-weight: 700;
+  font-size: .86rem;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.sticky-foot {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .78rem;
+  margin-top: 2px;
+}
+.sticky-price {
+  font-weight: 700;
+  color: var(--magenta-text);
+  font-family: var(--mono);
+  font-size: .95rem;
+}
+.sticky-cta {
+  color: var(--cobalt);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+@media(max-width: 600px) {
+  .sticky-merch-badge {
+    bottom: 14px;
+    right: 14px;
+    padding: .5rem .75rem;
+    max-width: calc(100vw - 28px);
+  }
+  .sticky-thumb {
+    width: 44px;
+    height: 44px;
+  }
+  .sticky-title {
+    font-size: .8rem;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -235,6 +458,7 @@ footer a{color:var(--yellow)}
       <a href="#houses">สามพื้นที่</a>
       <a href="#origin">ที่มาของชื่อ</a>
       <a href="#six">6 อ.</a>
+      <a href="#shop">โพ้ช็อป</a>
       <a href="#contact">ติดต่อ</a>
     </nav>
   </div>
@@ -380,6 +604,185 @@ footer a{color:var(--yellow)}
   </div>
 </section>
 
+<!-- ═══════════ POH SHOP (โพ้ช็อป) ═══════════ -->
+<section class="shop shift" id="shop">
+  <div class="wrap">
+    <p class="tag rise">POH SHOP · โพ้ช็อป</p>
+    <h2 class="rise">ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ</h2>
+    <p class="lede rise">สินค้าและของสะสมที่ออกแบบจากอัตลักษณ์เมืองเก่าตะกั่วป่า ร่วมกับช่างฝีมือและคนในชุมชน
+      รายได้สนับสนุนการฟื้นฟูและขับเคลื่อนเมืองสร้างสรรค์</p>
+
+    <div class="shop-grid rise">
+      <!-- สินค้า 1: เสื้อยืดกั่วป่าโพ้ -->
+      <article class="shop-card">
+        <div class="shop-shot" style="cursor:pointer" data-open-modal="modal-shirt" title="คลิกเพื่อดูภาพถ่ายแบบและรายละเอียด">
+          <span class="shop-tag">Official Merch</span>
+          <img src="images/shirt-poh.webp" width="360" height="255" loading="lazy" decoding="async" alt="เสื้อยืดกั่วป่าโพ้ ด้านหน้าและด้านหลัง">
+        </div>
+        <div class="shop-body">
+          <h3>เสื้อยืดกั่วป่าโพ้ KUAPAPOH</h3>
+          <p class="shop-desc">เสื้อยืดสีดำพรีเมียม สกรีนตรากั่วป่าโพ้ที่อกซ้าย ด้านหลังจัดเต็มกราฟิกลายรวมอัตลักษณ์ตะกั่วป่า 6 อ.</p>
+          <button type="button" class="shop-more-btn" data-open-modal="modal-shirt">
+            📸 ดูภาพถ่ายแบบ & รายละเอียดลายเสื้อ →
+          </button>
+          <p class="shop-meta">ผ้าฝ้าย Comb 100% · ไซส์ M · L · XL · 2XL</p>
+          <div class="shop-foot">
+            <span class="shop-price">฿350</span>
+            <a class="shop-buy" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อ</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- สินค้า 2: พวงกุญแจผ้าปาเต๊ะ -->
+      <article class="shop-card">
+        <div class="shop-shot">
+          <span class="shop-tag">งานมือหน้าบ้านอี๋จู้</span>
+          <img src="images/ws/ws-keychain.webp" width="220" height="220" loading="lazy" decoding="async" alt="พวงกุญแจผ้าปาเต๊ะ">
+        </div>
+        <div class="shop-body">
+          <h3>พวงกุญแจผ้าปาเต๊ะแท้</h3>
+          <p class="shop-desc">งานตัดเย็บทำมือจากเศษผ้าปาเต๊ะเปอรานากัน โดยกลุ่มแม่บ้านในย่านเมืองเก่า แต่ละชิ้นมีคู่สีและลวดลายเอกลักษณ์ชิ้นเดียวในโลก</p>
+          <p class="shop-meta">งานฝีมือชุมชน 100%</p>
+          <div class="shop-foot">
+            <span class="shop-price">฿120</span>
+            <a class="shop-buy" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อ</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- สินค้า 3: โปสการ์ดแลกั่วป่า -->
+      <article class="shop-card">
+        <div class="shop-shot">
+          <span class="shop-tag">พิมพ์ Riso 4 สี</span>
+          <img src="images/photo-port.webp" width="180" height="190" loading="lazy" decoding="async" alt="โปสการ์ดแลกั่วป่า">
+        </div>
+        <div class="shop-body">
+          <h3>ชุดโปสการ์ด “แลกั่วป่า” (6 ใบ)</h3>
+          <p class="shop-desc">ภาพสเก็ตช์อาคารเก่า ผสมภาพถ่ายฟิล์มมุมประวัติศาสตร์และท่าน้ำตะกั่วป่า พิมพ์บนกระดาษคราฟต์หนา 260 แกรม</p>
+          <p class="shop-meta">พร้อมบันทึกประวัติศาสตร์ย่อ</p>
+          <div class="shop-foot">
+            <span class="shop-price">฿150</span>
+            <a class="shop-buy" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อ</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- สินค้า 4: โมเดลโคมไฟเฉลิมโบราณจิ๋ว -->
+      <article class="shop-card">
+        <div class="shop-shot">
+          <span class="shop-tag">ภูมิปัญญาช่างลุงเรน</span>
+          <img src="images/ws/ws-lantern.webp" width="150" height="220" loading="lazy" decoding="async" alt="โมเดลโคมไฟเฉลิมโบราณจิ๋ว">
+        </div>
+        <div class="shop-body">
+          <h3>โมเดลโคมไฟเฉลิมโบราณจิ๋ว</h3>
+          <p class="shop-desc">ของที่ระลึกจำลองโคมไฟเฉลิมโบราณ มรดกภูมิปัญญาการประกอบไม้ไร้ตะปูของช่างไม้ตะกั่วป่า เพื่อความเป็นสิริมงคล</p>
+          <p class="shop-meta">งานไม้ประกอบมือ</p>
+          <div class="shop-foot">
+            <span class="shop-price">฿290</span>
+            <a class="shop-buy" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อ</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- ช่องทางการสั่งซื้อและรับสินค้า -->
+    <div class="shop-guide rise">
+      <h3>ช่องทางการสั่งซื้อและรับสินค้า</h3>
+      <div class="shop-guide-grid">
+        <div class="shop-guide-item">
+          <b>📦 สั่งซื้อออนไลน์ (จัดส่งทั่วประเทศ)</b>
+          <p>สั่งซื้อ แจ้งรายการสินค้า และสอบถามรอบจัดส่งได้โดยตรงทาง LINE Official ของโครงการ</p>
+        </div>
+        <div class="shop-guide-item">
+          <b>🏮 รับสินค้าได้ที่บ้าน 78 Studio Takuapa</b>
+          <p>แวะชมและรับสินค้าจริงได้ที่บ้าน 78 Studio Takuapa ถนนศรีตะกั่วป่า (<a href="https://www.google.com/maps/search/?api=1&query=8.827130055794738,98.36498044583587" target="_blank" rel="noopener" style="text-decoration:underline;color:var(--ink);font-weight:600">📍 เปิดแผนที่นำทาง</a>)</p>
+        </div>
+      </div>
+      <a class="btn on-paper" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อของที่ระลึกผ่าน LINE @kuapapoh</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MODAL: เสื้อยืด KUAPAPOH ═══════════ -->
+<dialog id="modal-shirt" class="shop-dialog" aria-labelledby="modal-shirt-title">
+  <div class="dialog-box">
+    <button type="button" class="dialog-close" data-close-modal aria-label="ปิดหน้าต่างรายละเอียด">✕</button>
+    
+    <div class="dialog-grid">
+      <!-- แกลเลอรีภาพถ่ายแบบ + ภาพ 2D + ตารางไซส์ (แสดงเต็มภาพ ไม่ถูกตัด) -->
+      <div class="dialog-gallery">
+        <div class="dialog-main-img">
+          <img id="shirt-gallery-main" src="images/model-shirt-1.webp" width="799" height="1200" alt="ภาพถ่ายแบบเสื้อยืดกั่วป่าโพ้">
+        </div>
+        <div class="dialog-thumbs" role="tablist" aria-label="เลือกรูปภาพ">
+          <button type="button" class="dialog-thumb is-active" data-src="images/model-shirt-1.webp" title="ภาพถ่ายแบบ 1" aria-label="ภาพถ่ายแบบ 1">
+            <img src="images/model-shirt-1.webp" alt="แบบ 1">
+            <span class="dialog-thumb-badge">แบบ 1</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="images/model-shirt-2.webp" title="ภาพถ่ายแบบ 2" aria-label="ภาพถ่ายแบบ 2">
+            <img src="images/model-shirt-2.webp" alt="แบบ 2">
+            <span class="dialog-thumb-badge">แบบ 2</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="images/model-shirt-3.webp" title="ภาพถ่ายแบบ 3" aria-label="ภาพถ่ายแบบ 3">
+            <img src="images/model-shirt-3.webp" alt="แบบ 3">
+            <span class="dialog-thumb-badge">แบบ 3</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="images/shirt-poh.webp" title="ภาพ 2D กราฟิกลายเสื้อ หน้า-หลัง" aria-label="ภาพ 2D กราฟิกลายเสื้อ">
+            <img src="images/shirt-poh.webp" alt="ภาพ 2D ลายเสื้อ">
+            <span class="dialog-thumb-badge">ภาพ 2D</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- รายละเอียดสินค้า & สตอรี่ & ตารางไซส์ -->
+      <div class="dialog-content">
+        <div>
+          <span class="shop-tag" style="position:static;display:inline-block;margin-bottom:.5rem">Official Heritage Merch</span>
+          <h3 id="modal-shirt-title">เสื้อยืดกั่วป่าโพ้ KUAPAPOH</h3>
+          <p class="dialog-price">฿350 <small>จัดส่งทั่วประเทศ</small></p>
+        </div>
+
+        <p class="dialog-lead">เสื้อยืดสีดำพรีเมียม ถ่ายทอดเรื่องราวและสถาปัตยกรรมมีชีวิตของย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา ออกแบบร่วมกับศิลปินและคนในชุมชน</p>
+
+        <div class="dialog-section">
+          <h4>🌟 สัญลักษณ์และอัตลักษณ์บนผืนผ้า</h4>
+          <ul class="dialog-icons">
+            <li><b>อกซ้าย:</b> ตราประทับมงคล “กั่วป่าโพ้” (高埠巴) สีน้ำเงินโคบอลต์</li>
+            <li><b>ด้านหลัง:</b> บล็อกกราฟิกสีสัน 9 ช่อง ถอดรหัส 6 อ. ของเมืองเก่า:
+              <span>🚌 รถสองแถวไม้โพถ้องโบราณ · 🫖 กาน้ำชาลายครามเสิร์ฟยามเช้า · 🏮 ศาลเจ้ากังตั้งโหยกวน & พระเจดีย์ · 🌸 ดอกไม้ลายผ้าปาเต๊ะเปอรานากัน · 🍜 อาหารพื้นถิ่นตะกั่วป่า</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dialog-section">
+          <h4>📏 ตารางขนาดเสื้อ (Size Chart · นิ้ว)</h4>
+          <div class="size-table-wrap">
+            <table class="size-table">
+              <thead>
+                <tr><th>ไซส์</th><th>รอบอก (นิ้ว)</th><th>ความยาว (นิ้ว)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>M</td><td>36"</td><td>26"</td></tr>
+                <tr><td>L</td><td>40"</td><td>28"</td></tr>
+                <tr><td>XL</td><td>44"</td><td>29"</td></tr>
+                <tr><td>2XL</td><td>48"</td><td>30"</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="dialog-note">* มีจำหน่ายเฉพาะไซส์ <b>M · L · XL · 2XL</b> | ผ้าฝ้าย Cotton 100% เกรด Comb ผ้านุ่ม ใส่สบาย ระบายอากาศดี | คลิกแท็บ <b>"ภาพ 2D"</b> ที่แกลเลอรีเพื่อดูลวดลายกราฟิกแบบเต็มตา</p>
+        </div>
+
+        <div class="dialog-actions">
+          <a class="btn on-paper" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">
+            สั่งซื้อทาง LINE @kuapapoh
+          </a>
+          <span class="dialog-subnote">ราคา 350 บาท | ระบุไซส์ (M, L, XL, 2XL) และจำนวนทาง LINE ได้ทันที</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
 <!-- ═══════════ ติดต่อ ═══════════ -->
 <section class="contact shift" id="contact">
   <div class="wrap">
@@ -454,6 +857,106 @@ if (topnav) {
   topnav.addEventListener('scroll', syncFade, {passive:true});
   addEventListener('resize', syncFade, {passive:true});
 }
+
+/* ═══════════ จัดการหน้าต่างรายละเอียดสินค้า & แกลเลอรีถ่ายแบบ ═══════════ */
+document.querySelectorAll('[data-open-modal]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.getAttribute('data-open-modal');
+    const dlg = document.getElementById(id);
+    if (dlg) {
+      dlg.showModal();
+      document.body.style.overflow = 'hidden';
+    }
+  });
+});
+
+document.querySelectorAll('[data-close-modal]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const dlg = btn.closest('dialog');
+    if (dlg) {
+      dlg.close();
+      document.body.style.overflow = '';
+    }
+  });
+});
+
+document.querySelectorAll('.shop-dialog').forEach(dlg => {
+  dlg.addEventListener('click', (e) => {
+    if (e.target === dlg) {
+      dlg.close();
+      document.body.style.overflow = '';
+    }
+  });
+  dlg.addEventListener('close', () => {
+    document.body.style.overflow = '';
+  });
+});
+
+/* สลับภาพในแกลเลอรี */
+document.querySelectorAll('.dialog-thumb').forEach(thumb => {
+  thumb.addEventListener('click', () => {
+    const gallery = thumb.closest('.dialog-gallery');
+    const mainImg = gallery.querySelector('#shirt-gallery-main');
+    const src = thumb.getAttribute('data-src');
+    if (mainImg && src) {
+      mainImg.src = src;
+      gallery.querySelectorAll('.dialog-thumb').forEach(t => t.classList.remove('is-active'));
+      thumb.classList.add('is-active');
+    }
+  });
+});
+
 </script>
+<script src="cms-loader.js"></script>
+
+<!-- ═══════════ Sticky Floating Merch Card (การ์ดลอยติดตามหน้าจอ) ═══════════ -->
+<aside id="stickyMerchBadge" class="sticky-merch-badge" aria-label="Official Merch Floating Card">
+  <div class="sticky-thumb">
+    <img id="stickyBadgeImg" src="images/shirt-poh.webp" alt="เสื้อยืดกั่วป่าโพ้" width="60" height="60" loading="lazy">
+  </div>
+  <div class="sticky-info">
+    <div class="sticky-tag-row">
+      <span id="stickyBadgeTag" class="sticky-tag">Official Merch</span>
+      <button type="button" class="sticky-close" id="btnDismissSticky" aria-label="ซ่อนชั่วคราว" title="ซ่อนชั่วคราว">×</button>
+    </div>
+    <span id="stickyBadgeTitle" class="sticky-title">เสื้อยืดกั่วป่าโพ้ KUAPAPOH</span>
+    <div class="sticky-foot">
+      <span id="stickyBadgePrice" class="sticky-price">฿350</span>
+      <a id="stickyBadgeCta" href="#shop" class="sticky-cta">สั่งซื้อ / ดูรายละเอียด →</a>
+    </div>
+  </div>
+</aside>
+
+<script>
+// Floating Card scroll and dismiss logic
+(function() {
+  const badge = document.getElementById('stickyMerchBadge');
+  const btnClose = document.getElementById('btnDismissSticky');
+  const shopSec = document.getElementById('shop');
+  
+  if (btnClose && badge) {
+    btnClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      badge.classList.add('is-hidden');
+    });
+  }
+
+  // Smooth hide when reaching shop section
+  if (badge && shopSec) {
+    window.addEventListener('scroll', () => {
+      const rect = shopSec.getBoundingClientRect();
+      const inShop = rect.top <= (window.innerHeight - 100) && rect.bottom >= 150;
+      if (inShop) {
+        badge.style.opacity = '0';
+        badge.style.pointerEvents = 'none';
+      } else if (!badge.classList.contains('is-hidden')) {
+        badge.style.opacity = '1';
+        badge.style.pointerEvents = 'auto';
+      }
+    }, { passive: true });
+  }
+})();
+</script>
+
 </body>
 </html>

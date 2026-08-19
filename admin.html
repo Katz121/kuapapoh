@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>กั่วป่าโพ้ · ระบบจัดการเนื้อหา ฟอนต์ และสินค้า (CMS Admin)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Kanit:wght@600;700&family=Prompt:wght@400;600;700&family=Chakra+Petch:wght@600;700&family=Mitr:wght@400;600&family=Sarabun:wght@400;600;700&family=Pridi:wght@600;700&family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --yellow:#FFE81C;
+  --magenta:#EC0A72;
+  --magenta-text:#C4005D;
+  --cobalt:#1E3FA8;
+  --paper:#FBF7EC;
+  --ink:#101538;
+  --muted:#5a6288;
+  --rule:rgba(16,21,56,.14);
+  --rule-strong:rgba(16,21,56,.3);
+  --success:#0d8a4f;
+  --danger:#d92534;
+  --card-bg:#ffffff;
+  
+  --display:'Bai Jamjuree','IBM Plex Sans Thai',sans-serif;
+  --body:'IBM Plex Sans Thai','Noto Sans Thai',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:#f4f0e6;color:var(--ink);
+  font-family:var(--body);font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+input,textarea,select,button{font-family:inherit;font-size:inherit}
+
+/* Header */
+.admin-header{
+  background:var(--ink);color:#fff;padding:1rem 1.5rem;position:sticky;top:0;z-index:100;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;
+  box-shadow:0 4px 16px rgba(0,0,0,.18);
+}
+.brand{display:flex;align-items:center;gap:.8rem}
+.brand-badge{background:var(--yellow);color:var(--ink);font-family:var(--display);font-weight:700;padding:.2rem .6rem;border-radius:4px;font-size:.9rem}
+.brand-title{font-family:var(--display);font-weight:700;font-size:1.2rem;margin:0}
+.brand-sub{font-size:.8rem;color:#b2b8db}
+
+.header-actions{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:.4rem;font-weight:600;font-size:.88rem;
+  padding:.45rem 1rem;border-radius:6px;cursor:pointer;text-decoration:none;transition:all .15s ease;
+  border:2px solid transparent;
+}
+.btn-primary{background:var(--yellow);color:var(--ink);border-color:var(--ink)}
+.btn-primary:hover{background:#fff;box-shadow:3px 3px 0 var(--ink)}
+.btn-secondary{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.btn-secondary:hover{background:rgba(255,255,255,.25);color:var(--yellow)}
+.btn-success{background:var(--success);color:#fff}
+.btn-success:hover{opacity:.9}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#b91c1c}
+.btn-outline{background:#fff;border-color:var(--ink);color:var(--ink)}
+.btn-outline:hover{background:var(--ink);color:var(--yellow)}
+.btn-outline-danger{background:#fff;border-color:var(--danger);color:var(--danger)}
+.btn-outline-danger:hover{background:var(--danger);color:#fff}
+.btn-sm{padding:.28rem .65rem;font-size:.8rem}
+
+/* Layout */
+.admin-layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 66px)}
+@media(max-width:860px){
+  .admin-layout{grid-template-columns:1fr}
+}
+
+/* Sidebar Nav */
+.admin-sidebar{
+  background:#fff;border-right:2px solid var(--rule);padding:1.2rem .8rem;
+  position:sticky;top:66px;height:calc(100vh - 66px);overflow-y:auto;
+}
+@media(max-width:860px){
+  .admin-sidebar{position:static;height:auto;border-right:none;border-bottom:2px solid var(--rule);display:flex;overflow-x:auto;padding:.6rem}
+}
+.nav-group-title{font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin:.8rem 0 .4rem .6rem}
+.nav-tab{
+  width:100%;text-align:left;background:none;border:none;padding:.65rem .85rem;border-radius:6px;
+  font-weight:600;font-size:.9rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:.6rem;
+  transition:all .15s;white-space:nowrap;
+}
+.nav-tab:hover{background:rgba(16,21,56,.05);color:var(--ink)}
+.nav-tab.is-active{background:var(--ink);color:var(--yellow);box-shadow:2px 2px 0 rgba(0,0,0,.2)}
+
+/* Main Content */
+.admin-main{padding:clamp(1.2rem,3vw,2.4rem);max-width:1100px;margin:0 auto;width:100%}
+.tab-content{display:none}
+.tab-content.is-active{display:block;animation:fadeIn .2s ease-in-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* Panels & Cards */
+.panel{background:var(--card-bg);border:2px solid var(--ink);border-radius:8px;box-shadow:4px 4px 0 var(--ink);padding:clamp(1.2rem,2.5vw,1.8rem);margin-bottom:1.6rem}
+.panel-head{border-bottom:2px solid var(--rule);padding-bottom:.8rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.panel-title{font-family:var(--display);font-weight:700;font-size:1.25rem;margin:0;color:var(--ink)}
+.panel-desc{color:var(--muted);font-size:.86rem;margin:0}
+
+/* Form Controls */
+.form-grid{display:grid;gap:1.1rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem}
+@media(max-width:760px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+
+.field{display:flex;flex-direction:column;gap:.35rem}
+.field-label{font-weight:600;font-size:.88rem;color:var(--ink);display:flex;align-items:center;justify-content:space-between}
+.field-hint{font-size:.76rem;color:var(--muted);font-weight:400}
+.field-input, .field-textarea, .field-select{
+  width:100%;border:1.5px solid var(--rule-strong);border-radius:5px;padding:.55rem .75rem;
+  background:#faf8f3;color:var(--ink);transition:border-color .2s,background .2s;
+}
+.field-input:focus, .field-textarea:focus, .field-select:focus{
+  outline:none;border-color:var(--cobalt);background:#fff;box-shadow:0 0 0 3px rgba(30,63,168,.15);
+}
+.field-textarea{min-height:75px;resize:vertical}
+.field-textarea.tall{min-height:120px}
+
+/* Dynamic Item Cards */
+.item-card{
+  background:#fdfcf9;border:2px solid var(--rule-strong);border-radius:8px;padding:1.2rem;
+  margin-bottom:1.2rem;position:relative;box-shadow:2px 2px 0 rgba(16,21,56,.08);transition:border-color .2s;
+}
+.item-card:hover{border-color:var(--cobalt)}
+.item-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1.5px dashed var(--rule);flex-wrap:wrap;gap:.5rem}
+.item-card-title{font-weight:700;font-size:1.05rem;color:var(--cobalt);display:flex;align-items:center;gap:.5rem}
+.badge{background:var(--yellow);color:var(--ink);font-weight:600;font-size:.74rem;padding:.25em .6em;border-radius:4px;border:1px solid var(--ink)}
+
+/* Image Upload Widget */
+.image-widget{
+  background:#fff;border:1.5px solid var(--rule-strong);border-radius:6px;padding:.8rem;
+  display:flex;align-items:center;gap:1rem;margin-top:.3rem;flex-wrap:wrap;transition:border-color .2s;
+}
+.image-widget.is-dragover{border-color:var(--magenta);background:#fff5f9}
+.img-preview-box{
+  width:80px;height:80px;border-radius:5px;border:2px solid var(--ink);background:#0e132c;
+  display:grid;place-items:center;overflow:hidden;flex:none;box-shadow:2px 2px 0 var(--ink);position:relative;
+}
+.img-preview-box img{width:100%;height:100%;object-fit:contain;display:block}
+.img-controls{flex:1;display:flex;flex-direction:column;gap:.4rem;min-width:200px}
+.img-btn-row{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.upload-btn-label{
+  display:inline-flex;align-items:center;gap:.35rem;font-size:.82rem;font-weight:600;
+  padding:.35rem .75rem;background:var(--yellow);border:1.5px solid var(--ink);border-radius:4px;
+  cursor:pointer;color:var(--ink);transition:all .15s;
+}
+.upload-btn-label:hover{background:var(--ink);color:var(--yellow)}
+.file-hidden{display:none}
+
+/* Toggle Switch */
+.switch-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--rule)}
+.switch{position:relative;display:inline-block;width:44px;height:24px}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:#ccc;transition:.3s;border-radius:24px;border:1.5px solid var(--ink)}
+.slider:before{position:absolute;content:"";height:16px;width:16px;left:2px;bottom:2px;background:#fff;transition:.3s;border-radius:50%;border:1px solid var(--ink)}
+input:checked + .slider{background:var(--success)}
+input:checked + .slider:before{transform:translateX(20px)}
+
+/* Typography Preview Box */
+.typo-preview-box{
+  background:#fff;border:2px solid var(--ink);border-radius:6px;padding:1.4rem;
+  box-shadow:3px 3px 0 var(--ink);margin-top:1rem;
+}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--yellow);padding:.8rem 1.4rem;
+  border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.25);border:2px solid var(--yellow);
+  font-weight:600;z-index:999;transform:translateY(100px);opacity:0;transition:all .25s ease;
+}
+.toast.show{transform:none;opacity:1}
+
+/* Modal Passcode */
+.auth-overlay{
+  position:fixed;inset:0;background:rgba(16,21,56,.85);backdrop-filter:blur(5px);z-index:200;
+  display:grid;place-items:center;padding:1rem;
+}
+.auth-box{
+  background:#fff;border:3px solid var(--ink);box-shadow:8px 8px 0 var(--ink);
+  padding:2rem;border-radius:8px;max-width:400px;width:100%;text-align:center;
+}
+</style>
+</head>
+<body>
+
+<!-- Passcode Protection -->
+<div id="authOverlay" class="auth-overlay" style="display:none">
+  <div class="auth-box">
+    <div style="font-size:2.5rem;margin-bottom:.5rem">🔐</div>
+    <h2 style="font-family:var(--display);margin:0 0 .5rem">เข้าสู่ระบบ Admin</h2>
+    <p style="color:var(--muted);font-size:.88rem;margin:0 0 1.2rem">กรุณากรอกรหัสผ่านเพื่อเข้าจัดการเนื้อหาและรูปภาพ<br><small>(รหัสเริ่มต้น: <b>78109</b>)</small></p>
+    <div class="field" style="margin-bottom:1rem">
+      <input type="password" id="passcodeInput" class="field-input" placeholder="ใส่รหัสผ่าน..." style="text-align:center;font-size:1.2rem;letter-spacing:.2em" autofocus>
+    </div>
+    <button type="button" id="btnUnlock" class="btn btn-primary" style="width:100%;justify-content:center">เข้าสู่ระบบ</button>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="admin-header">
+  <div class="brand">
+    <span class="brand-badge">KUAPAPOH CMS</span>
+    <div>
+      <h1 class="brand-title">ระบบจัดการเนื้อหา ฟอนต์ และสินค้า</h1>
+      <span class="brand-sub">ปรับแต่งแบบอิสระ 100% ทั้งข้อความ รูปภาพ หมวดหมู่ และรูปแบบตัวอักษร</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <a href="index.html" target="_blank" class="btn btn-secondary">
+      <span>🌐 ดูหน้าเว็บจริง</span>
+    </a>
+    <button type="button" id="btnSaveAll" class="btn btn-primary">
+      <span>💾 บันทึกการเปลี่ยนแปลง</span>
+    </button>
+  </div>
+</header>
+
+<div class="admin-layout">
+  <!-- Sidebar Navigation -->
+  <aside class="admin-sidebar">
+    <div class="nav-group-title">จัดการดีไซน์ & ฟอนต์</div>
+    <button type="button" class="nav-tab is-active" data-tab="tab-typo">🔤 จัดการฟอนต์ & ตัวอักษร</button>
+    <button type="button" class="nav-tab" data-tab="tab-sections">🎛️ เปิด/ปิด ส่วนแสดงผล</button>
+
+    <div class="nav-group-title" style="margin-top:1rem">หมวดหมู่เนื้อหา & สินค้า</div>
+    <button type="button" class="nav-tab" data-tab="tab-shop">🛍️ โพ้ช็อป & จัดการสินค้า</button>
+    <button type="button" class="nav-tab" data-tab="tab-hero">🌟 ข้อมูลทั่วไป & Hero</button>
+    <button type="button" class="nav-tab" data-tab="tab-houses">🏛️ พื้นที่สร้างสรรค์ (บ้าน)</button>
+    <button type="button" class="nav-tab" data-tab="tab-origin">📜 ที่มาของชื่อ & ภาพเก่า</button>
+    <button type="button" class="nav-tab" data-tab="tab-six">🎨 แนวคิด 6 อ.</button>
+    <button type="button" class="nav-tab" data-tab="tab-contact">📞 ข้อมูลติดต่อ & ท้ายหน้า</button>
+
+    <div class="nav-group-title" style="margin-top:1rem">ระบบและการซิงค์</div>
+    <button type="button" class="nav-tab" data-tab="tab-sync">☁️ คลาวด์ & ป้องกัน Git ทับ</button>
+  </aside>
+
+  <!-- Main Content Form -->
+  <main class="admin-main">
+
+    <!-- ═══════════ TAB: TYPOGRAPHY MANAGER ═══════════ -->
+    <div id="tab-typo" class="tab-content is-active">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">🔤 จัดการฟอนต์ & รูปแบบตัวอักษร (Typography Management)</h2>
+            <p class="panel-desc">เลือกแบบอักษรสำหรับหัวข้อและเนื้อหา ปรับขนาดความหนาและพรีวิวได้ทันที</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">ฟอนต์หัวข้อ (Display / Heading Font)</label>
+              <select id="typo_headingFont" class="field-select">
+                <option value="Bai Jamjuree">Bai Jamjuree (ใบจามจุรี - มงคล คมชัด สไตล์กั่วป่าโพ้)</option>
+                <option value="Kanit">Kanit (คณิต - หนักแน่น โมเดิร์น)</option>
+                <option value="Prompt">Prompt (พร้อมท์ - เรียบหรู สะอาดตา)</option>
+                <option value="Chakra Petch">Chakra Petch (จักรเพชร - สไตล์โปสเตอร์ย้อนยุค)</option>
+                <option value="Mitr">Mitr (มิตร - สบายตา เป็นมิตร)</option>
+                <option value="Pridi">Pridi (ปรีดี - มีหัว คลาสสิก)</option>
+                <option value="Sarabun">Sarabun (สารบรรณ - ทางการ อ่านง่าย)</option>
+                <option value="Noto Sans Thai">Noto Sans Thai (มาตรฐานสากล)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field-label">ฟอนต์เนื้อหา (Body Font)</label>
+              <select id="typo_bodyFont" class="field-select">
+                <option value="IBM Plex Sans Thai">IBM Plex Sans Thai (เพล็คซ์ - คมชัด อ่านง่ายมาก)</option>
+                <option value="Sarabun">Sarabun (สารบรรณ)</option>
+                <option value="Prompt">Prompt (พร้อมท์)</option>
+                <option value="Bai Jamjuree">Bai Jamjuree (ใบจามจุรี)</option>
+                <option value="Noto Sans Thai">Noto Sans Thai (โนโตะ แซนส์)</option>
+                <option value="Mitr">Mitr (มิตร)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">ขนาดตัวอักษรพื้นฐาน (Base Font Size)</label>
+              <select id="typo_baseSize" class="field-select">
+                <option value="15px">15px (กะทัดรัด พอดีจอ)</option>
+                <option value="16px" selected>16px (มาตรฐาน อ่านสบายตา แนะนำ)</option>
+                <option value="17px">17px (ขนาดใหญ่ ตัวหนังสือชัดเจน)</option>
+                <option value="18px">18px (ขนาดใหญ่พิเศษ)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field-label">ความหนาของหัวข้อ (Heading Weight)</label>
+              <select id="typo_headingWeight" class="field-select">
+                <option value="600">600 (Semi-bold - กึ่งหนา)</option>
+                <option value="700" selected>700 (Bold - หนามาตรฐาน)</option>
+                <option value="800">800 (Extra Bold - หนาพิเศษ)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Live Typography Preview Box -->
+          <div class="typo-preview-box" id="typoPreviewBox">
+            <span class="badge" style="margin-bottom:.5rem">ตัวอย่างการแสดงผลฟอนต์จริง</span>
+            <h3 id="prevHeadingText" style="margin:.4rem 0 .2rem;font-size:1.6rem;color:var(--cobalt)">
+              กั่วป่าโพ้ จีโชว์เมือง · โครงการพื้นที่สร้างสรรค์
+            </h3>
+            <p id="prevBodyText" style="margin:0;color:var(--muted)">
+              พัฒนาเมืองที่หลับใหลให้กลับมามีชีวิตอีกครั้ง ด้วยการเปิดพื้นที่ว่างในตึกเก่าย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา ผ่านมรดก 6 อ. ของชุมชน
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB: SECTIONS TOGGLE ═══════════ -->
+    <div id="tab-sections" class="tab-content">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">🎛️ จัดการการแสดงผลของแต่ละส่วน (Section Visibility)</h2>
+            <p class="panel-desc">เปิดหรือปิดการแสดงผลของแต่ละหมวดหมู่บนหน้าเว็บจริงได้ตามต้องการ</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="switch-row">
+            <div><b>🌟 ส่วนเปิดเรื่อง (Hero Section)</b><br><small style="color:var(--muted)">หัวข้อ โลโก้ และลายเส้นอาคาร</small></div>
+            <label class="switch"><input type="checkbox" id="sec_hero" checked><span class="slider"></span></label>
+          </div>
+          <div class="switch-row">
+            <div><b>🏛️ ส่วนสามพื้นที่หลัก (Three Houses)</b><br><small style="color:var(--muted)">บ้าน 78 · 109 · 305 และสถานที่สร้างสรรค์</small></div>
+            <label class="switch"><input type="checkbox" id="sec_houses" checked><span class="slider"></span></label>
+          </div>
+          <div class="switch-row">
+            <div><b>📜 ส่วนที่มาของชื่อ (Origin Story)</b><br><small style="color:var(--muted)">ประวัติศาสตร์คำว่ากั่วป่าโพ้และภาพท่าน้ำ</small></div>
+            <label class="switch"><input type="checkbox" id="sec_origin" checked><span class="slider"></span></label>
+          </div>
+          <div class="switch-row">
+            <div><b>🎨 ส่วนแนวคิด 6 อ. (Six Heritage Pillars)</b><br><small style="color:var(--muted)">ถอดรหัสอัตลักษณ์ 6 มิติของย่าน</small></div>
+            <label class="switch"><input type="checkbox" id="sec_six" checked><span class="slider"></span></label>
+          </div>
+          <div class="switch-row">
+            <div><b>🛍️ ส่วนโพ้ช็อป (POH SHOP & Products)</b><br><small style="color:var(--muted)">ของที่ระลึก เสื้อยืด และจุดรับสินค้า</small></div>
+            <label class="switch"><input type="checkbox" id="sec_shop" checked><span class="slider"></span></label>
+          </div>
+          <div class="switch-row">
+            <div><b>📞 ส่วนติดต่อ (Contact Section)</b><br><small style="color:var(--muted)">เบอร์โทร อีเมล เฟซบุ๊ก ไลน์ และที่ตั้ง</small></div>
+            <label class="switch"><input type="checkbox" id="sec_contact" checked><span class="slider"></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB: SHOP & MERCH ═══════════ -->
+    <div id="tab-shop" class="tab-content">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">🛍️ ของที่ระลึก POH SHOP (เพิ่ม / ลบ / จัดหมวดหมู่สินค้าอิสระ)</h2>
+            <p class="panel-desc">จัดการรายการสินค้า ราคา ประเภทสินค้า สถานะ (พร้อมส่ง/Pre-Order/หมด) และรูปภาพ</p>
+          </div>
+          <button type="button" id="btnAddProduct" class="btn btn-primary">
+            <span>➕ เพิ่มสินค้าใหม่</span>
+          </button>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label">หัวข้อส่วน Shop</label>
+            <input type="text" id="shop_heading" class="field-input">
+          </div>
+          <div class="field">
+            <label class="field-label">คำบรรยายเกริ่นนำ</label>
+            <textarea id="shop_lede" class="field-textarea"></textarea>
+          </div>
+
+          <!-- Dynamic Products List -->
+          <div id="dynamicProductsList"></div>
+
+          
+          <!-- Floating Sticky Badge Manager -->
+          <div class="panel-head" style="margin-top:1.8rem">
+            <div>
+              <h3 class="panel-title" style="font-size:1.15rem">🏷️ การ์ดลอยสินค้าติดตามหน้าจอ (Floating Sticky Card)</h3>
+              <p class="panel-desc">การ์ดแนะนำสินค้าที่ลอยติดตามผู้เข้าชมขณะเลื่อนหน้าเว็บขึ้น-ลง</p>
+            </div>
+            <label class="switch"><input type="checkbox" id="badge_enabled" checked><span class="slider"></span></label>
+          </div>
+          <div class="form-grid" id="floatingBadgeFields">
+            <div class="grid-3">
+              <div class="field">
+                <label class="field-label">ป้ายแท็ก (Badge Tag)</label>
+                <input type="text" id="badge_tag" class="field-input" value="Official Merch">
+              </div>
+              <div class="field">
+                <label class="field-label">ชื่อสินค้า</label>
+                <input type="text" id="badge_title" class="field-input" value="เสื้อยืดกั่วป่าโพ้ KUAPAPOH">
+              </div>
+              <div class="field">
+                <label class="field-label">ราคา (บาท)</label>
+                <input type="number" id="badge_price" class="field-input" value="350">
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label class="field-label">ข้อความปุ่มลิงก์</label>
+                <input type="text" id="badge_ctaText" class="field-input" value="สั่งซื้อ / ดูรายละเอียด →">
+              </div>
+              <div class="field">
+                <label class="field-label">รูปภาพการ์ดลอย</label>
+                <div class="image-widget" data-img-key="badge_image"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-head" style="margin-top:1.5rem">
+            <h3 class="panel-title" style="font-size:1.1rem">จุดรับสินค้า & ช่องทางสั่งซื้อ</h3>
+          </div>
+          <div class="form-grid">
+            <div class="grid-2">
+              <div class="field">
+                <label class="field-label">หัวข้อสั่งซื้อออนไลน์</label>
+                <input type="text" id="shop_onlineTitle" class="field-input">
+              </div>
+              <div class="field">
+                <label class="field-label">คำอธิบายสั่งซื้อออนไลน์</label>
+                <input type="text" id="shop_onlineDesc" class="field-input">
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label class="field-label">หัวข้อรับหน้าร้าน</label>
+                <input type="text" id="shop_pickupTitle" class="field-input">
+              </div>
+              <div class="field">
+                <label class="field-label">ลิงก์พิกัด Google Maps หน้าร้าน</label>
+                <input type="text" id="shop_pickupMapUrl" class="field-input">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label">ลิงก์สั่งซื้อ LINE Official</label>
+              <input type="text" id="shop_lineUrl" class="field-input">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB: HERO & GENERAL ═══════════ -->
+    <div id="tab-hero" class="tab-content">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">ข้อมูลทั่วไปของเว็บไซต์ (Site Info)</h2>
+            <p class="panel-desc">ชื่อเว็บและคำอธิบายสำหรับผลการค้นหา / การแชร์ลงโซเชียล</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label">ชื่อเรื่องเว็บไซต์ (Title)</label>
+            <input type="text" id="site_title" class="field-input">
+          </div>
+          <div class="field">
+            <label class="field-label">คำอธิบายย่อเว็บไซต์ (Meta Description)</label>
+            <textarea id="site_description" class="field-textarea"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">ส่วนหัวเปิดเรื่อง (Hero Section)</h2>
+            <p class="panel-desc">ข้อความหลัก รูปภาพลายเส้น และปุ่มนำทางในส่วนบนสุดของหน้าเว็บ</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label">ป้ายกำกับบนสุด (Kicker)</label>
+            <input type="text" id="hero_kicker" class="field-input">
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">หัวข้อหลัก (Title)</label>
+              <input type="text" id="hero_title" class="field-input">
+            </div>
+            <div class="field">
+              <label class="field-label">คำเน้นท้ายหัวข้อ (Emphasized Text)</label>
+              <input type="text" id="hero_titleEm" class="field-input">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">คำบรรยายโครงการ (Subtitle / Lede)</label>
+            <textarea id="hero_subtitle" class="field-textarea tall"></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">ข้อความปุ่ม 1 (สำรวจพื้นที่)</label>
+              <input type="text" id="hero_btnExplore" class="field-input">
+            </div>
+            <div class="field">
+              <label class="field-label">ข้อความปุ่ม 2 (เปิดแผนที่)</label>
+              <input type="text" id="hero_btnMap" class="field-input">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">ลิงก์แผนที่ Google Maps</label>
+            <input type="text" id="hero_mapUrl" class="field-input">
+          </div>
+
+          <h3 style="font-size:1.05rem;margin:1rem 0 .2rem;color:var(--cobalt)">🖼️ รูปภาพลายเส้นสามหลังใน Hero</h3>
+          <div class="grid-3">
+            <div class="field">
+              <label class="field-label">ลายเส้นบ้าน 78</label>
+              <div class="image-widget" data-img-key="hero_line78"></div>
+            </div>
+            <div class="field">
+              <label class="field-label">ลายเส้นบ้าน 109</label>
+              <div class="image-widget" data-img-key="hero_line109"></div>
+            </div>
+            <div class="field">
+              <label class="field-label">ลายเส้นบ้าน 305</label>
+              <div class="image-widget" data-img-key="hero_line305"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB: THREE HOUSES ═══════════ -->
+    <div id="tab-houses" class="tab-content">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">พื้นที่สร้างสรรค์และอาคารประวัติศาสตร์ (Creative Houses)</h2>
+            <p class="panel-desc">เพิ่ม แก้ไข หรือลบพื้นที่นำร่องได้ตามต้องการ</p>
+          </div>
+          <button type="button" id="btnAddHouse" class="btn btn-outline">
+            <span>➕ เพิ่มพื้นที่ใหม่</span>
+          </button>
+        </div>
+        <div class="form-grid">
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">ป้ายกำกับ (Tag)</label>
+              <input type="text" id="houses_tag" class="field-input">
+            </div>
+            <div class="field">
+              <label class="field-label">หัวข้อส่วน (Heading)</label>
+              <input type="text" id="houses_heading" class="field-input">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">คำบรรยายเกริ่นนำ (Lede)</label>
+            <textarea id="houses_lede" class="field-textarea tall"></textarea>
+          </div>
+
+          <!-- Dynamic Houses Container -->
+          <div id="dynamicHousesList"></div>
+
+          <div class="field">
+            <label class="field-label">ข้อความสรุปปิดท้ายสามพื้นที่</label>
+            <textarea id="houses_conclusion" class="field-textarea"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB: ORIGIN ═══════════ -->
+    <div id="tab-origin" class="tab-content">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">ที่มาของชื่อ “กั่วป่าโพ้” (Origin Story)</h2>
+            <p class="panel-desc">เนื้อหาประวัติศาสตร์และรูปภาพเก่าของท่าน้ำย่านเมืองเก่า</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label">หัวข้อเรื่อง</label>
+            <input type="text" id="origin_heading" class="field-input">
+          </div>
+          <div class="field">
+            <label class="field-label">คำคมเด่น (Big Quote)</label>
+            <input type="text" id="origin_quote" class="field-input">
+          </div>
+          <div class="field">
+            <label class="field-label">เนื้อหาคำอธิบายประวัติศาสตร์</label>
+            <textarea id="origin_body" class="field-textarea tall" style="min-height:140px"></textarea>
+          </div>
+          <div class="field">
+            <label class="field-label">คำบรรยายใต้ภาพเก่า</label>
+            <input type="text" id="origin_caption" class="field-input">
+          </div>
+          <div class="field">
+            <label class="field-label">รูปภาพเก่าท่าน้ำ (ภาพในกรอบ)</label>
+            <div class="image-widget" data-img-key="origin_photo"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB: SIX PILLARS ═══════════ -->
+    <div id="tab-six" class="tab-content">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">แนวคิดมรดกและอัตลักษณ์ (Heritage Pillars)</h2>
+            <p class="panel-desc">ถอดรหัสอัตลักษณ์เมืองเก่าตะกั่วป่า (เพิ่ม/ลบหัวข้อได้อิสระ)</p>
+          </div>
+          <button type="button" id="btnAddPillar" class="btn btn-outline">
+            <span>➕ เพิ่มหัวข้อแนวคิด</span>
+          </button>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label">หัวข้อส่วน 6 อ.</label>
+            <input type="text" id="six_heading" class="field-input">
+          </div>
+
+          <div id="sixItemsContainer" class="grid-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB: CONTACT & FOOTER ═══════════ -->
+    <div id="tab-contact" class="tab-content">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">ข้อมูลติดต่อ (Contact Info)</h2>
+            <p class="panel-desc">เบอร์โทรศัพท์ อีเมล เฟซบุ๊ก ไลน์ และที่ตั้งโครงการ</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">เบอร์โทรศัพท์</label>
+              <input type="text" id="contact_phone" class="field-input">
+            </div>
+            <div class="field">
+              <label class="field-label">อีเมล</label>
+              <input type="text" id="contact_email" class="field-input">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">ข้อความแสดงผลเฟซบุ๊ก</label>
+              <input type="text" id="contact_facebookText" class="field-input">
+            </div>
+            <div class="field">
+              <label class="field-label">ลิงก์เพจเฟซบุ๊ก</label>
+              <input type="text" id="contact_facebookUrl" class="field-input">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">LINE ID / บัญชีไลน์</label>
+              <input type="text" id="contact_lineText" class="field-input">
+            </div>
+            <div class="field">
+              <label class="field-label">ลิงก์ LINE Official</label>
+              <input type="text" id="contact_lineUrl" class="field-input">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">ที่ตั้งโครงการ</label>
+            <input type="text" id="contact_locationText" class="field-input">
+          </div>
+          <div class="field">
+            <label class="field-label">ลิงก์ Google Maps ที่ตั้งโครงการ</label>
+            <input type="text" id="contact_locationUrl" class="field-input">
+          </div>
+          <div class="field" style="margin-top:1rem">
+            <label class="field-label">ข้อความเครดิตท้ายเว็บ (Footer Credit)</label>
+            <textarea id="footer_credit" class="field-textarea"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB: CLOUD SYNC & SAFETY ═══════════ -->
+    <div id="tab-sync" class="tab-content">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">🛡️ ระบบบันทึกและป้องกัน Git ทับข้อมูล (Persistence & Sync)</h2>
+            <p class="panel-desc">ตั้งค่าการบันทึกข้อมูลเพื่อให้การแก้ไขของทีมคงอยู่ตลอดไป ไม่ถูกลบหรือเขียนทับเมื่อมีการ Git Push โค้ดใหม่</p>
+          </div>
+        </div>
+
+        <div class="alert alert-success">
+          <b>💡 ทำงานอย่างไร:</b>
+          <p style="margin:.3rem 0 0">เมื่อคุณกด <b>"บันทึกการเปลี่ยนแปลง"</b> ข้อความ ฟอนต์ และรูปภาพทั้งหมดจะถูกจัดเก็บใน Local Storage ทันที และหน้าเว็บหลัก (index.html) จะดึงข้อมูลล่าสุดนี้ไปแสดงผลเสมอ แม้ว่าโปรแกรมเมอร์จะทำการ `git pull` หรือ `git push` โค้ด HTML ใหม่ก็ตาม ข้อมูลที่ทีมกรอกไว้จะไม่โดนทับ</p>
+        </div>
+
+        <div class="form-grid">
+          <h3 style="font-size:1.05rem;margin:.5rem 0 .2rem">☁️ การเชื่อมต่อ Cloud Storage (แนะนำสำหรับทีมหลายคน)</h3>
+          <p style="color:var(--muted);font-size:.86rem;margin:0 0 .8rem">คุณสามารถเชื่อมต่อกับบริการจัดเก็บ JSON ฟรี เช่น <b>JSONBin.io</b> หรือ <b>Cloudflare KV Worker</b> เพื่อให้ทีมงานทุกคนเห็นข้อมูลตรงกันทันที</p>
+          
+          <div class="field">
+            <label class="field-label">Cloud JSON Endpoint URL (ตัวเลือกเสริม)</label>
+            <input type="text" id="sync_cloudUrl" class="field-input" placeholder="เช่น https://api.jsonbin.io/v3/b/XXXX หรือ Cloudflare Worker URL">
+          </div>
+          <div class="field">
+            <label class="field-label">API Key / Access Token (ถ้ามี)</label>
+            <input type="password" id="sync_apiKey" class="field-input" placeholder="ใส่ Master Key / Secret Token">
+          </div>
+
+          <div style="display:flex;gap:.8rem;margin-top:.8rem;flex-wrap:wrap">
+            <button type="button" id="btnExportJSON" class="btn btn-outline">
+              <span>📥 ดาวน์โหลดไฟล์สำรอง (Export JSON)</span>
+            </button>
+            <label class="btn btn-outline" style="cursor:pointer">
+              <span>📤 นำเข้าไฟล์สำรอง (Import JSON)</span>
+              <input type="file" id="importFileInput" accept=".json" style="display:none">
+            </label>
+            <button type="button" id="btnCopyForGit" class="btn btn-outline">
+              <span>📋 คัดลอกโค้ด JSON สำหรับ Git</span>
+            </button>
+          </div>
+
+          <div style="margin-top:1.8rem;border-top:2px dashed var(--rule);padding-top:1.2rem">
+            <h3 style="font-size:1.05rem;margin:0 0 .4rem;color:#d92534">⚠️ คืนค่าเริ่มต้น</h3>
+            <p style="color:var(--muted);font-size:.85rem;margin:0 0 .8rem">หากต้องการล้างข้อมูลที่แก้ไขทั้งหมดแล้วกลับไปใช้ข้อมูลดั้งเดิมของระบบ</p>
+            <button type="button" id="btnResetDefault" class="btn btn-danger btn-sm">
+              <span>🔄 คืนค่าเริ่มต้นทั้งหมด</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">บันทึกข้อมูลเรียบร้อยแล้ว ✨</div>
+
+<script>
+const DEFAULT_CONTENT = {"site": {"title": "กั่วป่าโพ้ จีโชว์เมือง · โครงการพื้นที่สร้างสรรค์ พังงา", "description": "โครงการพื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา · บ้านเลขที่ 78 · 109 · 305 · กั่วป่าโพ้ จีโชว์เมือง"}, "sections": {"hero": true, "houses": true, "origin": true, "six": true, "shop": true, "events": false, "contact": true}, "hero": {"kicker": "Creative Cultural District · Takua Pa", "title": "กั่วป่าโพ้", "titleEm": "จีโชว์เมือง", "subtitle": "พัฒนาเมืองที่หลับใหลให้กลับมามีชีวิตอีกครั้ง ด้วยการเปิดพื้นที่ว่างในตึกเก่าย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา", "chips": ["บ้านเลขที่ 78", "109", "305"], "btnExplore": "สำรวจสามพื้นที่", "btnMap": "เปิดแผนที่ย่านเมืองเก่า", "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2", "line78": "images/line-78.webp", "line109": "images/line-109.webp", "line305": "images/line-305.webp"}, "houses": {"tag": "พื้นที่สร้างสรรค์", "heading": "สามพื้นที่หลัก<br>ที่เคยว่าง กลับมาเป็นของเมือง", "lede": "นำพื้นที่ว่างในอาคารเก่ามาสร้างสรรค์ผ่านกิจกรรมและการออกแบบ เพื่อเพิ่มมูลค่าทางเศรษฐกิจ สร้างรายได้ให้แก่ชุมชน และสร้างคุณค่าของเมืองแก่ผู้มาเยือน โดยยังคงอัตลักษณ์ของพื้นที่ วิถีชีวิต วัฒนธรรม และเอกลักษณ์เดิมไว้", "items": [{"no": "78", "name": "กั่วป่าเหมืองมิวเซียม", "title": "บ้านของนายเหมือง", "desc": "ในอดีตเป็นบ้านของนายเหมืองและบริษัทเหมืองแร่ดีบุก จึงนำพื้นที่มาสร้างสรรค์เป็น “กั่วป่าเหมืองมิวเซียม” จัดแสดงอุปกรณ์การทำเหมืองแร่ แผนที่การสำรวจเหมือง และเอกสารต่าง ๆ ที่เกี่ยวกับเหมือง", "use": "กิจกรรมในพื้นที่หมุนเวียนไปในแต่ละเดือน", "photo": "images/house-78.webp", "line": "images/line-78.webp", "logo": ""}, {"no": "109", "name": "ศาลเจ้ากังตั้งโหยกวน (หวุ่ยกุ่น)", "title": "สมาคมชาวจีนและศาลเจ้า", "desc": "เป็นสมาคมของชาวจีนฮากก้าหรือจีนแคะ ปัจจุบันชั้น 2 เป็นที่ประดิษฐานพระท่ามกุงหย่าที่ชาวจีนนับถือ แต่บริเวณชั้น 1 ของอาคารเป็นพื้นที่ว่างไม่ได้มีการใช้สอยแต่อย่างใด ทางกลุ่มจึงประสานกับผู้ปกครองศาลเจ้าเพื่อขอความอนุเคราะห์ใช้จัดงานแสดง", "use": "กั่วป่าโพ้แกลอรี่ · นิทรรศการและกิจกรรมสร้างสรรค์ภูมิปัญญาของชาวตะกั่วป่า", "photo": "images/house-109.webp", "line": "images/line-109.webp", "logo": ""}, {"no": "305", "name": "โรงเรียนเต้าหมิง", "title": "โรงเรียนจีนในยุคเหมืองแร่", "desc": "โรงเรียนจีนที่เคยรุ่งเรืองในยุคเหมืองแร่ ทางทีมมีแนวคิดฟื้นคืนเต้าหมิงให้เป็นพื้นที่สร้างสรรค์ เป็นสถานที่แห่งความทรงจำ ผ่าน “เต้าหมิง ประกายแสงแห่งการเรียนรู้” นำอาคารมาจัดแสดงองค์ความรู้ของเมือง ทั้งงานสถาปัตยกรรม วัฒนธรรม ประเพณี และอื่น ๆ ที่เกี่ยวข้องกับเมืองตะกั่วป่า", "use": "", "logoCap": "ตราสัญลักษณ์เต้าหมิง", "photo": "images/house-305.webp", "line": "images/line-305.webp", "logo": "images/logo-305.jpg"}], "conclusion": "ทางทีมยังต่อยอดโดยนำพื้นที่ว่างอื่น ๆ มาเป็นพื้นที่รอง เพื่อให้ทั้งเมืองเป็นเมืองสร้างสรรค์ ดั่งแนวคิดที่ว่า <b>“กั่วป่าโพ้ จีโชว์เมือง”</b>"}, "origin": {"tag": "ที่มาของชื่อ", "heading": "คำว่า “กั่วป่าโพ้” มาจากไหน?", "quote": "“กั่วป่าโพ้” คือคำเรียกเมืองตะกั่วป่าของชาวจีนฮกเกี้ยนในอดีต", "body": "โดยคำว่า <b>“กั่วป่า”</b> คือ ตะกั่วป่า และคำว่า <b>“โพ้” (埠)</b> หมายถึง ตลาดหรือท่าเรือ รวมกันหมายถึง <b>“ตลาดท่าเรือตะกั่วป่า”</b> ในอดีตชาวจีนที่โล้สำเภาเข้ามาค้าขายและทำเหมืองแร่ดีบุก โดยขึ้นที่ท่าน้ำตะกั่วป่า หรืออีกนัยหนึ่งคือ <b>“คนตะกั่วป่า”</b> นั่นเอง และในเทศกาลกินผัก คำนี้ยังแฝงอยู่ในการประกอบพิธีกรรมต่าง ๆ ของศาลเจ้า จนกลายเป็นคำอันศักดิ์สิทธิ์ที่สื่อได้ถึงเมืองตะกั่วป่า", "caption": "ภาพเก่าจากเอกสารของโครงการ", "photo": "images/photo-port.webp"}, "six": {"tag": "แนวคิด 6 อ.", "heading": "โชว์เมืองผ่านมรดก<br>6 อ.", "items": [{"title": "อาภรณ์", "desc": "เครื่องแต่งกายเฉพาะถิ่น ผ้าลูกไม้ ผ้าถุงปาเต๊ะ ลวดลายผ้า และเครื่องประดับ"}, {"title": "อาศัย", "desc": "วิถีชีวิต ร้านค้า ความเป็นอยู่ และประเพณีที่สอดคล้องอย่างลงตัวกับการดำเนินชีวิต"}, {"title": "อาหาร", "desc": "อาหารท้องถิ่น รสชาติดั้งเดิมกับสูตรที่ถูกสืบทอด และร้านอาหารจากยุคเหมืองแร่ที่ยังเปิดอยู่"}, {"title": "อารมณ์", "desc": "ศิลปินถิ่นกั่วป่า ไม่ว่าจะเป็นภาพวาด ร้องรำทำเพลง หรือแม้แต่เสียงกลองในช่วงเทศกาลกินผัก"}, {"title": "อาราม", "desc": "วัด ศาลเจ้า โหย่กวนในย่านเมืองเก่าที่มีมากมาย และสถานที่พักผ่อนหย่อนใจ"}, {"title": "อาคาร", "desc": "อาคารบ้านเรือนในย่าน สถาปัตยกรรมที่แฝงไปด้วยทัศนคติและความเชื่อ เป็นมรดกที่ควรค่าแก่การอนุรักษ์"}]}, "shop": {"tag": "POH SHOP · โพ้ช็อป", "heading": "ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ", "lede": "สินค้าและของสะสมที่ออกแบบจากอัตลักษณ์เมืองเก่าตะกั่วป่า ร่วมกับช่างฝีมือและคนในชุมชน รายได้สนับสนุนการฟื้นฟูและขับเคลื่อนเมืองสร้างสรรค์", "products": [{"id": "shirt", "tag": "Official Merch", "name": "เสื้อยืดกั่วป่าโพ้ KUAPAPOH", "price": 350, "priceLabel": "฿350", "desc": "เสื้อยืดสีดำพรีเมียม สกรีนตรากั่วป่าโพ้ที่อกซ้าย ด้านหลังจัดเต็มกราฟิกลายรวมอัตลักษณ์ตะกั่วป่า 6 อ.", "meta": "ผ้าฝ้าย Comb 100% · ไซส์ M · L · XL · 2XL", "image": "images/shirt-poh.webp", "hasModal": true, "modalTag": "Official Heritage Merch", "modalLead": "เสื้อยืดสีดำพรีเมียม ถ่ายทอดเรื่องราวและสถาปัตยกรรมมีชีวิตของย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา ออกแบบร่วมกับศิลปินและคนในชุมชน", "modalDelivery": "จัดส่งทั่วประเทศ", "modalNote": "* มีจำหน่ายเฉพาะไซส์ M · L · XL · 2XL | ผ้าฝ้าย Cotton 100% เกรด Comb ผ้านุ่ม ใส่สบาย ระบายอากาศดี | คลิกแท็บ \"ภาพ 2D\" ที่แกลเลอรีเพื่อดูลวดลายกราฟิกแบบเต็มตา", "gallery": [{"label": "แบบ 1", "src": "images/model-shirt-1.webp"}, {"label": "แบบ 2", "src": "images/model-shirt-2.webp"}, {"label": "แบบ 3", "src": "images/model-shirt-3.webp"}, {"label": "ภาพ 2D", "src": "images/shirt-poh.webp"}], "category": "เสื้อผ้า & แฟชั่น", "status": "available"}, {"id": "keychain", "tag": "งานมือหน้าบ้านอี๋จู้", "name": "พวงกุญแจผ้าปาเต๊ะแท้", "price": 120, "priceLabel": "฿120", "desc": "งานตัดเย็บทำมือจากเศษผ้าปาเต๊ะเปอรานากัน โดยกลุ่มแม่บ้านในย่านเมืองเก่า แต่ละชิ้นมีคู่สีและลวดลายเอกลักษณ์ชิ้นเดียวในโลก", "meta": "งานฝีมือชุมชน 100%", "image": "images/ws/ws-keychain.webp", "hasModal": false, "category": "งานคราฟต์ชุมชน", "status": "available"}, {"id": "postcard", "tag": "พิมพ์ Riso 4 สี", "name": "ชุดโปสการ์ด “แลกั่วป่า” (6 ใบ)", "price": 150, "priceLabel": "฿150", "desc": "ภาพสเก็ตช์อาคารเก่า ผสมภาพถ่ายฟิล์มมุมประวัติศาสตร์และท่าน้ำตะกั่วป่า พิมพ์บนกระดาษคราฟต์หนา 260 แกรม", "meta": "พร้อมบันทึกประวัติศาสตร์ย่อ", "image": "images/photo-port.webp", "hasModal": false, "category": "ศิลปะ & สิ่งพิมพ์", "status": "available"}, {"id": "lantern", "tag": "ภูมิปัญญาช่างลุงเรน", "name": "โมเดลโคมไฟเฉลิมโบราณจิ๋ว", "price": 290, "priceLabel": "฿290", "desc": "ของที่ระลึกจำลองโคมไฟเฉลิมโบราณ มรดกภูมิปัญญาการประกอบไม้ไร้ตะปูของช่างไม้ตะกั่วป่า เพื่อความเป็นสิริมงคล", "meta": "งานไม้ประกอบมือ", "image": "images/ws/ws-lantern.webp", "hasModal": false, "category": "ของตกแต่งบ้าน", "status": "available"}], "guideHeading": "ช่องทางการสั่งซื้อและรับสินค้า", "onlineTitle": "📦 สั่งซื้อออนไลน์ (จัดส่งทั่วประเทศ)", "onlineDesc": "สั่งซื้อ แจ้งรายการสินค้า และสอบถามรอบจัดส่งได้โดยตรงทาง LINE Official ของโครงการ", "pickupTitle": "🏮 รับสินค้าได้ที่บ้าน 78 Studio Takuapa", "pickupDesc": "แวะชมและรับสินค้าจริงได้ที่บ้าน 78 Studio Takuapa ถนนศรีตะกั่วป่า (📍 เปิดแผนที่นำทาง)", "pickupMapUrl": "https://www.google.com/maps/search/?api=1&query=8.827130055794738,98.36498044583587", "lineUrl": "https://line.me/R/ti/p/%40kuapapoh", "lineCta": "สั่งซื้อของที่ระลึกผ่าน LINE @kuapapoh", "categories": ["ทั้งหมด", "เสื้อผ้า & แฟชั่น", "งานคราฟต์ชุมชน", "ศิลปะ & สิ่งพิมพ์", "ของตกแต่งบ้าน"]}, "events": {"enabled": false, "tag": "ตารางกิจกรรม", "heading": "กิจกรรมและเวิร์กช็อป<br>ในย่านเมืองเก่า", "lede": "สัมผัสประสบการณ์เรียนรู้และสร้างสรรค์ร่วมกับชุมชนตะกั่วป่า", "items": [{"date": "12-16 สิงหาคม 2569", "time": "09:30 - 17:00 น.", "place": "บ้านเลขที่ 78, 109, 305", "title": "นิทรรศการกั่วป่าโพ้ จีโชว์เมือง", "desc": "เปิดบ้านประวัติศาสตร์ 3 หลัง พร้อมนิทรรศการองค์ความรู้และงานศิลปะสร้างสรรค์", "link": ""}]}, "contact": {"tag": "ติดต่อ", "heading": "สอบถามข้อมูลโครงการ", "desc": "ติดต่อสอบถามเรื่องพื้นที่ กิจกรรม และงานกั่วป่าโพ้ จีโชว์เมือง ได้ตามช่องทางนี้", "phone": "061 874 9198", "phoneTel": "tel:0618749198", "email": "kuapapoh@gmail.com", "emailMailto": "mailto:kuapapoh@gmail.com", "facebookText": "เพจ กั่วป่าโพ้ (เปิดแท็บใหม่)", "facebookUrl": "https://www.facebook.com/profile.php?id=61590430773715", "lineText": "@kuapapoh", "lineUrl": "https://line.me/R/ti/p/%40kuapapoh", "locationText": "ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา", "locationUrl": "https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2"}, "footer": {"title": "กั่วป่าโพ้ จีโชว์เมือง", "credit": "ภายใต้โครงการ Creative Cultural District (CCD) · สนับสนุนและดำเนินงานโดยสำนักงานส่งเสริมเศรษฐกิจสร้างสรรค์ (CEA) ร่วมดำเนินงานโดยสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง"}, "typography": {"headingFont": "Bai Jamjuree", "bodyFont": "IBM Plex Sans Thai", "baseSize": "16px", "headingWeight": "700", "customGoogleFont": ""}, "floatingBadge": {"enabled": true, "tag": "Official Merch", "title": "เสื้อยืดกั่วป่าโพ้ KUAPAPOH", "price": 350, "priceLabel": "฿350", "image": "images/shirt-poh.webp", "ctaText": "ดูรายละเอียด & สั่งซื้อ →", "target": "#shop"}};
+// {"site": {"title": "กั่วป่าโพ้ จีโชว์เมือง · โครงการพื้นที่สร้างสรรค์ พังงา", "description": "โครงการพื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา · บ้านเลขที่ 78 · 109 · 305 · กั่วป่าโพ้ จีโชว์เมือง"}, "sections": {"hero": true, "houses": true, "origin": true, "six": true, "shop": true, "events": false, "contact": true}, "hero": {"kicker": "Creative Cultural District · Takua Pa", "title": "กั่วป่าโพ้", "titleEm": "จีโชว์เมือง", "subtitle": "พัฒนาเมืองที่หลับใหลให้กลับมามีชีวิตอีกครั้ง ด้วยการเปิดพื้นที่ว่างในตึกเก่าย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา", "chips": ["บ้านเลขที่ 78", "109", "305"], "btnExplore": "สำรวจสามพื้นที่", "btnMap": "เปิดแผนที่ย่านเมืองเก่า", "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2", "line78": "images/line-78.webp", "line109": "images/line-109.webp", "line305": "images/line-305.webp"}, "houses": {"tag": "พื้นที่สร้างสรรค์", "heading": "สามพื้นที่หลัก<br>ที่เคยว่าง กลับมาเป็นของเมือง", "lede": "นำพื้นที่ว่างในอาคารเก่ามาสร้างสรรค์ผ่านกิจกรรมและการออกแบบ เพื่อเพิ่มมูลค่าทางเศรษฐกิจ สร้างรายได้ให้แก่ชุมชน และสร้างคุณค่าของเมืองแก่ผู้มาเยือน โดยยังคงอัตลักษณ์ของพื้นที่ วิถีชีวิต วัฒนธรรม และเอกลักษณ์เดิมไว้", "items": [{"no": "78", "name": "กั่วป่าเหมืองมิวเซียม", "title": "บ้านของนายเหมือง", "desc": "ในอดีตเป็นบ้านของนายเหมืองและบริษัทเหมืองแร่ดีบุก จึงนำพื้นที่มาสร้างสรรค์เป็น “กั่วป่าเหมืองมิวเซียม” จัดแสดงอุปกรณ์การทำเหมืองแร่ แผนที่การสำรวจเหมือง และเอกสารต่าง ๆ ที่เกี่ยวกับเหมือง", "use": "กิจกรรมในพื้นที่หมุนเวียนไปในแต่ละเดือน", "photo": "images/house-78.webp", "line": "images/line-78.webp", "logo": ""}, {"no": "109", "name": "ศาลเจ้ากังตั้งโหยกวน (หวุ่ยกุ่น)", "title": "สมาคมชาวจีนและศาลเจ้า", "desc": "เป็นสมาคมของชาวจีนฮากก้าหรือจีนแคะ ปัจจุบันชั้น 2 เป็นที่ประดิษฐานพระท่ามกุงหย่าที่ชาวจีนนับถือ แต่บริเวณชั้น 1 ของอาคารเป็นพื้นที่ว่างไม่ได้มีการใช้สอยแต่อย่างใด ทางกลุ่มจึงประสานกับผู้ปกครองศาลเจ้าเพื่อขอความอนุเคราะห์ใช้จัดงานแสดง", "use": "กั่วป่าโพ้แกลอรี่ · นิทรรศการและกิจกรรมสร้างสรรค์ภูมิปัญญาของชาวตะกั่วป่า", "photo": "images/house-109.webp", "line": "images/line-109.webp", "logo": ""}, {"no": "305", "name": "โรงเรียนเต้าหมิง", "title": "โรงเรียนจีนในยุคเหมืองแร่", "desc": "โรงเรียนจีนที่เคยรุ่งเรืองในยุคเหมืองแร่ ทางทีมมีแนวคิดฟื้นคืนเต้าหมิงให้เป็นพื้นที่สร้างสรรค์ เป็นสถานที่แห่งความทรงจำ ผ่าน “เต้าหมิง ประกายแสงแห่งการเรียนรู้” นำอาคารมาจัดแสดงองค์ความรู้ของเมือง ทั้งงานสถาปัตยกรรม วัฒนธรรม ประเพณี และอื่น ๆ ที่เกี่ยวข้องกับเมืองตะกั่วป่า", "use": "", "logoCap": "ตราสัญลักษณ์เต้าหมิง", "photo": "images/house-305.webp", "line": "images/line-305.webp", "logo": "images/logo-305.jpg"}], "conclusion": "ทางทีมยังต่อยอดโดยนำพื้นที่ว่างอื่น ๆ มาเป็นพื้นที่รอง เพื่อให้ทั้งเมืองเป็นเมืองสร้างสรรค์ ดั่งแนวคิดที่ว่า <b>“กั่วป่าโพ้ จีโชว์เมือง”</b>"}, "origin": {"tag": "ที่มาของชื่อ", "heading": "คำว่า “กั่วป่าโพ้” มาจากไหน?", "quote": "“กั่วป่าโพ้” คือคำเรียกเมืองตะกั่วป่าของชาวจีนฮกเกี้ยนในอดีต", "body": "โดยคำว่า <b>“กั่วป่า”</b> คือ ตะกั่วป่า และคำว่า <b>“โพ้” (埠)</b> หมายถึง ตลาดหรือท่าเรือ รวมกันหมายถึง <b>“ตลาดท่าเรือตะกั่วป่า”</b> ในอดีตชาวจีนที่โล้สำเภาเข้ามาค้าขายและทำเหมืองแร่ดีบุก โดยขึ้นที่ท่าน้ำตะกั่วป่า หรืออีกนัยหนึ่งคือ <b>“คนตะกั่วป่า”</b> นั่นเอง และในเทศกาลกินผัก คำนี้ยังแฝงอยู่ในการประกอบพิธีกรรมต่าง ๆ ของศาลเจ้า จนกลายเป็นคำอันศักดิ์สิทธิ์ที่สื่อได้ถึงเมืองตะกั่วป่า", "caption": "ภาพเก่าจากเอกสารของโครงการ", "photo": "images/photo-port.webp"}, "six": {"tag": "แนวคิด 6 อ.", "heading": "โชว์เมืองผ่านมรดก<br>6 อ.", "items": [{"title": "อาภรณ์", "desc": "เครื่องแต่งกายเฉพาะถิ่น ผ้าลูกไม้ ผ้าถุงปาเต๊ะ ลวดลายผ้า และเครื่องประดับ"}, {"title": "อาศัย", "desc": "วิถีชีวิต ร้านค้า ความเป็นอยู่ และประเพณีที่สอดคล้องอย่างลงตัวกับการดำเนินชีวิต"}, {"title": "อาหาร", "desc": "อาหารท้องถิ่น รสชาติดั้งเดิมกับสูตรที่ถูกสืบทอด และร้านอาหารจากยุคเหมืองแร่ที่ยังเปิดอยู่"}, {"title": "อารมณ์", "desc": "ศิลปินถิ่นกั่วป่า ไม่ว่าจะเป็นภาพวาด ร้องรำทำเพลง หรือแม้แต่เสียงกลองในช่วงเทศกาลกินผัก"}, {"title": "อาราม", "desc": "วัด ศาลเจ้า โหย่กวนในย่านเมืองเก่าที่มีมากมาย และสถานที่พักผ่อนหย่อนใจ"}, {"title": "อาคาร", "desc": "อาคารบ้านเรือนในย่าน สถาปัตยกรรมที่แฝงไปด้วยทัศนคติและความเชื่อ เป็นมรดกที่ควรค่าแก่การอนุรักษ์"}]}, "shop": {"tag": "POH SHOP · โพ้ช็อป", "heading": "ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ", "lede": "สินค้าและของสะสมที่ออกแบบจากอัตลักษณ์เมืองเก่าตะกั่วป่า ร่วมกับช่างฝีมือและคนในชุมชน รายได้สนับสนุนการฟื้นฟูและขับเคลื่อนเมืองสร้างสรรค์", "products": [{"id": "shirt", "tag": "Official Merch", "name": "เสื้อยืดกั่วป่าโพ้ KUAPAPOH", "price": 350, "priceLabel": "฿350", "desc": "เสื้อยืดสีดำพรีเมียม สกรีนตรากั่วป่าโพ้ที่อกซ้าย ด้านหลังจัดเต็มกราฟิกลายรวมอัตลักษณ์ตะกั่วป่า 6 อ.", "meta": "ผ้าฝ้าย Comb 100% · ไซส์ M · L · XL · 2XL", "image": "images/shirt-poh.webp", "hasModal": true, "modalTag": "Official Heritage Merch", "modalLead": "เสื้อยืดสีดำพรีเมียม ถ่ายทอดเรื่องราวและสถาปัตยกรรมมีชีวิตของย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา ออกแบบร่วมกับศิลปินและคนในชุมชน", "modalDelivery": "จัดส่งทั่วประเทศ", "modalNote": "* มีจำหน่ายเฉพาะไซส์ M · L · XL · 2XL | ผ้าฝ้าย Cotton 100% เกรด Comb ผ้านุ่ม ใส่สบาย ระบายอากาศดี | คลิกแท็บ \"ภาพ 2D\" ที่แกลเลอรีเพื่อดูลวดลายกราฟิกแบบเต็มตา", "gallery": [{"label": "แบบ 1", "src": "images/model-shirt-1.webp"}, {"label": "แบบ 2", "src": "images/model-shirt-2.webp"}, {"label": "แบบ 3", "src": "images/model-shirt-3.webp"}, {"label": "ภาพ 2D", "src": "images/shirt-poh.webp"}], "category": "เสื้อผ้า & แฟชั่น", "status": "available"}, {"id": "keychain", "tag": "งานมือหน้าบ้านอี๋จู้", "name": "พวงกุญแจผ้าปาเต๊ะแท้", "price": 120, "priceLabel": "฿120", "desc": "งานตัดเย็บทำมือจากเศษผ้าปาเต๊ะเปอรานากัน โดยกลุ่มแม่บ้านในย่านเมืองเก่า แต่ละชิ้นมีคู่สีและลวดลายเอกลักษณ์ชิ้นเดียวในโลก", "meta": "งานฝีมือชุมชน 100%", "image": "images/ws/ws-keychain.webp", "hasModal": false, "category": "งานคราฟต์ชุมชน", "status": "available"}, {"id": "postcard", "tag": "พิมพ์ Riso 4 สี", "name": "ชุดโปสการ์ด “แลกั่วป่า” (6 ใบ)", "price": 150, "priceLabel": "฿150", "desc": "ภาพสเก็ตช์อาคารเก่า ผสมภาพถ่ายฟิล์มมุมประวัติศาสตร์และท่าน้ำตะกั่วป่า พิมพ์บนกระดาษคราฟต์หนา 260 แกรม", "meta": "พร้อมบันทึกประวัติศาสตร์ย่อ", "image": "images/photo-port.webp", "hasModal": false, "category": "ศิลปะ & สิ่งพิมพ์", "status": "available"}, {"id": "lantern", "tag": "ภูมิปัญญาช่างลุงเรน", "name": "โมเดลโคมไฟเฉลิมโบราณจิ๋ว", "price": 290, "priceLabel": "฿290", "desc": "ของที่ระลึกจำลองโคมไฟเฉลิมโบราณ มรดกภูมิปัญญาการประกอบไม้ไร้ตะปูของช่างไม้ตะกั่วป่า เพื่อความเป็นสิริมงคล", "meta": "งานไม้ประกอบมือ", "image": "images/ws/ws-lantern.webp", "hasModal": false, "category": "ของตกแต่งบ้าน", "status": "available"}], "guideHeading": "ช่องทางการสั่งซื้อและรับสินค้า", "onlineTitle": "📦 สั่งซื้อออนไลน์ (จัดส่งทั่วประเทศ)", "onlineDesc": "สั่งซื้อ แจ้งรายการสินค้า และสอบถามรอบจัดส่งได้โดยตรงทาง LINE Official ของโครงการ", "pickupTitle": "🏮 รับสินค้าได้ที่บ้าน 78 Studio Takuapa", "pickupDesc": "แวะชมและรับสินค้าจริงได้ที่บ้าน 78 Studio Takuapa ถนนศรีตะกั่วป่า (📍 เปิดแผนที่นำทาง)", "pickupMapUrl": "https://www.google.com/maps/search/?api=1&query=8.827130055794738,98.36498044583587", "lineUrl": "https://line.me/R/ti/p/%40kuapapoh", "lineCta": "สั่งซื้อของที่ระลึกผ่าน LINE @kuapapoh", "categories": ["ทั้งหมด", "เสื้อผ้า & แฟชั่น", "งานคราฟต์ชุมชน", "ศิลปะ & สิ่งพิมพ์", "ของตกแต่งบ้าน"]}, "events": {"enabled": false, "tag": "ตารางกิจกรรม", "heading": "กิจกรรมและเวิร์กช็อป<br>ในย่านเมืองเก่า", "lede": "สัมผัสประสบการณ์เรียนรู้และสร้างสรรค์ร่วมกับชุมชนตะกั่วป่า", "items": [{"date": "12-16 สิงหาคม 2569", "time": "09:30 - 17:00 น.", "place": "บ้านเลขที่ 78, 109, 305", "title": "นิทรรศการกั่วป่าโพ้ จีโชว์เมือง", "desc": "เปิดบ้านประวัติศาสตร์ 3 หลัง พร้อมนิทรรศการองค์ความรู้และงานศิลปะสร้างสรรค์", "link": ""}]}, "contact": {"tag": "ติดต่อ", "heading": "สอบถามข้อมูลโครงการ", "desc": "ติดต่อสอบถามเรื่องพื้นที่ กิจกรรม และงานกั่วป่าโพ้ จีโชว์เมือง ได้ตามช่องทางนี้", "phone": "061 874 9198", "phoneTel": "tel:0618749198", "email": "kuapapoh@gmail.com", "emailMailto": "mailto:kuapapoh@gmail.com", "facebookText": "เพจ กั่วป่าโพ้ (เปิดแท็บใหม่)", "facebookUrl": "https://www.facebook.com/profile.php?id=61590430773715", "lineText": "@kuapapoh", "lineUrl": "https://line.me/R/ti/p/%40kuapapoh", "locationText": "ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา", "locationUrl": "https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2"}, "footer": {"title": "กั่วป่าโพ้ จีโชว์เมือง", "credit": "ภายใต้โครงการ Creative Cultural District (CCD) · สนับสนุนและดำเนินงานโดยสำนักงานส่งเสริมเศรษฐกิจสร้างสรรค์ (CEA) ร่วมดำเนินงานโดยสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง"}, "typography": {"headingFont": "Bai Jamjuree", "bodyFont": "IBM Plex Sans Thai", "baseSize": "16px", "headingWeight": "700", "customGoogleFont": ""}};
+const STORAGE_KEY = 'KUAPAPOH_CONTENT_DATA';
+const CONFIG_KEY = 'KUAPAPOH_SYNC_CONFIG';
+const AUTH_KEY = 'KUAPAPOH_ADMIN_AUTH';
+const DEFAULT_PASS = '78109';
+
+let currentData = null;
+const imageStore = {};
+
+// Tab Navigation
+document.querySelectorAll('.nav-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('is-active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    const tabId = btn.getAttribute('data-tab');
+    const target = document.getElementById(tabId);
+    if (target) target.classList.add('is-active');
+  });
+});
+
+// Toast Helper
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Typography Live Preview Helper
+function updateTypoPreview() {
+  const hFont = document.getElementById('typo_headingFont').value;
+  const bFont = document.getElementById('typo_bodyFont').value;
+  const hWeight = document.getElementById('typo_headingWeight').value;
+  const bSize = document.getElementById('typo_baseSize').value;
+
+  const hEl = document.getElementById('prevHeadingText');
+  const bEl = document.getElementById('prevBodyText');
+  if (hEl) {
+    hEl.style.fontFamily = `'${hFont}', sans-serif`;
+    hEl.style.fontWeight = hWeight;
+  }
+  if (bEl) {
+    bEl.style.fontFamily = `'${bFont}', sans-serif`;
+    bEl.style.fontSize = bSize;
+  }
+}
+
+['typo_headingFont', 'typo_bodyFont', 'typo_headingWeight', 'typo_baseSize'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('change', updateTypoPreview);
+});
+
+// Image Compression Helper
+function compressImage(file, callback) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const maxDim = 1200;
+      let width = img.width;
+      let height = img.height;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL('image/webp', 0.85);
+      callback(dataUrl);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Image Widget Builder with Drag & Drop
+function setupImageWidget(container, key, initialValue) {
+  imageStore[key] = initialValue || '';
+  container.innerHTML = `
+    <div class="img-preview-box">
+      <img id="prev_${key}" src="${initialValue || ''}" alt="preview" onerror="this.style.opacity='0.2'">
+    </div>
+    <div class="img-controls">
+      <div class="img-btn-row">
+        <label class="upload-btn-label">
+          <span>📁 อัปโหลดรูปภาพ</span>
+          <input type="file" accept="image/*" class="file-hidden" id="file_${key}">
+        </label>
+        <button type="button" class="btn btn-outline btn-sm" id="clear_${key}">ล้างรูป</button>
+      </div>
+      <input type="text" class="field-input" id="inp_${key}" value="${initialValue || ''}" placeholder="หรือใส่ URL / ลากไฟล์มาวาง..." style="font-size:.8rem;padding:.35rem .6rem">
+    </div>
+  `;
+
+  const prevImg = container.querySelector(`#prev_${key}`);
+  const fileInp = container.querySelector(`#file_${key}`);
+  const textInp = container.querySelector(`#inp_${key}`);
+  const clearBtn = container.querySelector(`#clear_${key}`);
+
+  const handleFile = (file) => {
+    if (file) {
+      compressImage(file, (dataUrl) => {
+        imageStore[key] = dataUrl;
+        textInp.value = dataUrl.slice(0, 40) + '... (Data URL)';
+        prevImg.src = dataUrl;
+        prevImg.style.opacity = '1';
+        showToast('อัปโหลดและบีบอัดรูปภาพแล้ว! 🖼️✨');
+      });
+    }
+  };
+
+  fileInp.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+  // Drag & Drop
+  container.addEventListener('dragover', (e) => { e.preventDefault(); container.classList.add('is-dragover'); });
+  container.addEventListener('dragleave', () => { container.classList.remove('is-dragover'); });
+  container.addEventListener('drop', (e) => {
+    e.preventDefault();
+    container.classList.remove('is-dragover');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  textInp.addEventListener('input', () => {
+    imageStore[key] = textInp.value.trim();
+    prevImg.src = imageStore[key];
+    prevImg.style.opacity = '1';
+  });
+
+  clearBtn.addEventListener('click', () => {
+    imageStore[key] = '';
+    textInp.value = '';
+    prevImg.src = '';
+    prevImg.style.opacity = '0.2';
+  });
+}
+
+// Authentication Check
+function checkAuth() {
+  const isAuth = sessionStorage.getItem(AUTH_KEY);
+  const overlay = document.getElementById('authOverlay');
+  if (!isAuth) {
+    overlay.style.display = 'grid';
+    document.getElementById('btnUnlock').onclick = () => {
+      const val = document.getElementById('passcodeInput').value.trim();
+      if (val === DEFAULT_PASS || val === 'admin') {
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        overlay.style.display = 'none';
+        initAdmin();
+      } else {
+        alert('รหัสผ่านไม่ถูกต้อง');
+      }
+    };
+    document.getElementById('passcodeInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('btnUnlock').click();
+    });
+  } else {
+    overlay.style.display = 'none';
+    initAdmin();
+  }
+}
+
+// Load Initial Data
+async function initAdmin() {
+  const local = localStorage.getItem(STORAGE_KEY);
+  if (local) {
+    try {
+      currentData = JSON.parse(local);
+    } catch(e) {}
+  }
+
+  if (!currentData) {
+    try {
+      const res = await fetch('content.json');
+      currentData = await res.json();
+    } catch(e) {
+      currentData = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+    }
+  }
+  if (!currentData) {
+    currentData = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+  }
+
+  populateForm(currentData);
+  updateTypoPreview();
+
+  const syncConfig = localStorage.getItem(CONFIG_KEY);
+  if (syncConfig) {
+    try {
+      const conf = JSON.parse(syncConfig);
+      if (conf.cloudUrl) document.getElementById('sync_cloudUrl').value = conf.cloudUrl;
+      if (conf.apiKey) document.getElementById('sync_apiKey').value = conf.apiKey;
+    } catch(e) {}
+  }
+}
+
+// Render Dynamic Houses List
+function renderHousesList(items) {
+  const cont = document.getElementById('dynamicHousesList');
+  cont.innerHTML = '';
+  items.forEach((h, idx) => {
+    const box = document.createElement('div');
+    box.className = 'item-card';
+    box.innerHTML = `
+      <div class="item-card-header">
+        <span class="item-card-title">🏠 หลังที่ ${idx+1}: <span id="house_title_disp_${idx}">${h.name || 'พื้นที่'}</span></span>
+        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteHouse(${idx})">🗑️ ลบพื้นที่นี้</button>
+      </div>
+      <div class="form-grid">
+        <div class="grid-2">
+          <div class="field">
+            <label class="field-label">เลขที่บ้าน / รหัสสถานที่</label>
+            <input type="text" class="field-input house-no" value="${h.no || ''}" placeholder="เช่น 78, 109, 305">
+          </div>
+          <div class="field">
+            <label class="field-label">ชื่อสถานที่ / อาคาร</label>
+            <input type="text" class="field-input house-name" value="${h.name || ''}" placeholder="เช่น กั่วป่าเหมืองมิวเซียม">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">หัวข้อย่อย</label>
+          <input type="text" class="field-input house-sub" value="${h.title || ''}" placeholder="เช่น บ้านของนายเหมือง">
+        </div>
+        <div class="field">
+          <label class="field-label">เนื้อหาประวัติความเป็นมา</label>
+          <textarea class="field-textarea tall house-desc">${h.desc || ''}</textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">หมายเหตุการใช้งาน (ตัวหนังสือสีชมพู)</label>
+          <input type="text" class="field-input house-use" value="${h.use || ''}" placeholder="เช่น กิจกรรมในพื้นที่หมุนเวียนไปในแต่ละเดือน">
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label class="field-label">ภาพถ่ายจริงอาคาร</label>
+            <div class="image-widget" data-img-key="house_photo_${idx}"></div>
+          </div>
+          <div class="field">
+            <label class="field-label">ภาพลายเส้นอาคาร (การ์ดมุม)</label>
+            <div class="image-widget" data-img-key="house_line_${idx}"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    cont.appendChild(box);
+    const photoEl = box.querySelector(`[data-img-key="house_photo_${idx}"]`);
+    const lineEl = box.querySelector(`[data-img-key="house_line_${idx}"]`);
+    if (photoEl) setupImageWidget(photoEl, `house_photo_${idx}`, h.photo || '');
+    if (lineEl) setupImageWidget(lineEl, `house_line_${idx}`, h.line || '');
+  });
+}
+
+// Render Dynamic Pillars
+function renderPillarsList(items) {
+  const container = document.getElementById('sixItemsContainer');
+  container.innerHTML = '';
+  items.forEach((item, idx) => {
+    const box = document.createElement('div');
+    box.className = 'item-card';
+    box.innerHTML = `
+      <div class="item-card-header">
+        <span class="item-card-title">💡 หัวข้อที่ ${idx+1}</span>
+        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deletePillar(${idx})">🗑️ ลบ</button>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="field-label">ชื่อแนวคิด / อ.</label>
+          <input type="text" class="field-input pillar-title" value="${item.title || ''}" style="font-weight:700">
+        </div>
+        <div class="field">
+          <label class="field-label">คำอธิบาย</label>
+          <textarea class="field-textarea pillar-desc">${item.desc || ''}</textarea>
+        </div>
+      </div>
+    `;
+    container.appendChild(box);
+  });
+}
+
+// Render Dynamic Products List with Category & Status
+function renderProductsList(products) {
+  const cont = document.getElementById('dynamicProductsList');
+  cont.innerHTML = '';
+  products.forEach((p, idx) => {
+    const isShirt = idx === 0 && p.id === 'shirt';
+    const box = document.createElement('div');
+    box.className = 'item-card';
+    if (isShirt) box.style.borderLeft = '6px solid var(--magenta)';
+
+    let extraShirtHtml = '';
+    if (isShirt) {
+      extraShirtHtml = `
+        <h4 style="font-size:1rem;margin:1rem 0 .4rem;color:var(--cobalt)">📸 รูปภาพในแกลเลอรีหน้าต่างรายละเอียด (4 ภาพ)</h4>
+        <div class="grid-2">
+          <div class="field">
+            <label class="field-label">ภาพถ่ายแบบ 1</label>
+            <div class="image-widget" data-img-key="prod_${idx}_g0"></div>
+          </div>
+          <div class="field">
+            <label class="field-label">ภาพถ่ายแบบ 2</label>
+            <div class="image-widget" data-img-key="prod_${idx}_g1"></div>
+          </div>
+          <div class="field">
+            <label class="field-label">ภาพถ่ายแบบ 3</label>
+            <div class="image-widget" data-img-key="prod_${idx}_g2"></div>
+          </div>
+          <div class="field">
+            <label class="field-label">ภาพ 2D ลายเสื้อ</label>
+            <div class="image-widget" data-img-key="prod_${idx}_g3"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    box.innerHTML = `
+      <div class="item-card-header">
+        <span class="item-card-title">🛍️ สินค้าชิ้นที่ ${idx+1}: <span id="prod_title_disp_${idx}">${p.name || 'สินค้า'}</span></span>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteProduct(${idx})">🗑️ ลบสินค้านี้</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="grid-3">
+          <div class="field">
+            <label class="field-label">ชื่อสินค้า</label>
+            <input type="text" class="field-input prod-name" value="${p.name || ''}">
+          </div>
+          <div class="field">
+            <label class="field-label">ราคา (บาท)</label>
+            <input type="number" class="field-input prod-price" value="${p.price || ''}">
+          </div>
+          <div class="field">
+            <label class="field-label">ป้ายแท็ก (Tag)</label>
+            <input type="text" class="field-input prod-tag" value="${p.tag || ''}" placeholder="เช่น Official Merch, งานมือ">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label class="field-label">ประเภทสินค้า (Category)</label>
+            <input type="text" class="field-input prod-category" list="categoryPresets" value="${p.category || 'ทั่วไป'}" placeholder="เลือกหรือพิมพ์ประเภทสินค้า...">
+          </div>
+          <div class="field">
+            <label class="field-label">สถานะการจำหน่าย (Status)</label>
+            <select class="field-select prod-status">
+              <option value="available" ${p.status === 'available' ? 'selected' : ''}>🟢 พร้อมจำหน่าย (สั่งซื้อได้ทันที)</option>
+              <option value="preorder" ${p.status === 'preorder' ? 'selected' : ''}>🔵 สั่งจอง (Pre-Order)</option>
+              <option value="soldout" ${p.status === 'soldout' ? 'selected' : ''}>🔴 สินค้าหมดชั่วคราว (Sold Out)</option>
+              <option value="coming_soon" ${p.status === 'coming_soon' ? 'selected' : ''}>⚪ เร็ว ๆ นี้ (Coming Soon)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">คำอธิบายสั้นบนการ์ดสินค้า</label>
+          <textarea class="field-textarea prod-desc">${p.desc || ''}</textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">ข้อมูลเนื้อหา/ขนาด (Meta)</label>
+          <input type="text" class="field-input prod-meta" value="${p.meta || ''}" placeholder="เช่น ผ้าฝ้าย Comb 100% · ไซส์ M ถึง 2XL">
+        </div>
+        <div class="field">
+          <label class="field-label">รูปภาพสินค้า</label>
+          <div class="image-widget" data-img-key="prod_${idx}_image"></div>
+        </div>
+        ${extraShirtHtml}
+      </div>
+    `;
+    cont.appendChild(box);
+
+    const imgEl = box.querySelector(`[data-img-key="prod_${idx}_image"]`);
+    if (imgEl) setupImageWidget(imgEl, `prod_${idx}_image`, p.image || '');
+
+    if (isShirt) {
+      const g = p.gallery || [];
+      const g0 = box.querySelector(`[data-img-key="prod_${idx}_g0"]`);
+      const g1 = box.querySelector(`[data-img-key="prod_${idx}_g1"]`);
+      const g2 = box.querySelector(`[data-img-key="prod_${idx}_g2"]`);
+      const g3 = box.querySelector(`[data-img-key="prod_${idx}_g3"]`);
+      if (g0) setupImageWidget(g0, `prod_${idx}_g0`, g[0]?.src || 'images/model-shirt-1.webp');
+      if (g1) setupImageWidget(g1, `prod_${idx}_g1`, g[1]?.src || 'images/model-shirt-2.webp');
+      if (g2) setupImageWidget(g2, `prod_${idx}_g2`, g[2]?.src || 'images/model-shirt-3.webp');
+      if (g3) setupImageWidget(g3, `prod_${idx}_g3`, g[3]?.src || 'images/shirt-poh.webp');
+    }
+  });
+}
+
+// Category Presets datalist
+const datalist = document.createElement('datalist');
+datalist.id = 'categoryPresets';
+datalist.innerHTML = `
+  <option value="เสื้อผ้า & แฟชั่น">
+  <option value="งานคราฟต์ชุมชน">
+  <option value="ศิลปะ & สิ่งพิมพ์">
+  <option value="ของตกแต่งบ้าน">
+  <option value="ของฝาก & อาหาร">
+  <option value="ของสะสม">
+`;
+document.body.appendChild(datalist);
+
+// Global Actions: Add/Delete Items
+window.deleteHouse = function(idx) {
+  if (currentData.houses.items.length <= 1) return alert('ต้องมีพื้นที่อย่างน้อย 1 รายการ');
+  if (confirm('ต้องการลบพื้นที่นี้ใช่หรือไม่?')) {
+    currentData.houses.items.splice(idx, 1);
+    renderHousesList(currentData.houses.items);
+  }
+};
+
+window.deletePillar = function(idx) {
+  if (currentData.six.items.length <= 1) return alert('ต้องมีหัวข้ออย่างน้อย 1 รายการ');
+  if (confirm('ต้องการลบหัวข้อนี้ใช่หรือไม่?')) {
+    currentData.six.items.splice(idx, 1);
+    renderPillarsList(currentData.six.items);
+  }
+};
+
+window.deleteProduct = function(idx) {
+  if (confirm('ต้องการลบสินค้านี้ใช่หรือไม่?')) {
+    currentData.shop.products.splice(idx, 1);
+    renderProductsList(currentData.shop.products);
+  }
+};
+
+document.getElementById('btnAddHouse').addEventListener('click', () => {
+  currentData.houses.items = currentData.houses.items || [];
+  currentData.houses.items.push({
+    no: String(currentData.houses.items.length + 1),
+    name: "พื้นที่ใหม่",
+    title: "ชื่อหัวข้อ",
+    desc: "รายละเอียดพื้นที่...",
+    use: "",
+    photo: "",
+    line: ""
+  });
+  renderHousesList(currentData.houses.items);
+  showToast('เพิ่มพื้นที่ใหม่แล้ว ✨');
+});
+
+document.getElementById('btnAddPillar').addEventListener('click', () => {
+  currentData.six.items = currentData.six.items || [];
+  currentData.six.items.push({
+    title: "แนวคิดใหม่",
+    desc: "รายละเอียด..."
+  });
+  renderPillarsList(currentData.six.items);
+  showToast('เพิ่มหัวข้อแนวคิดใหม่แล้ว ✨');
+});
+
+document.getElementById('btnAddProduct').addEventListener('click', () => {
+  currentData.shop.products = currentData.shop.products || [];
+  currentData.shop.products.push({
+    id: "prod-" + Date.now(),
+    tag: "สินค้าใหม่",
+    category: "งานคราฟต์ชุมชน",
+    status: "available",
+    name: "ชื่อสินค้าใหม่",
+    price: 150,
+    priceLabel: "฿150",
+    desc: "คำอธิบายสินค้า...",
+    meta: "งานฝีมือชุมชน",
+    image: "",
+    hasModal: false
+  });
+  renderProductsList(currentData.shop.products);
+  showToast('เพิ่มสินค้าใหม่แล้ว ✨');
+});
+
+// Populate Form from Data Object
+function populateForm(data) {
+
+  // Floating Badge
+  if (data.floatingBadge) {
+    document.getElementById('badge_enabled').checked = data.floatingBadge.enabled !== false;
+    document.getElementById('badge_tag').value = data.floatingBadge.tag || '';
+    document.getElementById('badge_title').value = data.floatingBadge.title || '';
+    document.getElementById('badge_price').value = data.floatingBadge.price || 350;
+    document.getElementById('badge_ctaText').value = data.floatingBadge.ctaText || 'สั่งซื้อ / ดูรายละเอียด →';
+    document.querySelectorAll('[data-img-key="badge_image"]').forEach(el => setupImageWidget(el, 'badge_image', data.floatingBadge.image || 'images/shirt-poh.webp'));
+  }
+
+  // Typography
+  if (data.typography) {
+    if (data.typography.headingFont) document.getElementById('typo_headingFont').value = data.typography.headingFont;
+    if (data.typography.bodyFont) document.getElementById('typo_bodyFont').value = data.typography.bodyFont;
+    if (data.typography.baseSize) document.getElementById('typo_baseSize').value = data.typography.baseSize;
+    if (data.typography.headingWeight) document.getElementById('typo_headingWeight').value = data.typography.headingWeight;
+  }
+
+  // Section Toggles
+  if (data.sections) {
+    document.getElementById('sec_hero').checked = data.sections.hero !== false;
+    document.getElementById('sec_houses').checked = data.sections.houses !== false;
+    document.getElementById('sec_origin').checked = data.sections.origin !== false;
+    document.getElementById('sec_six').checked = data.sections.six !== false;
+    document.getElementById('sec_shop').checked = data.sections.shop !== false;
+    document.getElementById('sec_contact').checked = data.sections.contact !== false;
+  }
+
+  // Site
+  if (data.site) {
+    document.getElementById('site_title').value = data.site.title || '';
+    document.getElementById('site_description').value = data.site.description || '';
+  }
+
+  // Hero
+  if (data.hero) {
+    document.getElementById('hero_kicker').value = data.hero.kicker || '';
+    document.getElementById('hero_title').value = data.hero.title || '';
+    document.getElementById('hero_titleEm').value = data.hero.titleEm || '';
+    document.getElementById('hero_subtitle').value = data.hero.subtitle || '';
+    document.getElementById('hero_btnExplore').value = data.hero.btnExplore || '';
+    document.getElementById('hero_btnMap').value = data.hero.btnMap || '';
+    document.getElementById('hero_mapUrl').value = data.hero.mapUrl || '';
+
+    // Hero Images
+    document.querySelectorAll('[data-img-key="hero_line78"]').forEach(el => setupImageWidget(el, 'hero_line78', data.hero.line78 || 'images/line-78.webp'));
+    document.querySelectorAll('[data-img-key="hero_line109"]').forEach(el => setupImageWidget(el, 'hero_line109', data.hero.line109 || 'images/line-109.webp'));
+    document.querySelectorAll('[data-img-key="hero_line305"]').forEach(el => setupImageWidget(el, 'hero_line305', data.hero.line305 || 'images/line-305.webp'));
+  }
+
+  // Houses
+  if (data.houses) {
+    document.getElementById('houses_tag').value = data.houses.tag || '';
+    document.getElementById('houses_heading').value = data.houses.heading || '';
+    document.getElementById('houses_lede').value = data.houses.lede || '';
+    document.getElementById('houses_conclusion').value = data.houses.conclusion || '';
+    renderHousesList(data.houses.items || []);
+  }
+
+  // Origin
+  if (data.origin) {
+    document.getElementById('origin_heading').value = data.origin.heading || '';
+    document.getElementById('origin_quote').value = data.origin.quote || '';
+    document.getElementById('origin_body').value = data.origin.body || '';
+    document.getElementById('origin_caption').value = data.origin.caption || '';
+    document.querySelectorAll('[data-img-key="origin_photo"]').forEach(el => setupImageWidget(el, 'origin_photo', data.origin.photo || 'images/photo-port.webp'));
+  }
+
+  // Six Pillars
+  if (data.six) {
+    document.getElementById('six_heading').value = data.six.heading || '';
+    renderPillarsList(data.six.items || []);
+  }
+
+  // Shop
+  if (data.shop) {
+    document.getElementById('shop_heading').value = data.shop.heading || '';
+    document.getElementById('shop_lede').value = data.shop.lede || '';
+    document.getElementById('shop_onlineTitle').value = data.shop.onlineTitle || '';
+    document.getElementById('shop_onlineDesc').value = data.shop.onlineDesc || '';
+    document.getElementById('shop_pickupTitle').value = data.shop.pickupTitle || '';
+    document.getElementById('shop_pickupMapUrl').value = data.shop.pickupMapUrl || '';
+    document.getElementById('shop_lineUrl').value = data.shop.lineUrl || '';
+    renderProductsList(data.shop.products || []);
+  }
+
+  // Contact
+  if (data.contact) {
+    document.getElementById('contact_phone').value = data.contact.phone || '';
+    document.getElementById('contact_email').value = data.contact.email || '';
+    document.getElementById('contact_facebookText').value = data.contact.facebookText || '';
+    document.getElementById('contact_facebookUrl').value = data.contact.facebookUrl || '';
+    document.getElementById('contact_lineText').value = data.contact.lineText || '';
+    document.getElementById('contact_lineUrl').value = data.contact.lineUrl || '';
+    document.getElementById('contact_locationText').value = data.contact.locationText || '';
+    document.getElementById('contact_locationUrl').value = data.contact.locationUrl || '';
+  }
+
+  // Footer
+  if (data.footer) {
+    document.getElementById('footer_credit').value = data.footer.credit || '';
+  }
+}
+
+// Collect Form to Data Object
+function collectFormData() {
+  const d = currentData ? JSON.parse(JSON.stringify(currentData)) : {};
+
+
+  // Floating Badge
+  d.floatingBadge = d.floatingBadge || {};
+  d.floatingBadge.enabled = document.getElementById('badge_enabled').checked;
+  d.floatingBadge.tag = document.getElementById('badge_tag').value;
+  d.floatingBadge.title = document.getElementById('badge_title').value;
+  d.floatingBadge.price = Number(document.getElementById('badge_price').value) || 350;
+  d.floatingBadge.priceLabel = `฿${d.floatingBadge.price}`;
+  d.floatingBadge.ctaText = document.getElementById('badge_ctaText').value;
+  if (imageStore['badge_image']) d.floatingBadge.image = imageStore['badge_image'];
+
+  // Typography
+  d.typography = d.typography || {};
+  d.typography.headingFont = document.getElementById('typo_headingFont').value;
+  d.typography.bodyFont = document.getElementById('typo_bodyFont').value;
+  d.typography.baseSize = document.getElementById('typo_baseSize').value;
+  d.typography.headingWeight = document.getElementById('typo_headingWeight').value;
+
+  // Section Toggles
+  d.sections = d.sections || {};
+  d.sections.hero = document.getElementById('sec_hero').checked;
+  d.sections.houses = document.getElementById('sec_houses').checked;
+  d.sections.origin = document.getElementById('sec_origin').checked;
+  d.sections.six = document.getElementById('sec_six').checked;
+  d.sections.shop = document.getElementById('sec_shop').checked;
+  d.sections.contact = document.getElementById('sec_contact').checked;
+
+  // Site
+  d.site = d.site || {};
+  d.site.title = document.getElementById('site_title').value;
+  d.site.description = document.getElementById('site_description').value;
+
+  // Hero
+  d.hero = d.hero || {};
+  d.hero.kicker = document.getElementById('hero_kicker').value;
+  d.hero.title = document.getElementById('hero_title').value;
+  d.hero.titleEm = document.getElementById('hero_titleEm').value;
+  d.hero.subtitle = document.getElementById('hero_subtitle').value;
+  d.hero.btnExplore = document.getElementById('hero_btnExplore').value;
+  d.hero.btnMap = document.getElementById('hero_btnMap').value;
+  d.hero.mapUrl = document.getElementById('hero_mapUrl').value;
+  if (imageStore['hero_line78']) d.hero.line78 = imageStore['hero_line78'];
+  if (imageStore['hero_line109']) d.hero.line109 = imageStore['hero_line109'];
+  if (imageStore['hero_line305']) d.hero.line305 = imageStore['hero_line305'];
+
+  // Houses
+  d.houses = d.houses || {};
+  d.houses.tag = document.getElementById('houses_tag').value;
+  d.houses.heading = document.getElementById('houses_heading').value;
+  d.houses.lede = document.getElementById('houses_lede').value;
+  d.houses.conclusion = document.getElementById('houses_conclusion').value;
+
+  const houseCards = document.querySelectorAll('#dynamicHousesList .item-card');
+  d.houses.items = [];
+  houseCards.forEach((card, idx) => {
+    d.houses.items.push({
+      no: card.querySelector('.house-no')?.value || String(idx+1),
+      name: card.querySelector('.house-name')?.value || '',
+      title: card.querySelector('.house-sub')?.value || '',
+      desc: card.querySelector('.house-desc')?.value || '',
+      use: card.querySelector('.house-use')?.value || '',
+      photo: imageStore[`house_photo_${idx}`] || '',
+      line: imageStore[`house_line_${idx}`] || ''
+    });
+  });
+
+  // Origin
+  d.origin = d.origin || {};
+  d.origin.heading = document.getElementById('origin_heading').value;
+  d.origin.quote = document.getElementById('origin_quote').value;
+  d.origin.body = document.getElementById('origin_body').value;
+  d.origin.caption = document.getElementById('origin_caption').value;
+  if (imageStore['origin_photo']) d.origin.photo = imageStore['origin_photo'];
+
+  // Six Pillars
+  d.six = d.six || {};
+  d.six.heading = document.getElementById('six_heading').value;
+  const pillarCards = document.querySelectorAll('#sixItemsContainer .item-card');
+  d.six.items = [];
+  pillarCards.forEach((card) => {
+    d.six.items.push({
+      title: card.querySelector('.pillar-title')?.value || '',
+      desc: card.querySelector('.pillar-desc')?.value || ''
+    });
+  });
+
+  // Shop
+  d.shop = d.shop || {};
+  d.shop.heading = document.getElementById('shop_heading').value;
+  d.shop.lede = document.getElementById('shop_lede').value;
+  d.shop.onlineTitle = document.getElementById('shop_onlineTitle').value;
+  d.shop.onlineDesc = document.getElementById('shop_onlineDesc').value;
+  d.shop.pickupTitle = document.getElementById('shop_pickupTitle').value;
+  d.shop.pickupMapUrl = document.getElementById('shop_pickupMapUrl').value;
+  d.shop.lineUrl = document.getElementById('shop_lineUrl').value;
+
+  const prodCards = document.querySelectorAll('#dynamicProductsList .item-card');
+  d.shop.products = [];
+  prodCards.forEach((card, idx) => {
+    const isShirt = idx === 0 && (card.querySelector('.prod-name')?.value.includes('เสื้อยืด') || idx === 0);
+    const priceVal = Number(card.querySelector('.prod-price')?.value) || 0;
+    const item = {
+      id: isShirt ? 'shirt' : 'prod-' + idx,
+      name: card.querySelector('.prod-name')?.value || '',
+      price: priceVal,
+      priceLabel: `฿${priceVal}`,
+      tag: card.querySelector('.prod-tag')?.value || '',
+      category: card.querySelector('.prod-category')?.value || 'ทั่วไป',
+      status: card.querySelector('.prod-status')?.value || 'available',
+      desc: card.querySelector('.prod-desc')?.value || '',
+      meta: card.querySelector('.prod-meta')?.value || '',
+      image: imageStore[`prod_${idx}_image`] || '',
+      hasModal: isShirt
+    };
+
+    if (isShirt) {
+      item.gallery = [
+        { label: "แบบ 1", src: imageStore[`prod_${idx}_g0`] || 'images/model-shirt-1.webp' },
+        { label: "แบบ 2", src: imageStore[`prod_${idx}_g1`] || 'images/model-shirt-2.webp' },
+        { label: "แบบ 3", src: imageStore[`prod_${idx}_g2`] || 'images/model-shirt-3.webp' },
+        { label: "ภาพ 2D", src: imageStore[`prod_${idx}_g3`] || 'images/shirt-poh.webp' }
+      ];
+    }
+    d.shop.products.push(item);
+  });
+
+  // Contact
+  d.contact = d.contact || {};
+  d.contact.phone = document.getElementById('contact_phone').value;
+  d.contact.email = document.getElementById('contact_email').value;
+  d.contact.facebookText = document.getElementById('contact_facebookText').value;
+  d.contact.facebookUrl = document.getElementById('contact_facebookUrl').value;
+  d.contact.lineText = document.getElementById('contact_lineText').value;
+  d.contact.lineUrl = document.getElementById('contact_lineUrl').value;
+  d.contact.locationText = document.getElementById('contact_locationText').value;
+  d.contact.locationUrl = document.getElementById('contact_locationUrl').value;
+
+  // Footer
+  d.footer = d.footer || {};
+  d.footer.credit = document.getElementById('footer_credit').value;
+
+  return d;
+}
+
+// Save All Function
+async function saveAll() {
+  const data = collectFormData();
+  currentData = data;
+
+  // 1. Save to LocalStorage
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+  // 2. Save Sync Config
+  const cloudUrl = document.getElementById('sync_cloudUrl').value.trim();
+  const apiKey = document.getElementById('sync_apiKey').value.trim();
+  const syncConfig = { cloudUrl, apiKey };
+  localStorage.setItem(CONFIG_KEY, JSON.stringify(syncConfig));
+
+  // 3. Save to Cloud if endpoint provided
+  if (cloudUrl) {
+    try {
+      showToast('กำลังส่งข้อมูลขึ้น Cloud...');
+      const headers = { 'Content-Type': 'application/json' };
+      if (apiKey) {
+        headers['X-Master-Key'] = apiKey;
+        headers['Authorization'] = `Bearer ${apiKey}`;
+      }
+      await fetch(cloudUrl, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(data)
+      });
+      showToast('บันทึกทั้งฟอนต์ เนื้อหา และรูปภาพขึ้น Cloud สำเร็จ! ☁️✨');
+    } catch(err) {
+      showToast('บันทึกในเบราว์เซอร์แล้ว (แต่ส่งขึ้น Cloud ไม่สำเร็จ)');
+    }
+  } else {
+    showToast('บันทึกข้อมูล ฟอนต์ และรูปภาพเรียบร้อยแล้ว ✨ (เปิดดูที่หน้าเว็บได้ทันที)');
+  }
+}
+
+// Export JSON
+document.getElementById('btnExportJSON').addEventListener('click', () => {
+  const data = collectFormData();
+  const str = JSON.stringify(data, null, 2);
+  const blob = new Blob([str], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `kuapapoh_content_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+});
+
+// Import JSON
+document.getElementById('importFileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    try {
+      const data = JSON.parse(evt.target.result);
+      currentData = data;
+      populateForm(data);
+      updateTypoPreview();
+      saveAll();
+      showToast('นำเข้าข้อมูลสำเร็จและบันทึกแล้ว! 📥✨');
+    } catch(err) {
+      alert('ไฟล์ JSON ไม่ถูกต้อง: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+});
+
+// Copy for Git
+document.getElementById('btnCopyForGit').addEventListener('click', () => {
+  const data = collectFormData();
+  const str = JSON.stringify(data, null, 2);
+  navigator.clipboard.writeText(str).then(() => {
+    showToast('คัดลอก JSON แล้ว! นำไปวางใน content.json ได้เลย 📋');
+  });
+});
+
+// Reset Default
+document.getElementById('btnResetDefault').addEventListener('click', async () => {
+  if (confirm('ต้องการล้างข้อมูลและคืนค่าเริ่มต้นใช่หรือไม่? ข้อมูลและรูปที่แก้ไขจะหายไป')) {
+    localStorage.removeItem(STORAGE_KEY);
+    currentData = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+    populateForm(currentData);
+    updateTypoPreview();
+    showToast('คืนค่าเริ่มต้นเรียบร้อยแล้ว 🔄');
+  }
+});
+
+// Save Button Click
+document.getElementById('btnSaveAll').addEventListener('click', saveAll);
+
+// Ctrl + S Shortcut to Save
+window.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    saveAll();
+  }
+});
+
+// Start
+checkAuth();
+</script>
+</body>
+</html>

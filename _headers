@@ -1,15 +1,17 @@
-# Cloudflare Pages อ่านไฟล์นี้เอง ไม่ต้องตั้งค่าอะไรใน dashboard
-#
-# ค่า default ของ Pages คือ max-age=0, must-revalidate แปลว่าคนที่เปิดเว็บซ้ำ
-# ต้องยิงถาม server ทุกรูปทุกครั้ง เสีย round trip ~150-300ms ต่อไฟล์บนเน็ตมือถือ
-# ช่วงงาน 12-16 ส.ค. คนน่าจะเปิดเช็คตารางซ้ำหลายรอบ จึงตั้ง cache ให้รูป
-#
-# ทำไมไม่ใช้ immutable 1 ปี: ชื่อไฟล์รูปไม่มี hash กำกับ ถ้าวันหนึ่งเปลี่ยนรูป
-# แต่ใช้ชื่อเดิม คนที่ cache ไว้จะไม่เห็นของใหม่ไปอีกนาน · 1 วัน + SWR 7 วัน
-# ให้ผลเกือบเท่ากันในช่วงงาน แต่ของใหม่ยังกระจายถึงคนภายในวันเดียว
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
 
 /images/*
   Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
-# ฟอนต์ที่ฝังเป็น data URI และ HTML ปล่อยตาม default เดิม (ต้อง revalidate
-# ทุกครั้ง) เพราะเนื้อหาหน้าเว็บยังแก้บ่อย ตารางกิจกรรม 15-16 ส.ค. ยังไม่ประกาศ
+/content.json
+  Cache-Control: public, max-age=0, must-revalidate
+
+/cms-loader.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate

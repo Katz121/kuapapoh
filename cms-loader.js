@@ -304,13 +304,11 @@
               art.setAttribute('data-category', prod.category || 'ทั่วไป');
               
               const priceText = prod.priceLabel || `฿${prod.price || 0}`;
-              const metaHtml = prod.meta ? `<p class="shop-meta">${prod.meta}</p>` : '';
+              const metaHtml = `<p class="shop-meta">${prod.meta || '&nbsp;'}</p>`;
               const modalBtnHtml = prod.hasModal ? `
-                <div class="shop-actions">
-                  <button type="button" class="btn-link" data-open-modal="modal-shirt">
-                    📷 ดูภาพถ่ายแบบ & รายละเอียดลายเสื้อ →
-                  </button>
-                </div>
+                <button type="button" class="shop-more-btn" data-open-modal="modal-shirt">
+                  📷 ดูภาพถ่ายแบบ & ลายเสื้อ →
+                </button>
               ` : '';
 
               let buyBtnHtml = `<a class="shop-buy" href="${data.shop.lineUrl || '#'}" target="_blank" rel="noopener">สั่งซื้อ</a>`;
@@ -323,11 +321,12 @@
               }
 
               art.innerHTML = `
-                <div class="shop-shot">
+                <div class="shop-shot" ${prod.hasModal ? 'data-open-modal="modal-shirt" title="คลิกดูภาพขยายและแกลเลอรี"' : ''}>
                   ${prod.tag ? `<span class="shop-tag">${prod.tag}</span>` : ''}
                   ${prod.image ? `<img src="${prod.image}" width="360" height="255" loading="lazy" decoding="async" alt="${prod.name || ''}">` : ''}
+                  ${prod.hasModal ? `<span class="shop-shot-overlay">🔍 ดู 4 ภาพ</span>` : ''}
                 </div>
-                <div class="shop-info">
+                <div class="shop-body">
                   <h3>${prod.name || ''}</h3>
                   <p class="shop-desc">${prod.desc || ''}</p>
                   ${modalBtnHtml}

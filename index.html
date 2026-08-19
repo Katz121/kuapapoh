@@ -183,42 +183,50 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .six-item b{font-family:var(--display);font-weight:700;font-size:1.55rem;color:var(--yellow);line-height:1.3}
 .six-item p{margin:.25rem 0 0;color:#d5d9ef;font-size:.95rem;max-width:44ch}
 
-/* ═══════════ POH SHOP (โพ้ช็อป) ═══════════ */
+
+/* ═══════════ POH SHOP (โพ้ช็อป) · Perfect Symmetry & Alignment ═══════════ */
 .shop{background:var(--paper)}
-.shop-grid{display:grid;gap:clamp(20px,3vw,30px);margin-top:2.2rem}
+.shop-grid{display:grid;gap:clamp(20px,2.5vw,28px);margin-top:2rem;align-items:stretch}
 @media(min-width:600px){.shop-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1020px){.shop-grid{grid-template-columns:repeat(4,1fr)}}
 
 .shop-card{background:#fff;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);
-  display:flex;flex-direction:column;position:relative;transition:transform .2s,box-shadow .2s}
+  display:flex;flex-direction:column;position:relative;transition:transform .2s,box-shadow .2s;height:100%}
 .shop-card:hover{transform:translateY(-3px);box-shadow:8px 8px 0 var(--ink)}
 
 .shop-shot{position:relative;background:var(--yellow);border-bottom:3px solid var(--ink);
-  aspect-ratio:4/3;display:grid;place-items:center;padding:1rem;overflow:hidden}
+  aspect-ratio:4/3;display:grid;place-items:center;padding:.8rem;overflow:hidden;cursor:pointer}
 .shop-shot img{max-height:100%;width:auto;object-fit:contain;transition:transform .3s}
 .shop-card:hover .shop-shot img{transform:scale(1.06)}
 
-.shop-tag{position:absolute;top:10px;left:10px;z-index:2;background:var(--ink);color:var(--yellow);
-  font-family:var(--body);font-weight:600;font-size:.74rem;padding:.2em .65em;border:1.5px solid var(--ink)}
+.shop-tag{position:absolute;top:8px;left:8px;z-index:2;background:var(--ink);color:var(--yellow);
+  font-family:var(--body);font-weight:600;font-size:.72rem;padding:.2em .6em;border:1.5px solid var(--ink);border-radius:2px}
 
-.shop-body{padding:1.3rem;display:flex;flex-direction:column;flex:1;gap:.5rem}
-.shop-body h3{font-size:1.15rem;margin:0;color:var(--ink);line-height:1.35}
-.shop-desc{font-size:.88rem;color:var(--muted);margin:0;line-height:1.55;flex:1}
-.shop-meta{font-size:.78rem;font-weight:600;color:var(--cobalt);margin:0}
+.shop-shot-overlay{position:absolute;bottom:8px;right:8px;z-index:2;background:rgba(16,21,56,.85);
+  color:#fff;font-size:.68rem;font-weight:600;padding:.2em .55em;border-radius:3px;backdrop-filter:blur(2px);
+  display:inline-flex;align-items:center;gap:3px;transition:background .2s}
+.shop-shot:hover .shop-shot-overlay{background:var(--magenta);color:#fff}
 
-.shop-more-btn{display:inline-flex;align-items:center;justify-content:flex-start;
-  font-size:.84rem;font-weight:600;color:var(--magenta-text);background:none;border:none;
-  padding:0;margin-top:.2rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;
-  transition:color .2s;text-align:left;font-family:inherit}
+.shop-body{padding:1.15rem;display:flex;flex-direction:column;flex:1;gap:.35rem}
+.shop-body h3{font-size:1.1rem;margin:0;color:var(--ink);line-height:1.35;min-height:2.7em;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.shop-desc{font-size:.85rem;color:var(--muted);margin:0;line-height:1.5;flex:1;min-height:4.5em}
+
+.shop-more-btn{display:inline-flex;align-items:center;gap:.3rem;font-size:.82rem;font-weight:600;
+  color:var(--magenta-text);background:none;border:none;padding:0;margin:.2rem 0;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;transition:color .2s;text-align:left;font-family:inherit}
 .shop-more-btn:hover{color:var(--ink)}
 
-.shop-foot{margin-top:.6rem;padding-top:.85rem;border-top:1.5px dashed var(--rule);
+.shop-meta{font-size:.76rem;font-weight:600;color:var(--cobalt);margin:.2rem 0 0;min-height:1.2em;line-height:1.4}
+
+.shop-foot{margin-top:auto;padding-top:.75rem;border-top:1.5px dashed var(--rule);
   display:flex;align-items:center;justify-content:space-between;gap:.6rem}
 .shop-price{font-family:var(--mono);font-size:1.25rem;font-weight:700;color:var(--magenta-text)}
 .shop-buy{display:inline-flex;align-items:center;gap:.35em;font-size:.82rem;font-weight:600;
   color:var(--ink);text-decoration:none;padding:.38em .85em;background:var(--yellow);
   border:2px solid var(--ink);border-radius:999px;transition:background .2s,color .2s}
 .shop-buy:hover{background:var(--magenta-text);color:#fff;border-color:var(--magenta-text)}
+
 
 .shop-guide{margin-top:2.6rem;background:var(--yellow);border:3px solid var(--ink);
   box-shadow:6px 6px 0 var(--ink);padding:clamp(1.4rem,3.5vw,2.4rem)}

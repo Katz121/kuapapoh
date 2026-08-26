@@ -52,8 +52,23 @@
     }
   }
 
+  // Current shop mode: the public catalog currently sells the shirt only.
+  function limitShopToShirt(data) {
+    if (data?.shop && Array.isArray(data.shop.products)) {
+      data.shop.products = data.shop.products
+        .filter(product => product.id === 'shirt' || String(product.name || '').includes('เสื้อ'))
+        .slice(0, 1);
+      data.shop.categories = ['ทั้งหมด', 'เสื้อผ้า & แฟชั่น'];
+      if (data.shop.heading === 'ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ' || data.shop.heading === 'เสื้อยืดจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ') {
+        data.shop.heading = 'เสื้อยืดจากย่าน<br>ถ่ายทอดด้วยใจ';
+      }
+    }
+    return data;
+  }
+
   function applyContent(data) {
     if (!data) return;
+    data = limitShopToShirt(data);
 
     try {
       // 0. Typography Management
@@ -303,6 +318,7 @@
           // Render Dynamic Product Cards
           const shopGrid = shopSec.querySelector('.shop-grid');
           if (shopGrid) {
+            shopGrid.classList.toggle('single-product', products.length === 1);
             shopGrid.innerHTML = '';
             products.forEach((prod) => {
               const art = document.createElement('article');

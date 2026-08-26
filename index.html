@@ -189,6 +189,8 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .shop-grid{display:grid;gap:clamp(20px,2.5vw,28px);margin-top:2rem;align-items:stretch}
 @media(min-width:600px){.shop-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1020px){.shop-grid{grid-template-columns:repeat(4,1fr)}}
+.shop-grid.single-product{grid-template-columns:minmax(0,760px);justify-content:center}
+.shop-grid.single-product .shop-card{width:100%}
 
 .shop-card{background:#fff;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);
   display:flex;flex-direction:column;position:relative;transition:transform .2s,box-shadow .2s;height:100%}
@@ -618,10 +620,10 @@ footer a{color:var(--yellow)}
 <section class="shop shift" id="shop">
   <div class="wrap">
     <p class="tag rise">POH SHOP · โพ้ช็อป</p>
-    <h2 class="rise">ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ</h2>
-    <p class="lede rise">สินค้าและของสะสมที่ออกแบบจากอัตลักษณ์เมืองเก่าตะกั่วป่า ร่วมกับช่างฝีมือและคนในชุมชน รายได้ทั้งหมดจะนำมาสมทบเป็นกองทุนของกลุ่มกั่วป่าโพ้ เพื่อใช้ในการฟื้นฟู ขับเคลื่อนกิจกรรม และดำเนินงานพัฒนาเมืองสร้างสรรค์อย่างต่อเนื่องในปีถัด ๆ ไป</p>
+    <h2 class="rise">เสื้อยืดจากย่าน<br>ถ่ายทอดด้วยใจ</h2>
+    <p class="lede rise">เสื้อยืดกั่วป่าโพ้ที่ออกแบบจากอัตลักษณ์เมืองเก่าตะกั่วป่า ร่วมกับศิลปินและคนในชุมชน รายได้ทั้งหมดจะนำมาสมทบเป็นกองทุนของกลุ่มกั่วป่าโพ้ เพื่อใช้ในการฟื้นฟู ขับเคลื่อนกิจกรรม และดำเนินงานพัฒนาเมืองสร้างสรรค์อย่างต่อเนื่อง</p>
 
-    <div class="shop-grid rise">
+    <div class="shop-grid single-product rise">
       <!-- สินค้า 1: เสื้อยืดกั่วป่าโพ้ -->
       <article class="shop-card">
         <div class="shop-shot" style="cursor:pointer" data-open-modal="modal-shirt" title="คลิกเพื่อดูภาพถ่ายแบบและรายละเอียด">
@@ -642,56 +644,6 @@ footer a{color:var(--yellow)}
         </div>
       </article>
 
-      <!-- สินค้า 2: พวงกุญแจผ้าปาเต๊ะ -->
-      <article class="shop-card">
-        <div class="shop-shot">
-          <span class="shop-tag">งานมือหน้าบ้านอี๋จู้</span>
-          <img src="images/ws/ws-keychain.webp" width="220" height="220" loading="lazy" decoding="async" alt="พวงกุญแจผ้าปาเต๊ะ">
-        </div>
-        <div class="shop-body">
-          <h3>พวงกุญแจผ้าปาเต๊ะแท้</h3>
-          <p class="shop-desc">งานตัดเย็บทำมือจากเศษผ้าปาเต๊ะเปอรานากัน โดยกลุ่มแม่บ้านในย่านเมืองเก่า แต่ละชิ้นมีคู่สีและลวดลายเอกลักษณ์ชิ้นเดียวในโลก</p>
-          <p class="shop-meta">งานฝีมือชุมชน 100%</p>
-          <div class="shop-foot">
-            <span class="shop-price">฿120</span>
-            <a class="shop-buy" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อ</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- สินค้า 3: โปสการ์ดแลกั่วป่า -->
-      <article class="shop-card">
-        <div class="shop-shot">
-          <span class="shop-tag">พิมพ์ Riso 4 สี</span>
-          <img src="images/photo-port.webp" width="180" height="190" loading="lazy" decoding="async" alt="โปสการ์ดแลกั่วป่า">
-        </div>
-        <div class="shop-body">
-          <h3>ชุดโปสการ์ด “แลกั่วป่า” (6 ใบ)</h3>
-          <p class="shop-desc">ภาพสเก็ตช์อาคารเก่า ผสมภาพถ่ายฟิล์มมุมประวัติศาสตร์และท่าน้ำตะกั่วป่า พิมพ์บนกระดาษคราฟต์หนา 260 แกรม</p>
-          <p class="shop-meta">พร้อมบันทึกประวัติศาสตร์ย่อ</p>
-          <div class="shop-foot">
-            <span class="shop-price">฿150</span>
-            <a class="shop-buy" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อ</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- สินค้า 4: โมเดลโคมไฟเฉลิมโบราณจิ๋ว -->
-      <article class="shop-card">
-        <div class="shop-shot">
-          <span class="shop-tag">ภูมิปัญญาช่างลุงเรน</span>
-          <img src="images/ws/ws-lantern.webp" width="150" height="220" loading="lazy" decoding="async" alt="โมเดลโคมไฟเฉลิมโบราณจิ๋ว">
-        </div>
-        <div class="shop-body">
-          <h3>โมเดลโคมไฟเฉลิมโบราณจิ๋ว</h3>
-          <p class="shop-desc">ของที่ระลึกจำลองโคมไฟเฉลิมโบราณ มรดกภูมิปัญญาการประกอบไม้ไร้ตะปูของช่างไม้ตะกั่วป่า เพื่อความเป็นสิริมงคล</p>
-          <p class="shop-meta">งานไม้ประกอบมือ</p>
-          <div class="shop-foot">
-            <span class="shop-price">฿290</span>
-            <a class="shop-buy" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อ</a>
-          </div>
-        </div>
-      </article>
     </div>
 
     <!-- ช่องทางการสั่งซื้อและรับสินค้า -->

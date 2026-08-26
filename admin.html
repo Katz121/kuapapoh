@@ -90,6 +90,14 @@ input,textarea,select,button{font-family:inherit;font-size:inherit}
 
 /* Main Content */
 .admin-main{padding:clamp(1.2rem,3vw,2.4rem);max-width:1100px;margin:0 auto;width:100%}
+.preview-shell{background:#d8d3c8;border:2px solid var(--ink);border-radius:8px;box-shadow:4px 4px 0 var(--ink);overflow:hidden}
+.preview-toolbar{display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;background:var(--ink);color:#fff;padding:.75rem 1rem}
+.preview-toolbar strong{font-family:var(--display);color:var(--yellow)}
+.preview-toolbar span{font-size:.82rem;color:#d8dcf2}
+.preview-edit-links{flex-basis:100%;display:flex;gap:.45rem;flex-wrap:wrap;padding-top:.2rem}
+.preview-edit-link{display:inline-flex;align-items:center;gap:.25rem;padding:.35rem .65rem;border:1.5px solid var(--yellow);border-radius:999px;background:#fff;color:var(--ink);font:600 .78rem/1.2 var(--body);cursor:pointer}
+.preview-edit-link:hover,.preview-edit-link:focus-visible{background:var(--magenta);color:#fff;border-color:#fff;outline:none}
+.preview-frame{display:block;width:100%;height:min(82vh,1000px);border:0;background:var(--paper)}
 .tab-content{display:none}
 .tab-content.is-active{display:block;animation:fadeIn .2s ease-in-out}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
@@ -222,8 +230,10 @@ input:checked + .slider:before{transform:translateX(20px)}
 <div class="admin-layout">
   <!-- Sidebar Navigation -->
   <aside class="admin-sidebar">
+    <div class="nav-group-title">พรีวิวเว็บไซต์</div>
+    <button type="button" class="nav-tab is-active" data-tab="tab-preview">👁️ หน้าเว็บ + แก้ไขรายส่วน</button>
     <div class="nav-group-title">จัดการดีไซน์ & ฟอนต์</div>
-    <button type="button" class="nav-tab is-active" data-tab="tab-typo">🔤 จัดการฟอนต์ & ตัวอักษร</button>
+    <button type="button" class="nav-tab" data-tab="tab-typo">🔤 จัดการฟอนต์ & ตัวอักษร</button>
     <button type="button" class="nav-tab" data-tab="tab-sections">🎛️ เปิด/ปิด ส่วนแสดงผล</button>
 
     <div class="nav-group-title" style="margin-top:1rem">หมวดหมู่เนื้อหา & สินค้า</div>
@@ -241,8 +251,30 @@ input:checked + .slider:before{transform:translateX(20px)}
   <!-- Main Content Form -->
   <main class="admin-main">
 
+    <!-- ═══════════ TAB: WEBSITE PREVIEW ═══════════ -->
+    <div id="tab-preview" class="tab-content is-active">
+      <div class="preview-shell">
+        <div class="preview-toolbar">
+          <div>
+            <strong>👁️ พรีวิวหน้าเว็บไซต์จริง</strong>
+            <span>กดปุ่ม ✏️ แก้ไข ที่มุมของแต่ละส่วนเพื่อเปิดฟอร์มส่วนนั้น</span>
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" id="btnRefreshPreview">รีเฟรชพรีวิว</button>
+          <div class="preview-edit-links" aria-label="เมนูแก้ไขแต่ละส่วน">
+            <button type="button" class="preview-edit-link" data-preview-edit="tab-hero">✏️ หน้าแรก</button>
+            <button type="button" class="preview-edit-link" data-preview-edit="tab-houses">✏️ พื้นที่สร้างสรรค์</button>
+            <button type="button" class="preview-edit-link" data-preview-edit="tab-origin">✏️ ที่มาของชื่อ</button>
+            <button type="button" class="preview-edit-link" data-preview-edit="tab-six">✏️ แนวคิด 6 อ.</button>
+            <button type="button" class="preview-edit-link" data-preview-edit="tab-shop">✏️ โพ้ช็อป / เสื้อยืด</button>
+            <button type="button" class="preview-edit-link" data-preview-edit="tab-contact">✏️ ติดต่อ</button>
+          </div>
+        </div>
+        <iframe id="sitePreviewFrame" class="preview-frame" src="index.html" title="พรีวิวหน้าเว็บไซต์สำหรับผู้ดูแลระบบ"></iframe>
+      </div>
+    </div>
+
     <!-- ═══════════ TAB: TYPOGRAPHY MANAGER ═══════════ -->
-    <div id="tab-typo" class="tab-content is-active">
+    <div id="tab-typo" class="tab-content">
       <div class="panel">
         <div class="panel-head">
           <div>
@@ -746,6 +778,20 @@ const DEFAULT_PASS = '78109';
 let currentData = null;
 const imageStore = {};
 
+// Current shop mode: keep the active catalog limited to the shirt.
+function enforceShirtOnly(data) {
+  if (data?.shop && Array.isArray(data.shop.products)) {
+    data.shop.products = data.shop.products
+      .filter(product => product.id === 'shirt' || String(product.name || '').includes('เสื้อ'))
+      .slice(0, 1);
+    data.shop.categories = ['ทั้งหมด', 'เสื้อผ้า & แฟชั่น'];
+    if (data.shop.heading === 'ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ' || data.shop.heading === 'เสื้อยืดจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ') {
+      data.shop.heading = 'เสื้อยืดจากย่าน<br>ถ่ายทอดด้วยใจ';
+    }
+  }
+  return data;
+}
+
 // Tab Navigation
 document.querySelectorAll('.nav-tab').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -756,6 +802,80 @@ document.querySelectorAll('.nav-tab').forEach(btn => {
     const target = document.getElementById(tabId);
     if (target) target.classList.add('is-active');
   });
+});
+
+// Website-like preview with section edit buttons
+window.openEditorTab = function(tabId) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('is-active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('is-active'));
+  const nav = document.querySelector(`.nav-tab[data-tab="${tabId}"]`);
+  const target = document.getElementById(tabId);
+  if (nav) nav.classList.add('is-active');
+  if (target) target.classList.add('is-active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+function addPreviewEditButtons() {
+  const frame = document.getElementById('sitePreviewFrame');
+  const doc = frame?.contentDocument;
+  if (!doc || !doc.body) return;
+
+  const sections = [
+    ['.hero', 'tab-hero', 'Hero / หน้าแรก'],
+    ['#houses', 'tab-houses', 'พื้นที่สร้างสรรค์'],
+    ['#origin', 'tab-origin', 'ที่มาของชื่อ'],
+    ['#six', 'tab-six', 'แนวคิด 6 อ.'],
+    ['#shop', 'tab-shop', 'โพ้ช็อป / เสื้อยืด'],
+    ['#contact', 'tab-contact', 'ข้อมูลติดต่อ']
+  ];
+
+  const style = doc.createElement('style');
+  style.id = 'admin-preview-edit-style';
+  style.textContent = `
+    .admin-preview-edit { position:absolute !important; top:18px !important; right:18px !important; z-index:2147483647 !important;
+      display:inline-flex !important; visibility:visible !important; opacity:1 !important; pointer-events:auto !important;
+      align-items:center; gap:.35rem; padding:.5rem .8rem; border:2px solid #101538 !important; border-radius:6px;
+      background:#FFE81C !important; color:#101538 !important; box-shadow:3px 3px 0 #101538 !important; cursor:pointer;
+      font:600 14px/1.2 'IBM Plex Sans Thai', sans-serif !important; }
+    .admin-preview-edit:hover { background:#EC0A72 !important; color:#fff !important; }
+    .admin-preview-edit:focus-visible { outline:3px solid #1E3FA8; outline-offset:3px; }
+  `;
+  doc.getElementById('admin-preview-edit-style')?.remove();
+  doc.head.appendChild(style);
+
+  sections.forEach(([selector, tabId, label]) => {
+    const section = doc.querySelector(selector);
+    if (!section) return;
+    section.style.setProperty('position', 'relative', 'important');
+    section.querySelector('.admin-preview-edit')?.remove();
+    const button = doc.createElement('button');
+    button.type = 'button';
+    button.className = 'admin-preview-edit';
+    button.textContent = `✏️ แก้ไข ${label}`;
+    button.title = `เปิดฟอร์มแก้ไข ${label}`;
+    button.addEventListener('click', () => window.parent.openEditorTab(tabId));
+    section.appendChild(button);
+  });
+}
+
+function refreshSitePreview() {
+  const frame = document.getElementById('sitePreviewFrame');
+  if (frame) {
+    frame.contentWindow?.location.reload();
+  }
+}
+
+const previewFrame = document.getElementById('sitePreviewFrame');
+if (previewFrame) {
+  previewFrame.addEventListener('load', () => {
+    setTimeout(addPreviewEditButtons, 250);
+    setTimeout(addPreviewEditButtons, 1000);
+  });
+  setTimeout(addPreviewEditButtons, 1500);
+}
+document.getElementById('btnRefreshPreview')?.addEventListener('click', refreshSitePreview);
+document.querySelectorAll('[data-preview-edit]').forEach(btn => {
+  btn.addEventListener('click', () => window.openEditorTab(btn.dataset.previewEdit));
 });
 
 // Toast Helper
@@ -930,6 +1050,8 @@ async function initAdmin() {
   if (!currentData) {
     currentData = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
   }
+
+  currentData = enforceShirtOnly(currentData);
 
   populateForm(currentData);
   updateTypoPreview();
@@ -1477,6 +1599,7 @@ async function saveAll() {
 
   // 1. Save to LocalStorage
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  refreshSitePreview();
 
   // 2. Save Sync Config
   const cloudUrl = document.getElementById('sync_cloudUrl').value.trim();
@@ -1526,8 +1649,8 @@ document.getElementById('importFileInput').addEventListener('change', (e) => {
   reader.onload = (evt) => {
     try {
       const data = JSON.parse(evt.target.result);
-      currentData = data;
-      populateForm(data);
+      currentData = enforceShirtOnly(data);
+      populateForm(currentData);
       updateTypoPreview();
       saveAll();
       showToast('นำเข้าข้อมูลสำเร็จและบันทึกแล้ว! 📥✨');
@@ -1552,6 +1675,7 @@ document.getElementById('btnResetDefault').addEventListener('click', async () =>
   if (confirm('ต้องการล้างข้อมูลและคืนค่าเริ่มต้นใช่หรือไม่? ข้อมูลและรูปที่แก้ไขจะหายไป')) {
     localStorage.removeItem(STORAGE_KEY);
     currentData = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+    currentData = enforceShirtOnly(currentData);
     populateForm(currentData);
     updateTypoPreview();
     showToast('คืนค่าเริ่มต้นเรียบร้อยแล้ว 🔄');

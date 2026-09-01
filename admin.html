@@ -242,6 +242,7 @@ input:checked + .slider:before{transform:translateX(20px)}
     <button type="button" class="nav-tab" data-tab="tab-houses">🏛️ พื้นที่สร้างสรรค์ (บ้าน)</button>
     <button type="button" class="nav-tab" data-tab="tab-origin">📜 ที่มาของชื่อ & ภาพเก่า</button>
     <button type="button" class="nav-tab" data-tab="tab-six">🎨 แนวคิด 6 อ.</button>
+    <button type="button" class="nav-tab" data-tab="tab-events">🖼️ นิทรรศการที่กำลังจัดแสดง</button>
     <button type="button" class="nav-tab" data-tab="tab-contact">📞 ข้อมูลติดต่อ & ท้ายหน้า</button>
 
     <div class="nav-group-title" style="margin-top:1rem">ระบบและการซิงค์</div>
@@ -369,6 +370,10 @@ input:checked + .slider:before{transform:translateX(20px)}
           <div class="switch-row">
             <div><b>🎨 ส่วนแนวคิด 6 อ. (Six Heritage Pillars)</b><br><small style="color:var(--muted)">ถอดรหัสอัตลักษณ์ 6 มิติของย่าน</small></div>
             <label class="switch"><input type="checkbox" id="sec_six" checked><span class="slider"></span></label>
+          </div>
+          <div class="switch-row">
+            <div><b>🖼️ ส่วนนิทรรศการ (Current Exhibition)</b><br><small style="color:var(--muted)">งานที่กำลังจัดแสดงและตารางเปิดเข้าชมสามบ้าน</small></div>
+            <label class="switch"><input type="checkbox" id="sec_events" checked><span class="slider"></span></label>
           </div>
           <div class="switch-row">
             <div><b>🛍️ ส่วนโพ้ช็อป (POH SHOP & Products)</b><br><small style="color:var(--muted)">ของที่ระลึก เสื้อยืด และจุดรับสินค้า</small></div>
@@ -653,6 +658,124 @@ input:checked + .slider:before{transform:translateX(20px)}
       </div>
     </div>
 
+    <!-- ═══════════ TAB: CURRENT EXHIBITION ═══════════ -->
+    <div id="tab-events" class="tab-content">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">🖼️ นิทรรศการที่กำลังจัดแสดง (Current Exhibition)</h2>
+            <p class="panel-desc">งานที่โชว์อยู่ตอนนี้ · เปลี่ยนโปสเตอร์และรายละเอียดได้เมื่อขึ้นงานใหม่</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label">ป้ายกำกับส่วน</label>
+            <input type="text" id="ev_tag" class="field-input">
+          </div>
+          <div class="field">
+            <label class="field-label">หัวข้อใหญ่ (ใช้ &lt;em&gt;...&lt;/em&gt; ครอบคำที่อยากให้เป็นสีชมพูบรรทัดใหม่)</label>
+            <input type="text" id="ev_heading" class="field-input">
+          </div>
+          <div class="field">
+            <label class="field-label">คำโปรยใต้หัวข้อ</label>
+            <textarea id="ev_lede" class="field-textarea"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">รายละเอียดงาน</h2>
+            <p class="panel-desc">ข้อมูลที่ขึ้นข้างโปสเตอร์</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label">โปสเตอร์งาน (ภาพหลัก)</label>
+            <div class="image-widget" data-img-key="ev_image"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">ป้ายอังกฤษบนสุด</label>
+              <input type="text" id="ev_kicker" class="field-input" placeholder="Solo Exhibition">
+            </div>
+            <div class="field">
+              <label class="field-label">แฮชแท็ก</label>
+              <input type="text" id="ev_hashtag" class="field-input" placeholder="#กันยาอาภรณ์">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">ชื่องาน (ไทย)</label>
+              <input type="text" id="ev_title" class="field-input" style="font-weight:700">
+            </div>
+            <div class="field">
+              <label class="field-label">ชื่องาน (อังกฤษ)</label>
+              <input type="text" id="ev_titleEn" class="field-input">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">ศิลปิน (ไทย)</label>
+              <input type="text" id="ev_by" class="field-input">
+            </div>
+            <div class="field">
+              <label class="field-label">ศิลปิน (อังกฤษ)</label>
+              <input type="text" id="ev_byEn" class="field-input">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">คำอธิบายงาน</label>
+            <textarea id="ev_desc" class="field-textarea tall" style="min-height:110px"></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">ช่วงเวลา</label>
+              <input type="text" id="ev_date" class="field-input" placeholder="กันยายน 2569">
+            </div>
+            <div class="field">
+              <label class="field-label">เวลา (เว้นว่างได้ ถ้าเว้นจะไม่ขึ้นแถวนี้)</label>
+              <input type="text" id="ev_time" class="field-input" placeholder="09:30 - 17:00 น.">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">สถานที่</label>
+            <input type="text" id="ev_place" class="field-input">
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label class="field-label">ข้อความบนปุ่ม</label>
+              <input type="text" id="ev_ctaText" class="field-input">
+            </div>
+            <div class="field">
+              <label class="field-label">ลิงก์ปุ่ม</label>
+              <input type="text" id="ev_link" class="field-input">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">ตารางเปิดให้เข้าชม</h2>
+            <p class="panel-desc">แต่ละบ้านเปิดคนละวัน · เพิ่ม/ลบแถวได้อิสระ</p>
+          </div>
+          <button type="button" id="btnAddOpening" class="btn btn-outline">
+            <span>➕ เพิ่มบ้าน</span>
+          </button>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label">หัวข้อตาราง</label>
+            <input type="text" id="ev_openingsHeading" class="field-input">
+          </div>
+          <div id="openingsContainer" class="grid-2"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- ═══════════ TAB: CONTACT & FOOTER ═══════════ -->
     <div id="tab-contact" class="tab-content">
       <div class="panel">
@@ -825,6 +948,7 @@ function addPreviewEditButtons() {
     ['#houses', 'tab-houses', 'พื้นที่สร้างสรรค์'],
     ['#origin', 'tab-origin', 'ที่มาของชื่อ'],
     ['#six', 'tab-six', 'แนวคิด 6 อ.'],
+    ['#events', 'tab-events', 'นิทรรศการ'],
     ['#shop', 'tab-shop', 'โพ้ช็อป / เสื้อยืด'],
     ['#contact', 'tab-contact', 'ข้อมูลติดต่อ']
   ];
@@ -1148,6 +1272,36 @@ function renderPillarsList(items) {
   });
 }
 
+function renderOpeningsList(items) {
+  const container = document.getElementById('openingsContainer');
+  container.innerHTML = '';
+  items.forEach((item, idx) => {
+    const box = document.createElement('div');
+    box.className = 'item-card';
+    box.innerHTML = `
+      <div class="item-card-header">
+        <span class="item-card-title">🏛️ บ้านที่ ${idx+1}</span>
+        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteOpening(${idx})">🗑️ ลบ</button>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="field-label">เลขที่บ้าน</label>
+          <input type="text" class="field-input opening-no" value="${item.no || ''}" style="font-weight:700">
+        </div>
+        <div class="field">
+          <label class="field-label">ชื่อนิทรรศการ / พื้นที่</label>
+          <input type="text" class="field-input opening-title" value="${item.title || ''}">
+        </div>
+        <div class="field">
+          <label class="field-label">วันที่เปิด</label>
+          <input type="text" class="field-input opening-days" value="${item.days || ''}" placeholder="เปิดทุกวัน">
+        </div>
+      </div>
+    `;
+    container.appendChild(box);
+  });
+}
+
 // Render Dynamic Products List with Category & Status
 function renderProductsList(products) {
   const cont = document.getElementById('dynamicProductsList');
@@ -1286,6 +1440,13 @@ window.deletePillar = function(idx) {
   }
 };
 
+window.deleteOpening = function(idx) {
+  if (confirm('ต้องการลบแถวนี้ใช่หรือไม่?')) {
+    currentData.events.openings.splice(idx, 1);
+    renderOpeningsList(currentData.events.openings);
+  }
+};
+
 window.deleteProduct = function(idx) {
   if (confirm('ต้องการลบสินค้านี้ใช่หรือไม่?')) {
     currentData.shop.products.splice(idx, 1);
@@ -1316,6 +1477,14 @@ document.getElementById('btnAddPillar').addEventListener('click', () => {
   });
   renderPillarsList(currentData.six.items);
   showToast('เพิ่มหัวข้อแนวคิดใหม่แล้ว ✨');
+});
+
+document.getElementById('btnAddOpening').addEventListener('click', () => {
+  currentData.events = currentData.events || {};
+  currentData.events.openings = currentData.events.openings || [];
+  currentData.events.openings.push({ no: "", title: "พื้นที่ใหม่", days: "เปิดทุกวัน" });
+  renderOpeningsList(currentData.events.openings);
+  showToast('เพิ่มแถวใหม่แล้ว ✨');
 });
 
 document.getElementById('btnAddProduct').addEventListener('click', () => {
@@ -1364,6 +1533,7 @@ function populateForm(data) {
     document.getElementById('sec_houses').checked = data.sections.houses !== false;
     document.getElementById('sec_origin').checked = data.sections.origin !== false;
     document.getElementById('sec_six').checked = data.sections.six !== false;
+    document.getElementById('sec_events').checked = data.sections.events !== false;
     document.getElementById('sec_shop').checked = data.sections.shop !== false;
     document.getElementById('sec_contact').checked = data.sections.contact !== false;
   }
@@ -1412,6 +1582,29 @@ function populateForm(data) {
   if (data.six) {
     document.getElementById('six_heading').value = data.six.heading || '';
     renderPillarsList(data.six.items || []);
+  }
+
+  // Current Exhibition
+  if (data.events) {
+    const ev = (Array.isArray(data.events.items) && data.events.items[0]) || {};
+    document.getElementById('ev_tag').value = data.events.tag || '';
+    document.getElementById('ev_heading').value = data.events.heading || '';
+    document.getElementById('ev_lede').value = data.events.lede || '';
+    document.getElementById('ev_kicker').value = ev.kicker || '';
+    document.getElementById('ev_hashtag').value = ev.hashtag || '';
+    document.getElementById('ev_title').value = ev.title || '';
+    document.getElementById('ev_titleEn').value = ev.titleEn || '';
+    document.getElementById('ev_by').value = ev.by || '';
+    document.getElementById('ev_byEn').value = ev.byEn || '';
+    document.getElementById('ev_desc').value = ev.desc || '';
+    document.getElementById('ev_date').value = ev.date || '';
+    document.getElementById('ev_time').value = ev.time || '';
+    document.getElementById('ev_place').value = ev.place || '';
+    document.getElementById('ev_ctaText').value = ev.ctaText || '';
+    document.getElementById('ev_link').value = ev.link || '';
+    document.getElementById('ev_openingsHeading').value = data.events.openingsHeading || '';
+    document.querySelectorAll('[data-img-key="ev_image"]').forEach(el => setupImageWidget(el, 'ev_image', ev.image || 'images/event-apaporn.webp'));
+    renderOpeningsList(data.events.openings || []);
   }
 
   // Shop
@@ -1472,6 +1665,7 @@ function collectFormData() {
   d.sections.houses = document.getElementById('sec_houses').checked;
   d.sections.origin = document.getElementById('sec_origin').checked;
   d.sections.six = document.getElementById('sec_six').checked;
+  d.sections.events = document.getElementById('sec_events').checked;
   d.sections.shop = document.getElementById('sec_shop').checked;
   d.sections.contact = document.getElementById('sec_contact').checked;
 
@@ -1531,6 +1725,39 @@ function collectFormData() {
     d.six.items.push({
       title: card.querySelector('.pillar-title')?.value || '',
       desc: card.querySelector('.pillar-desc')?.value || ''
+    });
+  });
+
+  // Current Exhibition
+  d.events = d.events || {};
+  d.events.enabled = document.getElementById('sec_events').checked;
+  d.events.tag = document.getElementById('ev_tag').value;
+  d.events.heading = document.getElementById('ev_heading').value;
+  d.events.lede = document.getElementById('ev_lede').value;
+  const prevEv = (Array.isArray(d.events.items) && d.events.items[0]) || {};
+  d.events.items = [{
+    kicker: document.getElementById('ev_kicker').value,
+    title: document.getElementById('ev_title').value,
+    titleEn: document.getElementById('ev_titleEn').value,
+    by: document.getElementById('ev_by').value,
+    byEn: document.getElementById('ev_byEn').value,
+    desc: document.getElementById('ev_desc').value,
+    date: document.getElementById('ev_date').value,
+    time: document.getElementById('ev_time').value,
+    place: document.getElementById('ev_place').value,
+    hashtag: document.getElementById('ev_hashtag').value,
+    image: imageStore['ev_image'] || prevEv.image || '',
+    imageAlt: prevEv.imageAlt || '',
+    ctaText: document.getElementById('ev_ctaText').value,
+    link: document.getElementById('ev_link').value
+  }];
+  d.events.openingsHeading = document.getElementById('ev_openingsHeading').value;
+  d.events.openings = [];
+  document.querySelectorAll('#openingsContainer .item-card').forEach((card) => {
+    d.events.openings.push({
+      no: card.querySelector('.opening-no')?.value || '',
+      title: card.querySelector('.opening-title')?.value || '',
+      days: card.querySelector('.opening-days')?.value || ''
     });
   });
 

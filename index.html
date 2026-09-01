@@ -184,6 +184,39 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .six-item p{margin:.25rem 0 0;color:#d5d9ef;font-size:.95rem;max-width:44ch}
 
 
+/* ═══════════ นิทรรศการที่กำลังจัดแสดง ═══════════ */
+.events{background:var(--paper)}
+.events h2 em{font-style:normal;color:var(--magenta);display:block}
+.ev-grid{display:grid;gap:clamp(22px,3vw,44px);margin-top:2.4rem;align-items:start}
+@media(min-width:860px){.ev-grid{grid-template-columns:minmax(0,.86fr) minmax(0,1fr)}}
+/* โปสเตอร์คือ key visual · กรอบหนาสีมาเจนต้าให้อ่านเป็นชิ้นงานจัดแสดง ไม่ใช่ภาพประกอบ */
+.ev-poster{border:6px solid var(--magenta);background:var(--magenta);line-height:0}
+.ev-poster img{width:100%;height:auto}
+.ev-body{min-width:0}
+.ev-kicker{color:var(--magenta-text);margin:0 0 .5rem}
+.ev-title{font-family:var(--display);font-weight:700;line-height:1.3;margin:0 0 .35rem;
+  font-size:clamp(1.5rem,3.2vw,2.15rem)}
+.ev-title span{display:block;font-family:var(--mono);font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;font-size:.68rem;color:var(--muted);margin-top:.5rem}
+.ev-by{font-weight:600;margin:0 0 1.1rem}
+.ev-by small{display:block;font-weight:400;font-size:.86rem;color:var(--muted);margin-top:.15rem}
+.ev-meta{display:grid;gap:0;margin:1.6rem 0 1.4rem;border-top:1px solid var(--rule)}
+.ev-meta > div{display:grid;grid-template-columns:7.5em 1fr;gap:1rem;align-items:baseline;
+  padding:.75rem 0;border-bottom:1px solid var(--rule)}
+.ev-meta dt{font-family:var(--body);font-weight:600;font-size:.84rem;color:var(--muted);margin:0}
+.ev-meta dd{margin:0;font-weight:600}
+.ev-hash{font-family:var(--display);font-weight:700;color:var(--magenta);
+  font-size:clamp(1.1rem,2vw,1.35rem);margin:0 0 1.5rem}
+/* ตารางเปิดเข้าชม 3 หลัง · เลขบ้านเป็นตัวนำสายตาแบบเดียวกับส่วน "สามพื้นที่" */
+.ev-open{margin-top:clamp(34px,4vw,54px);border-top:2px solid var(--ink);padding-top:1.5rem}
+.ev-open-h{font-family:var(--display);font-weight:700;font-size:1.15rem;margin:0 0 .2rem}
+.ev-open ul{list-style:none;margin:1rem 0 0;padding:0;display:grid;gap:0}
+@media(min-width:900px){.ev-open ul{grid-template-columns:repeat(3,1fr);column-gap:2.4rem}}
+.ev-open li{display:grid;grid-template-columns:2.9em 1fr;gap:.9rem;align-items:start;
+  padding:.95rem 0;border-bottom:1px solid var(--rule)}
+.ev-open b{font-family:var(--display);font-weight:700;font-size:1.5rem;color:var(--cobalt);line-height:1.1}
+.ev-open span{display:block;font-size:.86rem;color:var(--magenta-text);font-weight:600;margin-top:.2rem}
+
 /* ═══════════ POH SHOP (โพ้ช็อป) · Perfect Symmetry & Alignment ═══════════ */
 .shop{background:var(--paper)}
 .shop-grid{display:grid;gap:clamp(20px,2.5vw,28px);margin-top:2rem;align-items:stretch}
@@ -467,6 +500,7 @@ footer a{color:var(--yellow)}
   <div class="wrap">
     <b>กั่วป่าโพ้</b>
     <nav aria-label="เมนูหลัก">
+      <a href="#events">นิทรรศการ</a>
       <a href="#houses">สามพื้นที่</a>
       <a href="#origin">ที่มาของชื่อ</a>
       <a href="#six">6 อ.</a>
@@ -504,6 +538,45 @@ footer a{color:var(--yellow)}
 </header>
 
 <main id="main">
+
+<!-- ═══════════ นิทรรศการที่กำลังจัดแสดง ═══════════ -->
+<section class="events shift" id="events">
+  <div class="wrap">
+    <p class="tag rise">นิทรรศการที่กำลังจัดแสดง</p>
+    <h2 class="rise">อ. แรกเปิดผนึกแล้ว<em>อาภรณ์</em></h2>
+    <p class="lede rise">เครื่องแต่งกาย ความงามที่ถูกถ่ายทอดผ่านตัวตนของศิลปิน</p>
+
+    <div class="ev-grid rise">
+      <figure class="ev-poster">
+        <img src="images/event-apaporn.webp" width="1100" height="1467" loading="lazy" decoding="async"
+             alt="โปสเตอร์นิทรรศการเดี่ยว มนต์เสน่ห์เปอรานากัน โดย ติณณภพ งานสถิร · ภาพวาดหญิงสาวในชุดเปอรานากันสีฟ้าท่ามกลางดอกไม้และผีเสื้อ">
+      </figure>
+      <div class="ev-body">
+        <p class="ev-kicker label-en" lang="en">Solo Exhibition</p>
+        <h3 class="ev-title">มนต์เสน่ห์เปอรานากัน<span lang="en">Peranakan Charm · Still Becoming</span></h3>
+        <p class="ev-by">โดย ช่างป๋อง · ติณณภพ งานสถิร<small lang="en">Tinnapop Ngansathin</small></p>
+        <p>เลือกใช้ปลายพู่กันถ่ายทอดเรื่องราวของเมืองผ่านลวดลาย สีสัน
+          และการแต่งกายของผู้คน เชื่อมอดีตและปัจจุบันเข้าด้วยกัน</p>
+        <dl class="ev-meta">
+          <div><dt>ช่วงเวลา</dt><dd>กันยายน 2569</dd></div>
+          <div><dt>สถานที่</dt><dd>78 สตูดิโอ ถนนวัฒนธรรมตะกั่วป่า</dd></div>
+        </dl>
+        <p class="ev-hash">#กันยาอาภรณ์</p>
+        <a class="btn" href="https://www.facebook.com/profile.php?id=61590430773715" target="_blank" rel="noopener">ติดตามเรื่องราวทางเพจกั่วป่าโพ้</a>
+      </div>
+    </div>
+
+    <div class="ev-open rise">
+      <p class="ev-open-h">เปิดให้เข้าชม</p>
+      <p class="muted">สามบ้านในย่านเมืองเก่า เปิดคนละวัน เช็กก่อนเดินทาง</p>
+      <ul>
+        <li><b>78</b><div>นิทรรศการมนต์เสน่ห์เปอรานากัน<span>เปิดทุกวัน</span></div></li>
+        <li><b>109</b><div>นิทรรศการแลกั่วป่าผ่านตัวตน<span>เฉพาะวันอาทิตย์</span></div></li>
+        <li><b>305</b><div>เต้าหมิง<span>ทุกวันอาทิตย์</span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
 
 <!-- ═══════════ สามพื้นที่ ═══════════ -->
 <section id="houses">

@@ -85,6 +85,7 @@
         if ('houses' in data.sections) toggleSec('houses', data.sections.houses);
         if ('origin' in data.sections) toggleSec('origin', data.sections.origin);
         if ('six' in data.sections) toggleSec('six', data.sections.six);
+        if ('events' in data.sections) toggleSec('events', data.sections.events);
         if ('shop' in data.sections) toggleSec('shop', data.sections.shop);
         if ('contact' in data.sections) toggleSec('contact', data.sections.contact);
       }
@@ -203,6 +204,72 @@
 
           const conclusion = hSec.querySelector('.wrap > p.rise:last-child, .wrap > p:last-child');
           if (conclusion && data.houses.conclusion) conclusion.innerHTML = data.houses.conclusion;
+        }
+      }
+
+
+      // 3.5 Events Section (นิทรรศการที่กำลังจัดแสดง)
+      if (data.events) {
+        const evSec = document.getElementById('events');
+        if (evSec) {
+          if (data.events.enabled === false) {
+            evSec.style.display = 'none';
+          } else {
+            evSec.style.display = '';
+            const set = (sel, val, html) => {
+              const el = evSec.querySelector(sel);
+              if (el && val) { if (html) el.innerHTML = val; else el.textContent = val; }
+            };
+            set('.tag', data.events.tag, true);
+            set('h2', data.events.heading, true);
+            set('.lede', data.events.lede, true);
+
+            const ev = Array.isArray(data.events.items) ? data.events.items[0] : null;
+            if (ev) {
+              const img = evSec.querySelector('.ev-poster img');
+              if (img && ev.image) { img.src = ev.image; if (ev.imageAlt) img.alt = ev.imageAlt; }
+              set('.ev-kicker', ev.kicker);
+              const t = evSec.querySelector('.ev-title');
+              if (t && ev.title) {
+                t.innerHTML = ev.title + (ev.titleEn ? `<span lang="en">${ev.titleEn}</span>` : '');
+              }
+              const by = evSec.querySelector('.ev-by');
+              if (by && ev.by) {
+                by.innerHTML = ev.by + (ev.byEn ? `<small lang="en">${ev.byEn}</small>` : '');
+              }
+              set('.ev-body > p:not(.ev-kicker):not(.ev-by):not(.ev-hash)', ev.desc, true);
+              const meta = evSec.querySelector('.ev-meta');
+              if (meta && (ev.date || ev.place)) {
+                meta.innerHTML = '';
+                const row = (dt, dd) => {
+                  const d = document.createElement('div');
+                  d.innerHTML = `<dt>${dt}</dt><dd>${dd}</dd>`;
+                  meta.appendChild(d);
+                };
+                if (ev.date) row('ช่วงเวลา', ev.date);
+                if (ev.time) row('เวลา', ev.time);
+                if (ev.place) row('สถานที่', ev.place);
+              }
+              set('.ev-hash', ev.hashtag);
+              const cta = evSec.querySelector('.ev-body .btn');
+              if (cta) {
+                if (ev.ctaText) cta.textContent = ev.ctaText;
+                if (ev.link) cta.href = ev.link;
+              }
+            }
+
+            // ตารางเปิดเข้าชมของสามบ้าน
+            const openList = evSec.querySelector('.ev-open ul');
+            if (openList && Array.isArray(data.events.openings) && data.events.openings.length) {
+              openList.innerHTML = '';
+              data.events.openings.forEach(o => {
+                const li = document.createElement('li');
+                li.innerHTML = `<b>${o.no || ''}</b><div>${o.title || ''}<span>${o.days || ''}</span></div>`;
+                openList.appendChild(li);
+              });
+            }
+            set('.ev-open-h', data.events.openingsHeading);
+          }
         }
       }
 

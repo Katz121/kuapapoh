@@ -930,10 +930,10 @@ const DEFAULT_CONTENT = {"site": {"title": "กั่วป่าโพ้ จ�
 Object.assign(DEFAULT_CONTENT.hero, {
   artworksLabel: 'ผลงานจากนิทรรศการ มนต์เสน่ห์เปอรานากัน',
   artworks: [
-    { src: 'images/event/artwork-1.webp', caption: 'เสื้อครุยฟ้าปักดิ้นทอง' },
-    { src: 'images/event/artwork-2.webp', caption: 'เคบายาชมพูกับกุหลาบ' },
-    { src: 'images/event/artwork-3.webp', caption: 'เปียถักกับผีเสื้อ' },
-    { src: 'images/event/artwork-4.webp', caption: 'เสื้อลูกไม้ขาวลายดอก' }
+    { src: 'images/event/artwork-1.webp', caption: 'Peranakan Charm' },
+    { src: 'images/event/artwork-2.webp', caption: 'Peranakan Charm' },
+    { src: 'images/event/artwork-3.webp', caption: 'Peranakan Charm' },
+    { src: 'images/event/artwork-4.webp', caption: 'Peranakan Charm' }
   ]
 });
 delete DEFAULT_CONTENT.hero.line78;
@@ -1625,7 +1625,7 @@ document.getElementById('btnAddOpening').addEventListener('click', () => {
 document.getElementById('btnAddArtwork').addEventListener('click', () => {
   currentData.hero = currentData.hero || {};
   currentData.hero.artworks = currentData.hero.artworks || [];
-  currentData.hero.artworks.push({ src: '', caption: 'คำบรรยายภาพวาดใหม่' });
+  currentData.hero.artworks.push({ src: '', caption: 'Peranakan Charm' });
   renderHeroArtworksList(currentData.hero.artworks);
   showToast('เพิ่มภาพวาดใหม่แล้ว ✨');
 });

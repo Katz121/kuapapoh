@@ -166,7 +166,8 @@
             img.height = size[1];
             img.loading = 'lazy';
             img.decoding = 'async';
-            img.alt = `ภาพวาด${caption} จากชุด มนต์เสน่ห์เปอรานากัน โดย ติณณภพ งานสถิร`;
+            // caption เป็นชื่อชุดผลงาน ไม่ใช่คำบรรยายภาพ · เอามาต่อเป็น alt แล้วจะอ่านไม่รู้เรื่อง
+            img.alt = artwork.alt || 'ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร';
             const figcaption = document.createElement('figcaption');
             figcaption.textContent = caption;
             figure.append(img, figcaption);

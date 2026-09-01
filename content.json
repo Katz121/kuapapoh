@@ -27,10 +27,22 @@
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2",
     "artworksLabel": "ผลงานจากนิทรรศการ มนต์เสน่ห์เปอรานากัน",
     "artworks": [
-      { "src": "images/event/artwork-1.webp", "caption": "เสื้อครุยฟ้าปักดิ้นทอง" },
-      { "src": "images/event/artwork-2.webp", "caption": "เคบายาชมพูกับกุหลาบ" },
-      { "src": "images/event/artwork-3.webp", "caption": "เปียถักกับผีเสื้อ" },
-      { "src": "images/event/artwork-4.webp", "caption": "เสื้อลูกไม้ขาวลายดอก" }
+      {
+        "src": "images/event/artwork-1.webp",
+        "caption": "Peranakan Charm"
+      },
+      {
+        "src": "images/event/artwork-2.webp",
+        "caption": "Peranakan Charm"
+      },
+      {
+        "src": "images/event/artwork-3.webp",
+        "caption": "Peranakan Charm"
+      },
+      {
+        "src": "images/event/artwork-4.webp",
+        "caption": "Peranakan Charm"
+      }
     ],
     "btnExploreUrl": "#events"
   },

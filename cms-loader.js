@@ -149,11 +149,29 @@
           if (data.hero.mapUrl) btnMap.href = data.hero.mapUrl;
         }
 
-        const heroFigures = document.querySelectorAll('.hero-row figure img');
-        if (heroFigures.length >= 3) {
-          if (data.hero.line78) heroFigures[0].src = data.hero.line78;
-          if (data.hero.line109) heroFigures[1].src = data.hero.line109;
-          if (data.hero.line305) heroFigures[2].src = data.hero.line305;
+        const heroRow = document.querySelector('.hero-row');
+        if (heroRow && Array.isArray(data.hero.artworks)) {
+          // ใช้ข้อมูลชุดเดียวกันเพื่อให้ภาพ คำบรรยาย และ alt ไม่คลาดเคลื่อนจาก CMS
+          const artworkSizes = [[900, 1092], [900, 1142], [900, 1121], [900, 908]];
+          const label = heroRow.querySelector('.hero-row-label');
+          if (label && data.hero.artworksLabel) label.textContent = data.hero.artworksLabel;
+          heroRow.querySelectorAll('figure').forEach(figure => figure.remove());
+          data.hero.artworks.forEach((artwork, index) => {
+            const figure = document.createElement('figure');
+            const img = document.createElement('img');
+            const caption = artwork.caption || '';
+            const size = artworkSizes[index] || [900, 1092];
+            img.src = artwork.src || '';
+            img.width = size[0];
+            img.height = size[1];
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.alt = `ภาพวาด${caption} จากชุด มนต์เสน่ห์เปอรานากัน โดย ติณณภพ งานสถิร`;
+            const figcaption = document.createElement('figcaption');
+            figcaption.textContent = caption;
+            figure.append(img, figcaption);
+            heroRow.appendChild(figure);
+          });
         }
       }
 

@@ -543,21 +543,16 @@ input:checked + .slider:before{transform:translateX(20px)}
             <input type="text" id="hero_mapUrl" class="field-input">
           </div>
 
-          <h3 style="font-size:1.05rem;margin:1rem 0 .2rem;color:var(--cobalt)">🖼️ รูปภาพลายเส้นสามหลังใน Hero</h3>
-          <div class="grid-3">
-            <div class="field">
-              <label class="field-label">ลายเส้นบ้าน 78</label>
-              <div class="image-widget" data-img-key="hero_line78"></div>
-            </div>
-            <div class="field">
-              <label class="field-label">ลายเส้นบ้าน 109</label>
-              <div class="image-widget" data-img-key="hero_line109"></div>
-            </div>
-            <div class="field">
-              <label class="field-label">ลายเส้นบ้าน 305</label>
-              <div class="image-widget" data-img-key="hero_line305"></div>
-            </div>
+          <h3 style="font-size:1.05rem;margin:1rem 0 .2rem;color:var(--cobalt)">🖼️ ภาพวาดจากนิทรรศการใน Hero</h3>
+          <div class="field">
+            <label class="field-label">ข้อความกำกับชุดผลงาน</label>
+            <input type="text" id="hero_artworksLabel" class="field-input">
           </div>
+          <div class="panel-head" style="margin-top:1rem">
+            <p class="panel-desc">เพิ่มหรือลบภาพวาดได้ตามจำนวนผลงาน</p>
+            <button type="button" id="btnAddArtwork" class="btn btn-outline">➕ เพิ่มภาพวาด</button>
+          </div>
+          <div id="heroArtworksContainer" class="grid-2"></div>
         </div>
       </div>
     </div>
@@ -931,7 +926,21 @@ input:checked + .slider:before{transform:translateX(20px)}
 
 <script>
 const DEFAULT_CONTENT = {"site": {"title": "กั่วป่าโพ้ จีโชว์เมือง · โครงการพื้นที่สร้างสรรค์ พังงา", "description": "โครงการพื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา · บ้านเลขที่ 78 · 109 · 305 · กั่วป่าโพ้ จีโชว์เมือง"}, "sections": {"hero": true, "houses": true, "origin": true, "six": true, "shop": true, "events": true, "contact": true}, "hero": {"kicker": "Creative Cultural District · Takua Pa", "title": "กั่วป่าโพ้", "titleEm": "โชว์อาภรณ์", "subtitle": "อ. แรกใน 6 อ. ของย่านเมืองเก่าตะกั่วป่าเปิดผนึกแล้ว · เครื่องแต่งกาย ลวดลาย และความงามของคนเปอรานากัน ผ่านปลายพู่กันของช่างป๋อง", "chips": ["กันยายน 2569", "78 สตูดิโอ", "บ้านเลขที่ 78 · 109 · 305"], "btnExplore": "ดูนิทรรศการที่กำลังจัดแสดง", "btnExploreUrl": "#events", "btnMap": "เปิดแผนที่ย่านเมืองเก่า", "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2", "line78": "images/line-78.webp", "line109": "images/line-109.webp", "line305": "images/line-305.webp"}, "houses": {"tag": "พื้นที่สร้างสรรค์", "heading": "สามพื้นที่หลัก<br>ที่เคยว่าง กลับมาเป็นของเมือง", "lede": "นำพื้นที่ว่างในอาคารเก่ามาสร้างสรรค์ผ่านกิจกรรมและการออกแบบ เพื่อเพิ่มมูลค่าทางเศรษฐกิจ สร้างรายได้ให้แก่ชุมชน และสร้างคุณค่าของเมืองแก่ผู้มาเยือน โดยยังคงอัตลักษณ์ของพื้นที่ วิถีชีวิต วัฒนธรรม และเอกลักษณ์เดิมไว้", "items": [{"no": "78", "name": "กั่วป่าเหมืองมิวเซียม", "title": "บ้านของนายเหมือง", "desc": "ในอดีตเป็นบ้านของนายเหมืองและบริษัทเหมืองแร่ดีบุก จึงนำพื้นที่มาสร้างสรรค์เป็น “กั่วป่าเหมืองมิวเซียม” จัดแสดงอุปกรณ์การทำเหมืองแร่ แผนที่การสำรวจเหมือง และเอกสารต่าง ๆ ที่เกี่ยวกับเหมือง", "use": "กิจกรรมในพื้นที่หมุนเวียนไปในแต่ละเดือน", "photo": "images/house-78.webp", "line": "images/line-78.webp", "logo": ""}, {"no": "109", "name": "ศาลเจ้ากังตั้งโหยกวน (หวุ่ยกุ่น)", "title": "สมาคมชาวจีนและศาลเจ้า", "desc": "เป็นสมาคมของชาวจีนฮากก้าหรือจีนแคะ ปัจจุบันชั้น 2 เป็นที่ประดิษฐานพระท่ามกุงหย่าที่ชาวจีนนับถือ แต่บริเวณชั้น 1 ของอาคารเป็นพื้นที่ว่างไม่ได้มีการใช้สอยแต่อย่างใด ทางกลุ่มจึงประสานกับผู้ปกครองศาลเจ้าเพื่อขอความอนุเคราะห์ใช้จัดงานแสดง", "use": "กั่วป่าโพ้แกลอรี่ · นิทรรศการและกิจกรรมสร้างสรรค์ภูมิปัญญาของชาวตะกั่วป่า", "photo": "images/house-109.webp", "line": "images/line-109.webp", "logo": ""}, {"no": "305", "name": "โรงเรียนเต้าหมิง", "title": "โรงเรียนจีนในยุคเหมืองแร่", "desc": "โรงเรียนจีนที่เคยรุ่งเรืองในยุคเหมืองแร่ ทางทีมมีแนวคิดฟื้นคืนเต้าหมิงให้เป็นพื้นที่สร้างสรรค์ เป็นสถานที่แห่งความทรงจำ ผ่าน “เต้าหมิง ประกายแสงแห่งการเรียนรู้” นำอาคารมาจัดแสดงองค์ความรู้ของเมือง ทั้งงานสถาปัตยกรรม วัฒนธรรม ประเพณี และอื่น ๆ ที่เกี่ยวข้องกับเมืองตะกั่วป่า", "use": "", "logoCap": "ตราสัญลักษณ์เต้าหมิง", "photo": "images/house-305.webp", "line": "images/line-305.webp", "logo": "images/logo-305.jpg"}], "conclusion": "ทางทีมยังต่อยอดโดยนำพื้นที่ว่างอื่น ๆ มาเป็นพื้นที่รอง เพื่อให้ทั้งเมืองเป็นเมืองสร้างสรรค์ ดั่งแนวคิดที่ว่า <b>“กั่วป่าโพ้ จีโชว์เมือง”</b>"}, "origin": {"tag": "ที่มาของชื่อ", "heading": "คำว่า “กั่วป่าโพ้” มาจากไหน?", "quote": "“กั่วป่าโพ้” คือคำเรียกเมืองตะกั่วป่าของชาวจีนฮกเกี้ยนในอดีต", "body": "โดยคำว่า <b>“กั่วป่า”</b> คือ ตะกั่วป่า และคำว่า <b>“โพ้” (埠)</b> หมายถึง ตลาดหรือท่าเรือ รวมกันหมายถึง <b>“ตลาดท่าเรือตะกั่วป่า”</b> ในอดีตชาวจีนที่โล้สำเภาเข้ามาค้าขายและทำเหมืองแร่ดีบุก โดยขึ้นที่ท่าน้ำตะกั่วป่า หรืออีกนัยหนึ่งคือ <b>“คนตะกั่วป่า”</b> นั่นเอง และในเทศกาลกินผัก คำนี้ยังแฝงอยู่ในการประกอบพิธีกรรมต่าง ๆ ของศาลเจ้า จนกลายเป็นคำอันศักดิ์สิทธิ์ที่สื่อได้ถึงเมืองตะกั่วป่า", "caption": "ภาพเก่าจากเอกสารของโครงการ", "photo": "images/photo-port.webp"}, "six": {"tag": "แนวคิด 6 อ.", "heading": "โชว์เมืองผ่านมรดก<br>6 อ.", "items": [{"title": "อาภรณ์", "desc": "เครื่องแต่งกายเฉพาะถิ่น ผ้าลูกไม้ ผ้าถุงปาเต๊ะ ลวดลายผ้า และเครื่องประดับ"}, {"title": "อาศัย", "desc": "วิถีชีวิต ร้านค้า ความเป็นอยู่ และประเพณีที่สอดคล้องอย่างลงตัวกับการดำเนินชีวิต"}, {"title": "อาหาร", "desc": "อาหารท้องถิ่น รสชาติดั้งเดิมกับสูตรที่ถูกสืบทอด และร้านอาหารจากยุคเหมืองแร่ที่ยังเปิดอยู่"}, {"title": "อารมณ์", "desc": "ศิลปินถิ่นกั่วป่า ไม่ว่าจะเป็นภาพวาด ร้องรำทำเพลง หรือแม้แต่เสียงกลองในช่วงเทศกาลกินผัก"}, {"title": "อาราม", "desc": "วัด ศาลเจ้า โหย่กวนในย่านเมืองเก่าที่มีมากมาย และสถานที่พักผ่อนหย่อนใจ"}, {"title": "อาคาร", "desc": "อาคารบ้านเรือนในย่าน สถาปัตยกรรมที่แฝงไปด้วยทัศนคติและความเชื่อ เป็นมรดกที่ควรค่าแก่การอนุรักษ์"}]}, "shop": {"tag": "POH SHOP · โพ้ช็อป", "heading": "ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ", "lede": "สินค้าและของสะสมที่ออกแบบจากอัตลักษณ์เมืองเก่าตะกั่วป่า ร่วมกับช่างฝีมือและคนในชุมชน รายได้ทั้งหมดจะนำมาสมทบเป็นกองทุนของกลุ่มกั่วป่าโพ้ เพื่อใช้ในการฟื้นฟู ขับเคลื่อนกิจกรรม และดำเนินงานพัฒนาเมืองสร้างสรรค์อย่างต่อเนื่องในปีถัด ๆ ไป", "products": [{"id": "shirt", "tag": "Official Merch", "name": "เสื้อยืดกั่วป่าโพ้ KUAPAPOH", "price": 350, "priceLabel": "฿350", "desc": "เสื้อยืดสีดำพรีเมียม สกรีนตรากั่วป่าโพ้ที่อกซ้าย ด้านหลังจัดเต็มกราฟิกลายรวมอัตลักษณ์ตะกั่วป่า 6 อ.", "meta": "ผ้าฝ้าย Comb 100% · ไซส์ M · L · XL · 2XL", "image": "images/shirt-poh.webp", "hasModal": true, "modalTag": "Official Heritage Merch", "modalLead": "เสื้อยืดสีดำพรีเมียม ถ่ายทอดเรื่องราวและสถาปัตยกรรมมีชีวิตของย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา ออกแบบร่วมกับศิลปินและคนในชุมชน", "modalDelivery": "จัดส่งทั่วประเทศ", "modalNote": "* มีจำหน่ายเฉพาะไซส์ M · L · XL · 2XL | ผ้าฝ้าย Cotton 100% เกรด Comb ผ้านุ่ม ใส่สบาย ระบายอากาศดี | คลิกแท็บ \"ภาพ 2D\" ที่แกลเลอรีเพื่อดูลวดลายกราฟิกแบบเต็มตา", "gallery": [{"label": "แบบ 1", "src": "images/model-shirt-1.webp"}, {"label": "แบบ 2", "src": "images/model-shirt-2.webp"}, {"label": "แบบ 3", "src": "images/model-shirt-3.webp"}, {"label": "ภาพ 2D", "src": "images/shirt-poh.webp"}], "category": "เสื้อผ้า & แฟชั่น", "status": "available"}, {"id": "keychain", "tag": "งานมือหน้าบ้านอี๋จู้", "name": "พวงกุญแจผ้าปาเต๊ะแท้", "price": 120, "priceLabel": "฿120", "desc": "งานตัดเย็บทำมือจากเศษผ้าปาเต๊ะเปอรานากัน โดยกลุ่มแม่บ้านในย่านเมืองเก่า แต่ละชิ้นมีคู่สีและลวดลายเอกลักษณ์ชิ้นเดียวในโลก", "meta": "งานฝีมือชุมชน 100%", "image": "images/ws/ws-keychain.webp", "hasModal": false, "category": "งานคราฟต์ชุมชน", "status": "available"}, {"id": "postcard", "tag": "พิมพ์ Riso 4 สี", "name": "ชุดโปสการ์ด “แลกั่วป่า” (6 ใบ)", "price": 150, "priceLabel": "฿150", "desc": "ภาพสเก็ตช์อาคารเก่า ผสมภาพถ่ายฟิล์มมุมประวัติศาสตร์และท่าน้ำตะกั่วป่า พิมพ์บนกระดาษคราฟต์หนา 260 แกรม", "meta": "พร้อมบันทึกประวัติศาสตร์ย่อ", "image": "images/photo-port.webp", "hasModal": false, "category": "ศิลปะ & สิ่งพิมพ์", "status": "available"}, {"id": "lantern", "tag": "ภูมิปัญญาช่างลุงเรน", "name": "โมเดลโคมไฟเฉลิมโบราณจิ๋ว", "price": 290, "priceLabel": "฿290", "desc": "ของที่ระลึกจำลองโคมไฟเฉลิมโบราณ มรดกภูมิปัญญาการประกอบไม้ไร้ตะปูของช่างไม้ตะกั่วป่า เพื่อความเป็นสิริมงคล", "meta": "งานไม้ประกอบมือ", "image": "images/ws/ws-lantern.webp", "hasModal": false, "category": "ของตกแต่งบ้าน", "status": "available"}], "guideHeading": "ช่องทางการสั่งซื้อและรับสินค้า", "onlineTitle": "📦 สั่งซื้อออนไลน์ (จัดส่งทั่วประเทศ)", "onlineDesc": "สั่งซื้อ แจ้งรายการสินค้า และสอบถามรอบจัดส่งได้โดยตรงทาง LINE Official ของโครงการ", "pickupTitle": "🏮 รับสินค้าได้ที่บ้าน 78 Studio Takuapa", "pickupDesc": "แวะชมและรับสินค้าจริงได้ที่บ้าน 78 Studio Takuapa ถนนศรีตะกั่วป่า (📍 เปิดแผนที่นำทาง)", "pickupMapUrl": "https://www.google.com/maps/search/?api=1&query=8.827130055794738,98.36498044583587", "lineUrl": "https://line.me/R/ti/p/%40kuapapoh", "lineCta": "สั่งซื้อของที่ระลึกผ่าน LINE @kuapapoh", "categories": ["ทั้งหมด", "เสื้อผ้า & แฟชั่น", "งานคราฟต์ชุมชน", "ศิลปะ & สิ่งพิมพ์", "ของตกแต่งบ้าน"]}, "events": {"enabled": true, "tag": "นิทรรศการที่กำลังจัดแสดง", "heading": "อ. แรกเปิดผนึกแล้ว<em>อาภรณ์</em>", "lede": "เครื่องแต่งกาย ความงามที่ถูกถ่ายทอดผ่านตัวตนของศิลปิน", "items": [{"kicker": "Solo Exhibition", "title": "มนต์เสน่ห์เปอรานากัน", "titleEn": "Peranakan Charm · Still Becoming", "by": "โดย ช่างป๋อง · ติณณภพ งานสถิร", "byEn": "Tinnapop Ngansathin", "desc": "เลือกใช้ปลายพู่กันถ่ายทอดเรื่องราวของเมืองผ่านลวดลาย สีสัน และการแต่งกายของผู้คน เชื่อมอดีตและปัจจุบันเข้าด้วยกัน", "date": "กันยายน 2569", "time": "", "place": "78 สตูดิโอ ถนนวัฒนธรรมตะกั่วป่า", "hashtag": "#กันยาอาภรณ์", "image": "images/event-apaporn.webp", "imageAlt": "โปสเตอร์นิทรรศการเดี่ยว มนต์เสน่ห์เปอรานากัน โดย ติณณภพ งานสถิร", "ctaText": "ติดตามเรื่องราวทางเพจกั่วป่าโพ้", "link": "https://www.facebook.com/profile.php?id=61590430773715"}], "openingsHeading": "เปิดให้เข้าชม", "openings": [{"no": "78", "title": "นิทรรศการมนต์เสน่ห์เปอรานากัน", "days": "เปิดทุกวัน"}, {"no": "109", "title": "นิทรรศการแลกั่วป่าผ่านตัวตน", "days": "เฉพาะวันอาทิตย์"}, {"no": "305", "title": "เต้าหมิง", "days": "ทุกวันอาทิตย์"}]}, "contact": {"tag": "ติดต่อ", "heading": "สอบถามข้อมูลโครงการ", "desc": "ติดต่อสอบถามเรื่องพื้นที่ กิจกรรม และงานกั่วป่าโพ้ จีโชว์เมือง ได้ตามช่องทางนี้", "phone": "061 874 9198", "phoneTel": "tel:0618749198", "email": "kuapapoh@gmail.com", "emailMailto": "mailto:kuapapoh@gmail.com", "facebookText": "เพจ กั่วป่าโพ้ (เปิดแท็บใหม่)", "facebookUrl": "https://www.facebook.com/profile.php?id=61590430773715", "lineText": "@kuapapoh", "lineUrl": "https://line.me/R/ti/p/%40kuapapoh", "locationText": "ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา", "locationUrl": "https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2"}, "footer": {"title": "กั่วป่าโพ้ จีโชว์เมือง", "credit": "ภายใต้โครงการ Creative Cultural District (CCD) · สนับสนุนและดำเนินงานโดยสำนักงานส่งเสริมเศรษฐกิจสร้างสรรค์ (CEA) ร่วมดำเนินงานโดยสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง"}, "typography": {"headingFont": "Bai Jamjuree", "bodyFont": "IBM Plex Sans Thai", "baseSize": "16px", "headingWeight": "700", "customGoogleFont": ""}, "floatingBadge": {"enabled": true, "tag": "Official Merch", "title": "เสื้อยืดกั่วป่าโพ้ KUAPAPOH", "price": 350, "priceLabel": "฿350", "image": "images/shirt-poh.webp", "ctaText": "ดูรายละเอียด & สั่งซื้อ →", "target": "#shop"}};
- const EVENT_DEFAULTS = {
+// ล้างฟิลด์ภาพเดิมเพื่อให้ค่าเริ่มต้นสอดคล้องกับโครงสร้าง artworks ของ Hero
+Object.assign(DEFAULT_CONTENT.hero, {
+  artworksLabel: 'ผลงานจากนิทรรศการ มนต์เสน่ห์เปอรานากัน',
+  artworks: [
+    { src: 'images/event/artwork-1.webp', caption: 'เสื้อครุยฟ้าปักดิ้นทอง' },
+    { src: 'images/event/artwork-2.webp', caption: 'เคบายาชมพูกับกุหลาบ' },
+    { src: 'images/event/artwork-3.webp', caption: 'เปียถักกับผีเสื้อ' },
+    { src: 'images/event/artwork-4.webp', caption: 'เสื้อลูกไม้ขาวลายดอก' }
+  ]
+});
+delete DEFAULT_CONTENT.hero.line78;
+delete DEFAULT_CONTENT.hero.line109;
+delete DEFAULT_CONTENT.hero.line305;
+
+const EVENT_DEFAULTS = {
    artist: {
      heading: 'รู้จักช่างป๋อง', kickerEn: 'About the Artist', image: 'images/event/artist-card.webp',
      imageAlt: 'ช่างป๋อง ติณณภพ งานสถิร ยืนข้างภาพวาดฝาผนังในย่านเมืองเก่าตะกั่วป่า',
@@ -1365,6 +1374,33 @@ function renderOpeningsList(items) {
   });
 }
 
+function renderHeroArtworksList(items) {
+  const container = document.getElementById('heroArtworksContainer');
+  container.innerHTML = '';
+  (items || []).forEach((item, idx) => {
+    const box = document.createElement('div');
+    box.className = 'item-card';
+    box.innerHTML = `
+      <div class="item-card-header">
+        <span class="item-card-title">🖼️ ภาพวาดที่ ${idx + 1}</span>
+        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteArtwork(${idx})">🗑️ ลบ</button>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="field-label">รูปภาพ</label>
+          <div class="image-widget" data-img-key="hero_art_img_${idx}"></div>
+        </div>
+        <div class="field">
+          <label class="field-label">คำบรรยาย</label>
+          <input type="text" class="field-input hero-art-caption" value="${item.caption || ''}">
+        </div>
+      </div>
+    `;
+    container.appendChild(box);
+    setupImageWidget(box.querySelector('[data-img-key]'), `hero_art_img_${idx}`, item.src || '');
+  });
+}
+
 // สร้างการ์ดภาพใหม่ทุกครั้ง เพื่อให้ลำดับ index ของ widget ตรงกับข้อมูลที่กำลังบันทึก
 function renderGalleryList(items) {
   const container = document.getElementById('galleryContainer');
@@ -1532,6 +1568,13 @@ window.deleteOpening = function(idx) {
   }
 };
 
+window.deleteArtwork = function(idx) {
+  if (confirm('ต้องการลบภาพวาดนี้ใช่หรือไม่?')) {
+    currentData.hero.artworks.splice(idx, 1);
+    renderHeroArtworksList(currentData.hero.artworks);
+  }
+};
+
 window.deleteGallery = function(idx) {
   if (confirm('ต้องการลบภาพนี้ใช่หรือไม่?')) {
     currentData.events.gallery.items.splice(idx, 1);
@@ -1577,6 +1620,14 @@ document.getElementById('btnAddOpening').addEventListener('click', () => {
   currentData.events.openings.push({ no: "", title: "พื้นที่ใหม่", days: "เปิดทุกวัน" });
   renderOpeningsList(currentData.events.openings);
   showToast('เพิ่มแถวใหม่แล้ว ✨');
+});
+
+document.getElementById('btnAddArtwork').addEventListener('click', () => {
+  currentData.hero = currentData.hero || {};
+  currentData.hero.artworks = currentData.hero.artworks || [];
+  currentData.hero.artworks.push({ src: '', caption: 'คำบรรยายภาพวาดใหม่' });
+  renderHeroArtworksList(currentData.hero.artworks);
+  showToast('เพิ่มภาพวาดใหม่แล้ว ✨');
 });
 
 document.getElementById('btnAddGallery').addEventListener('click', () => {
@@ -1654,11 +1705,8 @@ function populateForm(data) {
     document.getElementById('hero_btnExplore').value = data.hero.btnExplore || '';
     document.getElementById('hero_btnMap').value = data.hero.btnMap || '';
     document.getElementById('hero_mapUrl').value = data.hero.mapUrl || '';
-
-    // Hero Images
-    document.querySelectorAll('[data-img-key="hero_line78"]').forEach(el => setupImageWidget(el, 'hero_line78', data.hero.line78 || 'images/line-78.webp'));
-    document.querySelectorAll('[data-img-key="hero_line109"]').forEach(el => setupImageWidget(el, 'hero_line109', data.hero.line109 || 'images/line-109.webp'));
-    document.querySelectorAll('[data-img-key="hero_line305"]').forEach(el => setupImageWidget(el, 'hero_line305', data.hero.line305 || 'images/line-305.webp'));
+    document.getElementById('hero_artworksLabel').value = data.hero.artworksLabel || '';
+    renderHeroArtworksList(data.hero.artworks || []);
   }
 
   // Houses
@@ -1798,9 +1846,17 @@ function collectFormData() {
   d.hero.btnExplore = document.getElementById('hero_btnExplore').value;
   d.hero.btnMap = document.getElementById('hero_btnMap').value;
   d.hero.mapUrl = document.getElementById('hero_mapUrl').value;
-  if (imageStore['hero_line78']) d.hero.line78 = imageStore['hero_line78'];
-  if (imageStore['hero_line109']) d.hero.line109 = imageStore['hero_line109'];
-  if (imageStore['hero_line305']) d.hero.line305 = imageStore['hero_line305'];
+  d.hero.artworksLabel = document.getElementById('hero_artworksLabel').value;
+  const previousArtworks = Array.isArray(d.hero.artworks) ? d.hero.artworks : [];
+  d.hero.artworks = [];
+  document.querySelectorAll('#heroArtworksContainer .item-card').forEach((card, idx) => {
+    const previous = previousArtworks[idx] || {};
+    const key = `hero_art_img_${idx}`;
+    d.hero.artworks.push({
+      src: Object.prototype.hasOwnProperty.call(imageStore, key) ? imageStore[key] : (previous.src || ''),
+      caption: card.querySelector('.hero-art-caption')?.value || ''
+    });
+  });
 
   // Houses
   d.houses = d.houses || {};

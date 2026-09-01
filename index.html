@@ -130,16 +130,19 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .btn.on-paper{background:var(--magenta-text);color:#fff;border-color:var(--magenta-text)}
 .btn.on-paper:hover{background:var(--ink);border-color:var(--ink);color:var(--yellow)}
 .hero-cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.6rem}
-/* แถวอาคารลายเส้นเป็นฐานของ hero */
-.hero-row{display:grid;grid-template-columns:repeat(3,1fr);align-items:end;
+/* ใช้กรอบกระดาษเดียวเพื่อให้ชุดภาพวาดอ่านเป็นนิทรรศการเดียวกัน */
+.hero-row{display:grid;grid-template-columns:repeat(2,1fr);align-items:stretch;
           gap:clamp(8px,3vw,40px);margin:clamp(26px,4vw,48px) 0 0;
           background:var(--paper);border-radius:16px;
           padding:clamp(20px,3vw,34px) clamp(14px,3vw,34px) clamp(14px,2vw,22px)}
-.hero-row img{width:auto;max-width:100%;max-height:clamp(120px,22vw,290px);margin-inline:auto}
+.hero-row-label{grid-column:1/-1;margin:0 0 clamp(12px,2vw,20px);font-family:var(--mono);
+  font-size:.68rem;letter-spacing:.16em;text-align:center;color:var(--muted);text-transform:uppercase}
+.hero-row figure{display:flex;flex-direction:column;margin:0}
+.hero-row img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;
+  border:1px solid var(--rule);margin-inline:auto}
 .hero-row figcaption{font-size:.72rem;color:var(--cobalt);text-align:center;
-  margin-top:.5rem;font-weight:600;line-height:1.45}
-.hero-row .nm{display:block;font-weight:400}
-@media(max-width:520px){.hero-row .nm{display:none}}
+  margin-top:.6rem;font-weight:600;line-height:1.45}
+@media(min-width:760px){.hero-row{grid-template-columns:repeat(4,1fr)}}
 
 /* ═══════════ สามพื้นที่ ═══════════ */
 .houses{display:grid;gap:clamp(26px,4vw,48px);margin-top:2.4rem}
@@ -560,12 +563,15 @@ footer a{color:var(--yellow)}
          target="_blank" rel="noopener">เปิดแผนที่ย่านเมืองเก่า</a>
     </div>
     <div class="hero-row">
-      <figure><img src="images/line-78.webp" width="237" height="403" alt="ภาพลายเส้นบ้านเลขที่ 78 อดีตบ้านนายเหมือง">
-        <figcaption>78 <span class="nm">กั่วป่าเหมืองมิวเซียม</span></figcaption></figure>
-      <figure><img src="images/line-109.webp" width="226" height="334" alt="ภาพลายเส้นบ้านเลขที่ 109 ศาลเจ้ากังตั้งโหยกวน">
-        <figcaption>109 <span class="nm">ศาลเจ้ากังตั้งโหยกวน</span></figcaption></figure>
-      <figure><img src="images/line-305.webp" width="388" height="250" alt="ภาพลายเส้นบ้านเลขที่ 305 โรงเรียนเต้าหมิง">
-        <figcaption>305 <span class="nm">โรงเรียนเต้าหมิง</span></figcaption></figure>
+      <p class="hero-row-label">ผลงานจากนิทรรศการ มนต์เสน่ห์เปอรานากัน</p>
+      <figure><img src="images/event/artwork-1.webp" width="900" height="1092" loading="lazy" decoding="async" alt="ภาพวาดเสื้อครุยฟ้าปักดิ้นทอง จากชุด มนต์เสน่ห์เปอรานากัน โดย ติณณภพ งานสถิร">
+        <figcaption>เสื้อครุยฟ้าปักดิ้นทอง</figcaption></figure>
+      <figure><img src="images/event/artwork-2.webp" width="900" height="1142" loading="lazy" decoding="async" alt="ภาพวาดเคบายาชมพูกับกุหลาบ จากชุด มนต์เสน่ห์เปอรานากัน โดย ติณณภพ งานสถิร">
+        <figcaption>เคบายาชมพูกับกุหลาบ</figcaption></figure>
+      <figure><img src="images/event/artwork-3.webp" width="900" height="1121" loading="lazy" decoding="async" alt="ภาพวาดเปียถักกับผีเสื้อ จากชุด มนต์เสน่ห์เปอรานากัน โดย ติณณภพ งานสถิร">
+        <figcaption>เปียถักกับผีเสื้อ</figcaption></figure>
+      <figure><img src="images/event/artwork-4.webp" width="900" height="908" loading="lazy" decoding="async" alt="ภาพวาดเสื้อลูกไม้ขาวลายดอก จากชุด มนต์เสน่ห์เปอรานากัน โดย ติณณภพ งานสถิร">
+        <figcaption>เสื้อลูกไม้ขาวลายดอก</figcaption></figure>
     </div>
   </div>
 </header>

@@ -25,9 +25,13 @@
     "btnExplore": "ดูนิทรรศการที่กำลังจัดแสดง",
     "btnMap": "เปิดแผนที่ย่านเมืองเก่า",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2",
-    "line78": "images/line-78.webp",
-    "line109": "images/line-109.webp",
-    "line305": "images/line-305.webp",
+    "artworksLabel": "ผลงานจากนิทรรศการ มนต์เสน่ห์เปอรานากัน",
+    "artworks": [
+      { "src": "images/event/artwork-1.webp", "caption": "เสื้อครุยฟ้าปักดิ้นทอง" },
+      { "src": "images/event/artwork-2.webp", "caption": "เคบายาชมพูกับกุหลาบ" },
+      { "src": "images/event/artwork-3.webp", "caption": "เปียถักกับผีเสื้อ" },
+      { "src": "images/event/artwork-4.webp", "caption": "เสื้อลูกไม้ขาวลายดอก" }
+    ],
     "btnExploreUrl": "#events"
   },
   "houses": {

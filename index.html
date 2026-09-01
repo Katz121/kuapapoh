@@ -227,6 +227,28 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
   padding:.95rem 0;border-bottom:1px solid var(--rule)}
 .ev-open b{font-family:var(--display);font-weight:700;font-size:1.5rem;color:var(--cobalt);line-height:1.1}
 .ev-open span{display:block;font-size:.86rem;color:var(--magenta-text);font-weight:600;margin-top:.2rem}
+.ev-artist{display:grid;gap:clamp(22px,3vw,44px);margin-top:clamp(44px,6vw,78px);align-items:start}
+@media(min-width:860px){.ev-artist{grid-template-columns:minmax(0,.8fr) minmax(0,1fr)}}
+.ev-artist-photo{border:3px solid var(--magenta);border-radius:4px;background:var(--magenta);line-height:0;max-width:700px}
+.ev-artist-photo img{width:100%;height:auto}
+.ev-artist-body{min-width:0}
+.ev-artist-h,.ev-gallery-h{font-family:var(--display);font-weight:700;font-size:clamp(1.35rem,2.6vw,1.8rem);line-height:1.3;margin:0 0 .2rem}
+.ev-artist-name{font-family:var(--display);font-weight:700;color:var(--magenta-text);font-size:1.2rem;margin:.8rem 0 1rem}
+.ev-artist-name small{display:block;font-family:var(--mono);font-size:.72rem;color:var(--muted);font-weight:500;letter-spacing:.08em;margin-top:.25rem}
+.ev-artist-body > p:not(.ev-artist-name):not(.label-en){margin:.8rem 0}
+.ev-quote{border-left:4px solid var(--yellow);margin:1.4rem 0;padding:.2rem 0 .2rem 1rem;font-family:var(--display);font-weight:600;line-height:1.65}
+.ev-quote cite{display:block;color:var(--muted);font-family:var(--mono);font-size:.7rem;font-style:normal;font-weight:500;letter-spacing:.08em;margin-top:.55rem}
+.ev-ig{display:inline-block;color:var(--magenta-text);font-family:var(--mono);font-size:.8rem;font-weight:600;margin-top:.4rem;text-decoration:underline;text-underline-offset:3px}
+.ev-gallery{margin-top:clamp(44px,6vw,78px)}
+.ev-gallery .muted{margin:.2rem 0 1.4rem}
+.ev-gallery-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width:680px){.ev-gallery-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.ev-gallery-grid{grid-template-columns:repeat(3,1fr)}}
+.ev-gallery-grid figure{margin:0;border:1.5px solid var(--rule);background:var(--paper);padding:.45rem}
+/* height:100% ตีกับ aspect-ratio (ความสูงอ้างอิง figure ที่สูงตามเนื้อหา = วนกลับ)
+   บางใบเลยไม่ครอปและกริดเป๋ · ตัด height ออกให้ aspect-ratio คุมอย่างเดียว */
+.ev-gallery-grid img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center}
+.ev-gallery-grid figcaption{font-size:.8rem;color:var(--muted);line-height:1.4;padding:.55rem .25rem .2rem}
 
 /* ═══════════ POH SHOP (โพ้ช็อป) · Perfect Symmetry & Alignment ═══════════ */
 .shop{background:var(--paper)}
@@ -576,6 +598,38 @@ footer a{color:var(--yellow)}
         <a class="btn" href="https://www.facebook.com/profile.php?id=61590430773715" target="_blank" rel="noopener">ติดตามเรื่องราวทางเพจกั่วป่าโพ้</a>
       </div>
     </div>
+
+    <article class="ev-artist rise">
+      <figure class="ev-artist-photo">
+        <img src="images/event/artist-portrait.webp" width="700" height="1221" loading="lazy" decoding="async"
+             alt="ช่างป๋อง ติณณภพ งานสถิร ยืนข้างภาพวาดฝาผนังในย่านเมืองเก่าตะกั่วป่า">
+      </figure>
+      <div class="ev-artist-body">
+        <h3 class="ev-artist-h">รู้จักช่างป๋อง</h3>
+        <p class="label-en" lang="en">About the Artist</p>
+        <p class="ev-artist-name">ติณณภพ งานสถิร<small lang="en">Tinnapop Ngansathin</small></p>
+        <p>เป็นชาวตลาดเก่าตะกั่วป่าโดยกำเนิด เป็นศิษย์เก่าโรงเรียนสุทธิธรรมอนุสรณ์ และโรงเรียนตะกั่วป่า “เสนานุกูล” สนใจศิลปะมาตั้งแต่วัยเด็ก ชอบเขียนภาพการ์ตูน ซุปเปอร์ฮีโร นักกีฬาบาสเก็ตบอล และเทพเจ้าตามความเชื่อของชาวจีนที่ซึมซับอยู่ในวัฒนธรรมรอบตัวของชาวตะกั่วป่า</p>
+        <p>เรียนต่อระดับ ปวช. ณ วิทยาลัยช่างศิลป และระดับปริญญา สาขาจิตรกรรม คณะจิตรกรรม ประติมากรรมและภาพพิมพ์ มหาวิทยาลัยศิลปากร หลังเรียนจบเป็นวิทยากรถ่ายทอดความรู้ด้านศิลปะให้เยาวชนและหน่วยงานต่าง ๆ</p>
+        <p>ร่วมแสดงนิทรรศการศิลปะสำคัญ เช่น “หลังจากบทสนทนาที่หายไป” หอศิลป์สนามจันทร์ มหาวิทยาลัยศิลปากร · “มหัศจรรย์กล้วยไม้แห่งรักษ์” ศูนย์การค้าสยามพารากอน · นิทรรศการศิลปะ สมาคมทัศนศิลป์นานาชาติแห่งประเทศไทย ครั้งที่ 6, 7 และ 8</p>
+        <p>เป็นศิลปินภาพประกอบมืออาชีพ เขียนภาพประกอบอาคารและสถานที่ต่าง ๆ ในจังหวัดพังงาและจังหวัดใกล้เคียง เขียนภาพประกอบฉากภาพยนตร์ฮอลลีวูดเรื่อง RAMBO 6 และเขียนภาพปกหนังสือให้สำนักพิมพ์ที่มีชื่อเสียง ปัจจุบันเป็นผู้ช่วยนายช่างศิลป์ เทศบาลเมืองตะกั่วป่า จังหวัดพังงา และยังเป็นศิลปินอิสระ</p>
+        <blockquote class="ev-quote">“ผลงานจิตรกรรม มนต์เสน่ห์เปอรานากัน คือหลักฐานที่แสดงตัวตนทุกช่วงเวลาตลอดเส้นทางการดำเนินชีวิต หล่อหลอมให้เติบโตในฐานะมนุษย์ผู้หลงใหลในศิลปะ ท่ามกลางวัฒนธรรมเปอรานากัน”<cite>Artist Statement · Still Becoming</cite></blockquote>
+        <a class="ev-ig" href="https://instagram.com/tinnapop.art" target="_blank" rel="noopener">Instagram · tinnapop.art</a>
+      </div>
+    </article>
+
+    <section class="ev-gallery rise">
+      <h3 class="ev-gallery-h">บรรยากาศในงาน</h3>
+      <p class="muted">ชวนชมบรรยากาศและรายละเอียดจากนิทรรศการในย่านเมืองเก่าตะกั่วป่า</p>
+      <div class="ev-gallery-grid">
+        <figure><img src="images/event/gallery-1.webp" width="1400" height="1050" loading="lazy" decoding="async" alt="มุมแรกของนิทรรศการ พร้อมป้ายประวัติศิลปิน"><figcaption>มุมแรกของนิทรรศการ พร้อมป้ายประวัติศิลปิน</figcaption></figure>
+        <figure><img src="images/event/gallery-2.webp" width="1400" height="1867" loading="lazy" decoding="async" alt="ผนังผลงานชุดใหญ่ริมทางเดิน"><figcaption>ผนังผลงานชุดใหญ่ริมทางเดิน</figcaption></figure>
+        <figure><img src="images/event/gallery-3.webp" width="1400" height="1867" loading="lazy" decoding="async" alt="Peranakan Charm No.9 บนผนังไม้"><figcaption>Peranakan Charm No.9 บนผนังไม้</figcaption></figure>
+        <figure><img src="images/event/gallery-4.webp" width="1400" height="1867" loading="lazy" decoding="async" alt="Peranakan Charm No.10 และ No.11"><figcaption>Peranakan Charm No.10 และ No.11</figcaption></figure>
+        <figure><img src="images/event/gallery-5.webp" width="1400" height="1867" loading="lazy" decoding="async" alt="ผลงานในกรอบทองบนชั้นไม้เก่า"><figcaption>ผลงานในกรอบทองบนชั้นไม้เก่า</figcaption></figure>
+        <figure><img src="images/event/gallery-prints.webp" width="1400" height="1143" loading="lazy" decoding="async" alt="ชุดภาพพิมพ์ที่ระลึกจากนิทรรศการ"><figcaption>ชุดภาพพิมพ์ที่ระลึกจากนิทรรศการ</figcaption></figure>
+        <figure><img src="images/event/gallery-leaflet.webp" width="1400" height="1050" loading="lazy" decoding="async" alt="ใบปลิวนิทรรศการที่แจกหน้างาน"><figcaption>ใบปลิวนิทรรศการที่แจกหน้างาน</figcaption></figure>
+      </div>
+    </section>
 
     <div class="ev-open rise">
       <p class="ev-open-h">เปิดให้เข้าชม</p>

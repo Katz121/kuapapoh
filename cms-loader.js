@@ -258,6 +258,62 @@
               }
             }
 
+            // ประวัติศิลปินแยกเป็นก้อนข้อมูล เพื่อให้แก้เฉพาะเนื้อหาส่วนนี้ได้โดยไม่กระทบรายละเอียดงาน
+            if (data.events.artist) {
+              const artist = data.events.artist;
+              set('.ev-artist-h', artist.heading);
+              set('.ev-artist-body .label-en', artist.kickerEn);
+              const artistImg = evSec.querySelector('.ev-artist-photo img');
+              if (artistImg && artist.image) { artistImg.src = artist.image; if (artist.imageAlt) artistImg.alt = artist.imageAlt; }
+              const artistName = evSec.querySelector('.ev-artist-name');
+              if (artistName && artist.name) artistName.firstChild.textContent = artist.name;
+              const nameEn = evSec.querySelector('.ev-artist-name small');
+              if (nameEn && artist.nameEn) nameEn.textContent = artist.nameEn;
+              const artistBody = evSec.querySelector('.ev-artist-body');
+              if (artistBody && Array.isArray(artist.paragraphs)) {
+                artistBody.querySelectorAll(':scope > p:not(.label-en):not(.ev-artist-name)').forEach(p => p.remove());
+                const quote = artistBody.querySelector('.ev-quote');
+                artist.paragraphs.forEach(paragraph => {
+                  const p = document.createElement('p');
+                  p.textContent = paragraph;
+                  artistBody.insertBefore(p, quote);
+                });
+              }
+              const quoteText = evSec.querySelector('.ev-quote');
+              if (quoteText && artist.quote) quoteText.firstChild.textContent = artist.quote;
+              set('.ev-quote cite', artist.quoteCite);
+              const ig = evSec.querySelector('.ev-ig');
+              if (ig) {
+                if (artist.igUrl) ig.href = artist.igUrl;
+                if (artist.igLabel) ig.textContent = artist.igLabel;
+              }
+            }
+
+            // แกลเลอรีสร้างจากข้อมูลเพื่อให้จำนวนภาพและคำบรรยายเปลี่ยนได้โดยไม่ต้องแก้ HTML หลัก
+            if (data.events.gallery) {
+              const gallery = data.events.gallery;
+              set('.ev-gallery-h', gallery.heading);
+              set('.ev-gallery > .muted', gallery.lede);
+              const galleryGrid = evSec.querySelector('.ev-gallery-grid');
+              if (galleryGrid && Array.isArray(gallery.items)) {
+                galleryGrid.innerHTML = '';
+                gallery.items.forEach(item => {
+                  const figure = document.createElement('figure');
+                  const img = document.createElement('img');
+                  img.src = item.src || '';
+                  img.width = 1400;
+                  img.height = 1050;
+                  img.loading = 'lazy';
+                  img.decoding = 'async';
+                  img.alt = item.caption || '';
+                  const caption = document.createElement('figcaption');
+                  caption.textContent = item.caption || '';
+                  figure.append(img, caption);
+                  galleryGrid.appendChild(figure);
+                });
+              }
+            }
+
             // ตารางเปิดเข้าชมของสามบ้าน
             const openList = evSec.querySelector('.ev-open ul');
             if (openList && Array.isArray(data.events.openings) && data.events.openings.length) {

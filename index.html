@@ -102,14 +102,21 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 @media(max-width:700px){.topbar b{font-size:.92rem}.topbar nav{gap:1.1rem}}
 
 /* ═══════════ HERO ═══════════ */
-.hero{background:var(--yellow);color:var(--ink);
+/* พื้นชมพู · ใช้ --magenta-text (เข้มกว่า --magenta) ด้วยเหตุผลเดียวกับส่วนติดต่อ
+   ขาวบน --magenta ได้ contrast แค่ 4.33:1 ตก WCAG AA */
+.hero{background:var(--magenta-text);color:#fff;
       padding-block:clamp(44px,6.5vw,80px) clamp(28px,4vw,52px)}
-.hero .kicker{color:var(--ink);margin:0 0 1.6rem}
+.hero .kicker{color:var(--yellow);margin:0 0 1.6rem}
 /* line-height ต้องเผื่อสระบน+วรรณยุกต์ของไทย · ต่ำกว่า 1.05 แล้วชนบรรทัดบน */
-.hero h1{font-family:var(--display);font-weight:700;margin:0;color:var(--magenta);
+.hero h1{font-family:var(--display);font-weight:700;margin:0;color:var(--yellow);
          font-size:clamp(2.9rem,10vw,7.4rem);line-height:1.08;letter-spacing:-.02em}
-.hero h1 em{font-style:normal;color:var(--ink);display:block}
+.hero h1 em{font-style:normal;color:var(--paper);display:block}
 .hero .sub{max-width:40ch;font-size:clamp(1.02rem,1.6vw,1.24rem);margin:1.5rem 0 0;text-wrap:pretty}
+.hero .chip{border-color:rgba(255,255,255,.72);color:#fff}
+.hero .chip.date{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+/* ปุ่มบนพื้นชมพูต้องกลับสี · ปุ่มสีหมึกบนชมพูจมหาย */
+.hero-cta .btn{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.hero-cta .btn:hover{background:transparent;color:var(--yellow)}
 .hero-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.9rem 0 0}
 .chip{font-family:var(--body);font-weight:500;font-size:.86rem;padding:.5em 1.1em;
       border:1.5px solid var(--ink);border-radius:999px;background:transparent;
@@ -125,7 +132,9 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .hero-cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.6rem}
 /* แถวอาคารลายเส้นเป็นฐานของ hero */
 .hero-row{display:grid;grid-template-columns:repeat(3,1fr);align-items:end;
-          gap:clamp(8px,3vw,40px);margin:clamp(26px,4vw,48px) 0 0}
+          gap:clamp(8px,3vw,40px);margin:clamp(26px,4vw,48px) 0 0;
+          background:var(--paper);border-radius:16px;
+          padding:clamp(20px,3vw,34px) clamp(14px,3vw,34px) clamp(14px,2vw,22px)}
 .hero-row img{width:auto;max-width:100%;max-height:clamp(120px,22vw,290px);margin-inline:auto}
 .hero-row figcaption{font-size:.72rem;color:var(--cobalt);text-align:center;
   margin-top:.5rem;font-weight:600;line-height:1.45}

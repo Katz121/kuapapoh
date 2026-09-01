@@ -137,8 +137,11 @@
           data.hero.chips.forEach((c, i) => { if (chips[i]) chips[i].textContent = c; });
         }
 
-        const btnExplore = document.querySelector('.hero-cta a[href="#houses"]');
-        if (btnExplore && data.hero.btnExplore) btnExplore.textContent = data.hero.btnExplore;
+        const btnExplore = document.querySelector('.hero-cta a[data-cta="explore"]');
+        if (btnExplore) {
+          if (data.hero.btnExplore) btnExplore.textContent = data.hero.btnExplore;
+          if (data.hero.btnExploreUrl) btnExplore.href = data.hero.btnExploreUrl;
+        }
 
         const btnMap = document.querySelector('.hero-cta a[target="_blank"]');
         if (btnMap) {

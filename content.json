@@ -16,18 +16,19 @@
     "kicker": "Creative Cultural District · Takua Pa",
     "title": "กั่วป่าโพ้",
     "titleEm": "โชว์อาภรณ์",
-    "subtitle": "พัฒนาเมืองที่หลับใหลให้กลับมามีชีวิตอีกครั้ง ด้วยการเปิดพื้นที่ว่างในตึกเก่าย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา",
+    "subtitle": "อ. แรกใน 6 อ. ของย่านเมืองเก่าตะกั่วป่าเปิดผนึกแล้ว · เครื่องแต่งกาย ลวดลาย และความงามของคนเปอรานากัน ผ่านปลายพู่กันของช่างป๋อง",
     "chips": [
-      "บ้านเลขที่ 78",
-      "109",
-      "305"
+      "กันยายน 2569",
+      "78 สตูดิโอ",
+      "บ้านเลขที่ 78 · 109 · 305"
     ],
-    "btnExplore": "สำรวจสามพื้นที่",
+    "btnExplore": "ดูนิทรรศการที่กำลังจัดแสดง",
     "btnMap": "เปิดแผนที่ย่านเมืองเก่า",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2",
     "line78": "images/line-78.webp",
     "line109": "images/line-109.webp",
-    "line305": "images/line-305.webp"
+    "line305": "images/line-305.webp",
+    "btnExploreUrl": "#events"
   },
   "houses": {
     "tag": "พื้นที่สร้างสรรค์",
@@ -188,8 +189,8 @@
     "artist": {
       "heading": "รู้จักช่างป๋อง",
       "kickerEn": "About the Artist",
-      "image": "images/event/artist-portrait.webp",
-      "imageAlt": "ช่างป๋อง ติณณภพ งานสถิร ยืนข้างภาพวาดฝาผนังในย่านเมืองเก่าตะกั่วป่า",
+      "image": "images/event/artist-card.webp",
+      "imageAlt": "การ์ดประวัติศิลปิน About the Artist ของนิทรรศการ มนต์เสน่ห์เปอรานากัน · ติณณภพ งานสถิร ยืนข้างภาพวาดฝาผนังในย่านเมืองเก่าตะกั่วป่า",
       "name": "ติณณภพ งานสถิร",
       "nameEn": "Tinnapop Ngansathin",
       "paragraphs": [
@@ -207,13 +208,34 @@
       "heading": "บรรยากาศในงาน",
       "lede": "ชวนชมบรรยากาศและรายละเอียดจากนิทรรศการในย่านเมืองเก่าตะกั่วป่า",
       "items": [
-        {"src": "images/event/gallery-1.webp", "caption": "มุมแรกของนิทรรศการ พร้อมป้ายประวัติศิลปิน"},
-        {"src": "images/event/gallery-2.webp", "caption": "ผนังผลงานชุดใหญ่ริมทางเดิน"},
-        {"src": "images/event/gallery-3.webp", "caption": "Peranakan Charm No.9 บนผนังไม้"},
-        {"src": "images/event/gallery-4.webp", "caption": "Peranakan Charm No.10 และ No.11"},
-        {"src": "images/event/gallery-5.webp", "caption": "ผลงานในกรอบทองบนชั้นไม้เก่า"},
-        {"src": "images/event/gallery-prints.webp", "caption": "ชุดภาพพิมพ์ที่ระลึกจากนิทรรศการ"},
-        {"src": "images/event/gallery-leaflet.webp", "caption": "ใบปลิวนิทรรศการที่แจกหน้างาน"}
+        {
+          "src": "images/event/gallery-1.webp",
+          "caption": "มุมแรกของนิทรรศการ พร้อมป้ายประวัติศิลปิน"
+        },
+        {
+          "src": "images/event/gallery-2.webp",
+          "caption": "ผนังผลงานชุดใหญ่ริมทางเดิน"
+        },
+        {
+          "src": "images/event/gallery-3.webp",
+          "caption": "Peranakan Charm No.9 บนผนังไม้"
+        },
+        {
+          "src": "images/event/gallery-4.webp",
+          "caption": "Peranakan Charm No.10 และ No.11"
+        },
+        {
+          "src": "images/event/gallery-5.webp",
+          "caption": "ผลงานในกรอบทองบนชั้นไม้เก่า"
+        },
+        {
+          "src": "images/event/gallery-prints.webp",
+          "caption": "ชุดภาพพิมพ์ที่ระลึกจากนิทรรศการ"
+        },
+        {
+          "src": "images/event/gallery-leaflet.webp",
+          "caption": "ใบปลิวนิทรรศการที่แจกหน้างาน"
+        }
       ]
     },
     "openings": [

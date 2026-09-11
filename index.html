@@ -428,6 +428,13 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .ctd-venue a{font-size:.84rem;font-weight:600}
 @media(max-width:520px){.ctd-when{grid-template-columns:1fr}.ctd-date{grid-row:auto;margin-bottom:.5rem}}
 @media(max-width:879px){section.ctd{padding-bottom:calc(var(--gap-shift) + 64px)}}
+.ctd-lightbox{border:0;padding:0;margin:auto;background:transparent;max-width:100vw;max-height:100vh;
+  width:100vw;height:100vh;height:100dvh;cursor:zoom-out;overflow:hidden}
+.ctd-lightbox[open]{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem}
+.ctd-lightbox::backdrop{background:rgba(16,21,56,.92);backdrop-filter:blur(3px)}
+.ctd-lightbox img{max-width:min(94vw,900px);max-height:calc(100dvh - 4.5rem);width:auto;height:auto;
+  border:3px solid var(--paper);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.ctd-lightbox-hint{margin:0;color:var(--paper);font-size:.85rem;opacity:.85;text-align:center}
 .ctd-link-note{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin:.6rem 0 0}
 .ctd-close{font-weight:500}
 .ctd-close strong{color:var(--magenta-text)}
@@ -655,7 +662,7 @@ footer a{color:var(--yellow)}
     <p class="tag rise">กิจกรรมพิเศษ · กรุงเทพฯ</p>
     <div class="ctd-grid rise">
       <figure class="ctd-poster">
-        <a href="images/ctd-poster.webp" target="_blank" rel="noopener" aria-label="เปิดโปสเตอร์ Connecting the Dots ขนาดเต็ม">
+        <a href="images/ctd-poster.webp" data-ctd-zoom aria-label="เปิดโปสเตอร์ Connecting the Dots ขนาดเต็ม">
           <img src="images/ctd-poster.webp" width="1100" height="1555" loading="lazy" decoding="async"
                alt="โปสเตอร์ Connecting the Dots · Creative Districts Reimagined · 12–13 September 2026 · Discovery Plaza, Siam Discovery · มีภาพกั่วป่าโพ้ จ.พังงา เป็นหนึ่งในพื้นที่ที่ร่วมจัดแสดง">
         </a>
@@ -692,6 +699,10 @@ footer a{color:var(--yellow)}
     </div>
   </div>
 </section>
+<dialog class="ctd-lightbox" id="ctd-lightbox" aria-label="โปสเตอร์ Connecting the Dots ขนาดเต็ม">
+  <img src="images/ctd-poster.webp" width="1100" height="1555" alt="โปสเตอร์ Connecting the Dots ขนาดเต็ม">
+  <p class="ctd-lightbox-hint">แตะตรงไหนก็ได้เพื่อปิด</p>
+</dialog>
 <script>
 /* ซ่อนส่วน Connecting the Dots + ลิงก์เมนู หลังงานจบ */
 (function () {
@@ -699,6 +710,19 @@ footer a{color:var(--yellow)}
   if (!sec || Date.now() < Date.parse(sec.getAttribute('data-end'))) return;
   sec.hidden = true;
   document.querySelectorAll('[data-ctd-link]').forEach(function (a) { a.hidden = true; });
+})();
+/* แตะโปสเตอร์ → เด้งเต็มจอในหน้าเดียวกัน · แตะตรงไหนก็ปิด (Esc ก็ปิด) */
+(function () {
+  var box = document.getElementById('ctd-lightbox');
+  var trigger = document.querySelector('[data-ctd-zoom]');
+  if (!box || !trigger || typeof box.showModal !== 'function') return; // เบราว์เซอร์เก่า: ลิงก์เปิดรูปตามปกติ
+  trigger.addEventListener('click', function (e) {
+    e.preventDefault();
+    box.showModal();
+    document.body.style.overflow = 'hidden';
+  });
+  box.addEventListener('click', function () { box.close(); });
+  box.addEventListener('close', function () { document.body.style.overflow = ''; });
 })();
 </script>
 

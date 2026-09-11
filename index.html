@@ -380,6 +380,59 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 @media(max-width:420px){.line-order{grid-template-columns:1fr;justify-items:center;text-align:center}}
 
 
+/* ═══════════ CONNECTING THE DOTS (งานที่กรุงเทพฯ 12–13 ก.ย. 2569) ═══════════
+   ส่วนแยกของตัวเอง · cms-loader ไม่แตะ · สีพิกเซล 4 สีตามโปสเตอร์ = สีเว็บเดิม */
+.ctd{background:var(--paper);position:relative;overflow:hidden;border-bottom:3px solid var(--ink)}
+.ctd::before,.ctd::after{content:"";position:absolute;width:clamp(72px,9vw,120px);aspect-ratio:1;pointer-events:none;
+  background:
+    linear-gradient(var(--cobalt) 0 0) 0 0/50% 50% no-repeat,
+    linear-gradient(var(--yellow) 0 0) 100% 0/50% 50% no-repeat,
+    linear-gradient(var(--magenta) 0 0) 0 100%/50% 50% no-repeat}
+.ctd::before{top:0;right:0}
+.ctd::after{bottom:0;left:0;transform:rotate(180deg)}
+.ctd-grid{display:grid;gap:clamp(1.6rem,4vw,3.4rem);align-items:start;position:relative;z-index:1}
+@media(min-width:880px){.ctd-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}}
+.ctd-poster{border:3px solid var(--ink);box-shadow:8px 8px 0 var(--ink);background:#fff}
+.ctd-poster a{display:block}
+.ctd-poster figcaption{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:.5rem .8rem;border-top:3px solid var(--ink);background:var(--yellow);color:var(--ink)}
+.ctd-kicker{font-family:var(--mono);font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cobalt);margin:0 0 .6rem}
+.ctd-title{font-family:var(--mono);font-weight:700;font-size:clamp(2.3rem,6vw,4.4rem);line-height:1;letter-spacing:-.02em;margin:0 0 .5rem;text-wrap:initial}
+.ctd-title span{display:block;color:var(--cobalt)}
+.ctd-title span+span{color:var(--ink)}
+.ctd-title b{color:var(--magenta)}
+.ctd-sub{font-family:var(--display);font-weight:700;font-size:clamp(1rem,1.8vw,1.3rem);letter-spacing:.02em;margin:0 0 .3rem}
+.ctd-dots{display:flex;flex-wrap:wrap;align-items:center;gap:.2rem .7rem;font-family:var(--display);font-weight:700;
+  font-size:clamp(1.1rem,2vw,1.45rem);margin:0 0 1.3rem}
+.ctd-dots i{width:.55em;height:.55em;display:inline-block}
+.ctd-dots i:nth-of-type(1){background:var(--cobalt)}
+.ctd-dots i:nth-of-type(2){background:var(--magenta)}
+.ctd-dots i:nth-of-type(3){background:var(--yellow);outline:1.5px solid var(--ink)}
+.ctd-lead{font-size:clamp(1rem,1.3vw,1.1rem)}
+.ctd-poh{display:inline-flex;align-items:center;gap:.6rem;background:var(--ink);color:var(--yellow);
+  font-weight:600;font-size:.92rem;padding:.55em 1em;margin:0 0 1.4rem;max-width:none}
+.ctd-poh::before{content:"";width:.7em;height:.7em;background:var(--magenta);flex:none}
+.ctd-acts{list-style:none;margin:0 0 1.4rem;padding:0;display:grid;gap:.5rem}
+@media(min-width:560px){.ctd-acts{grid-template-columns:1fr 1fr}}
+.ctd-acts li{border:2px solid var(--ink);background:#fff;padding:.6rem .8rem;display:grid;gap:.1rem}
+.ctd-acts b{font-family:var(--mono);font-size:.95rem;letter-spacing:.08em;color:var(--cobalt)}
+.ctd-acts li:nth-child(2) b{color:var(--magenta-text)}
+.ctd-acts li:nth-child(3) b{color:var(--ink)}
+.ctd-acts li:nth-child(4) b{color:#8a6d00}
+.ctd-acts span{font-size:.88rem;line-height:1.45}
+.ctd-when{display:grid;grid-template-columns:auto 1fr;gap:.2rem 1.1rem;align-items:center;
+  background:var(--yellow);border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);padding:.9rem 1.1rem;margin:0 0 1.4rem}
+.ctd-date{font-family:var(--mono);font-weight:700;font-size:clamp(1.9rem,4vw,2.6rem);line-height:1;color:var(--magenta-text);grid-row:span 2}
+.ctd-date small{display:block;font-size:.42em;letter-spacing:.14em;color:var(--ink);margin-top:.3rem}
+.ctd-venue{margin:0;font-weight:600;line-height:1.4}
+.ctd-venue a{font-size:.84rem;font-weight:600}
+@media(max-width:520px){.ctd-when{grid-template-columns:1fr}.ctd-date{grid-row:auto;margin-bottom:.5rem}}
+@media(max-width:879px){section.ctd{padding-bottom:calc(var(--gap-shift) + 64px)}}
+.ctd-link-note{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin:.6rem 0 0}
+.ctd-close{font-weight:500}
+.ctd-close strong{color:var(--magenta-text)}
+.ctd .btn{gap:.4em}
+
 /* ═══════════ ติดต่อ ═══════════ */
 /* ใช้ magenta-text (เข้มกว่า) เพราะขาวบน --magenta ได้ contrast แค่ 4.33:1 · ตก WCAG AA */
 .contact{background:var(--magenta-text);color:#fff}
@@ -552,6 +605,7 @@ footer a{color:var(--yellow)}
   <div class="wrap">
     <b>กั่วป่าโพ้</b>
     <nav aria-label="เมนูหลัก">
+      <a href="#connecting-the-dots" data-ctd-link>Connecting the Dots</a>
       <a href="#events">นิทรรศการ</a>
       <a href="#houses">สามพื้นที่</a>
       <a href="#origin">ที่มาของชื่อ</a>
@@ -593,6 +647,60 @@ footer a{color:var(--yellow)}
 </header>
 
 <main id="main">
+
+<!-- ═══════════ CONNECTING THE DOTS · 12–13 ก.ย. 2569 · Siam Discovery ═══════════
+     ซ่อนตัวเองอัตโนมัติหลังงานจบ (data-end) · ลบทิ้งทั้งบล็อกได้เมื่อไม่ใช้แล้ว -->
+<section class="ctd shift" id="connecting-the-dots" data-end="2026-09-14T00:00:00+07:00" aria-labelledby="ctd-title">
+  <div class="wrap">
+    <p class="tag rise">กิจกรรมพิเศษ · กรุงเทพฯ</p>
+    <div class="ctd-grid rise">
+      <figure class="ctd-poster">
+        <a href="images/ctd-poster.webp" target="_blank" rel="noopener" aria-label="เปิดโปสเตอร์ Connecting the Dots ขนาดเต็ม">
+          <img src="images/ctd-poster.webp" width="1100" height="1555" loading="lazy" decoding="async"
+               alt="โปสเตอร์ Connecting the Dots · Creative Districts Reimagined · 12–13 September 2026 · Discovery Plaza, Siam Discovery · มีภาพกั่วป่าโพ้ จ.พังงา เป็นหนึ่งในพื้นที่ที่ร่วมจัดแสดง">
+        </a>
+        <figcaption>แตะเพื่อดูโปสเตอร์เต็ม</figcaption>
+      </figure>
+
+      <div class="ctd-body">
+        <p class="ctd-kicker" lang="en">Creative Cultural District</p>
+        <h2 class="ctd-title" id="ctd-title" lang="en"><span>CONNECTING</span><span>THE <b>DOTS</b></span></h2>
+        <p class="ctd-sub" lang="en">CREATIVE DISTRICTS REIMAGINED</p>
+        <p class="ctd-dots">ผู้คน <i aria-hidden="true"></i> ชุมชน <i aria-hidden="true"></i> พื้นที่ <i aria-hidden="true"></i> สร้างสรรค์</p>
+
+        <p class="ctd-lead">เมื่อ “พื้นที่” ไม่ได้มีความหมายเพียงแค่สถานที่ แต่เกิดขึ้นจากผู้คน เรื่องราว วัฒนธรรม และความคิดสร้างสรรค์ที่เชื่อมโยงกัน</p>
+        <p>ชวนมาพบกับ 7 พื้นที่ต้นแบบสร้างสรรค์ และ 8 เครือข่ายพื้นที่เพิ่มเติม จากหลากหลายจังหวัดทั่วประเทศ ที่กำลังสร้าง และต่อยอดศักยภาพของพื้นที่ให้กลายเป็นพลังใหม่ของเมือง</p>
+        <p class="ctd-poh">พบกั่วป่าโพ้ จ.พังงา ในนิทรรศการนี้ด้วย</p>
+
+        <ul class="ctd-acts" aria-label="กิจกรรมในงาน">
+          <li><b lang="en">EXHIBITION</b><span>นิทรรศการพื้นที่สร้างสรรค์</span></li>
+          <li><b lang="en">MARKET</b><span>สินค้าและเรื่องราวจากชุมชน</span></li>
+          <li><b lang="en">TALK</b><span>แลกเปลี่ยนมุมมองการพัฒนาเมือง</span></li>
+          <li><b lang="en">WORKSHOP</b><span>ลงมือสร้างสรรค์ไปด้วยกัน</span></li>
+        </ul>
+
+        <div class="ctd-when">
+          <p class="ctd-date" lang="en">12–13<small>SEPTEMBER 2026</small></p>
+          <p class="ctd-venue">Discovery Plaza, G Floor<br>Siam Discovery</p>
+          <p class="ctd-venue"><a href="https://www.google.com/maps/search/?api=1&query=Siam+Discovery+Bangkok" target="_blank" rel="noopener">📍 เปิดแผนที่นำทาง</a></p>
+        </div>
+
+        <p class="ctd-close">มาร่วม Connecting the Dots เชื่อม <strong>“คน”</strong> เชื่อม <strong>“ชุมชน”</strong> เชื่อม <strong>“พื้นที่”</strong> และร่วมมองเห็นความเป็นไปได้ใหม่ ๆ ของ Creative Cultural District ไปด้วยกัน</p>
+        <a class="btn on-paper" href="https://creativeculturaldistrict.com/" target="_blank" rel="noopener">ดูรายละเอียดงาน ↗</a>
+        <p class="ctd-link-note">creativeculturaldistrict.com</p>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+/* ซ่อนส่วน Connecting the Dots + ลิงก์เมนู หลังงานจบ */
+(function () {
+  var sec = document.getElementById('connecting-the-dots');
+  if (!sec || Date.now() < Date.parse(sec.getAttribute('data-end'))) return;
+  sec.hidden = true;
+  document.querySelectorAll('[data-ctd-link]').forEach(function (a) { a.hidden = true; });
+})();
+</script>
 
 <!-- ═══════════ นิทรรศการที่กำลังจัดแสดง ═══════════ -->
 <section class="events shift" id="events">

@@ -19,7 +19,7 @@ if not TOKEN:
 API = "https://api.line.me"
 API_DATA = "https://api-data.line.me"
 
-SITE = "https://kuapapoh.pages.dev"
+SITE = "https://kuapapoh.com"
 MAPS = ("https://www.google.com/maps/search/?api=1&query="
         "%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0"
         "%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2")

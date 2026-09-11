@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://kuapapoh.pages.dev/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://kuapapoh.com/</loc>
+    <lastmod>2026-09-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image><image:loc>https://kuapapoh.com/images/og-image.jpg</image:loc></image:image>
+    <image:image><image:loc>https://kuapapoh.com/images/event-og.jpg</image:loc></image:image>
+    <image:image><image:loc>https://kuapapoh.com/images/event-apaporn.webp</image:loc></image:image>
+    <image:image><image:loc>https://kuapapoh.com/images/house-78.webp</image:loc></image:image>
+    <image:image><image:loc>https://kuapapoh.com/images/house-109.webp</image:loc></image:image>
+    <image:image><image:loc>https://kuapapoh.com/images/house-305.webp</image:loc></image:image>
+    <image:image><image:loc>https://kuapapoh.com/images/shirt-poh.webp</image:loc></image:image>
+    <image:image><image:loc>https://kuapapoh.com/images/poh-bottle.webp</image:loc></image:image>
+    <image:image><image:loc>https://kuapapoh.com/images/ctd-poster.webp</image:loc></image:image>
   </url>
 </urlset>

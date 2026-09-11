@@ -6,8 +6,8 @@
 
 ## 📌 1. ข้อมูลระบบและลิงก์หลัก (System Identity & Endpoints)
 
-* **Production URL (Cloudflare Pages):** `https://kuapapoh.pages.dev/`
-* **Admin CMS Dashboard:** `https://kuapapoh.pages.dev/admin.html`
+* **Production URL:** `https://kuapapoh.com/` (custom domain + www · ผูกกับ Pages project `kuapapoh` เมื่อ 2026-09-11 · `https://kuapapoh.pages.dev/` ยังใช้ได้)
+* **Admin CMS Dashboard:** `https://kuapapoh.com/admin.html`
 * **Admin Passcode (รหัสผ่านเริ่มต้น):** `78109` (หรือ `admin`)
 * **GitHub Repository:** `https://github.com/Katz121/kuapapoh.git` (Branch: `main`)
 * **Framework:** Vanilla Jamstack (Zero-Build Static HTML5 / CSS3 / ES6 Vanilla JS)

@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 
-Sitemap: https://kuapapoh.pages.dev/sitemap.xml
+Sitemap: https://kuapapoh.com/sitemap.xml

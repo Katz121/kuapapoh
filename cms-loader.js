@@ -52,13 +52,14 @@
     }
   }
 
-  // Current shop mode: the public catalog currently sells the shirt only.
-  function limitShopToShirt(data) {
+  // Current shop mode: the public catalog sells the shirt + Poh Sparkling Tea only
+  // (old placeholder products in saved CMS data stay hidden).
+  const SHOP_PRODUCT_IDS = ['shirt', 'poh'];
+  function limitShopProducts(data) {
     if (data?.shop && Array.isArray(data.shop.products)) {
-      data.shop.products = data.shop.products
-        .filter(product => product.id === 'shirt' || String(product.name || '').includes('เสื้อ'))
-        .slice(0, 1);
-      data.shop.categories = ['ทั้งหมด', 'เสื้อผ้า & แฟชั่น'];
+      const pick = (id) => data.shop.products.find(product => product.id === id)
+        || (id === 'shirt' ? data.shop.products.find(product => String(product.name || '').includes('เสื้อ')) : null);
+      data.shop.products = SHOP_PRODUCT_IDS.map(pick).filter(Boolean);
       if (data.shop.heading === 'ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ' || data.shop.heading === 'เสื้อยืดจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ') {
         data.shop.heading = 'เสื้อยืดจากย่าน<br>ถ่ายทอดด้วยใจ';
       }
@@ -68,7 +69,7 @@
 
   function applyContent(data) {
     if (!data) return;
-    data = limitShopToShirt(data);
+    data = limitShopProducts(data);
 
     try {
       // 0. Typography Management
@@ -418,7 +419,8 @@
           });
 
           let filterNav = shopSec.querySelector('.shop-filter-nav');
-          if (!filterNav && categories.length > 2) {
+          // Tabs only help with a real catalogue; 2 products fit on screen already
+          if (!filterNav && categories.length > 2 && products.length > 3) {
             filterNav = document.createElement('div');
             filterNav.className = 'shop-filter-nav rise';
             filterNav.style.cssText = 'display:flex;gap:.5rem;flex-wrap:wrap;margin:1.2rem 0 1.8rem;justify-content:center';
@@ -464,17 +466,19 @@
           const shopGrid = shopSec.querySelector('.shop-grid');
           if (shopGrid) {
             shopGrid.classList.toggle('single-product', products.length === 1);
+            shopGrid.classList.toggle('two-products', products.length === 2);
             shopGrid.innerHTML = '';
             products.forEach((prod) => {
               const art = document.createElement('article');
               art.className = 'shop-card rise';
               art.setAttribute('data-category', prod.category || 'ทั่วไป');
-              
+
               const priceText = prod.priceLabel || `฿${prod.price || 0}`;
               const metaHtml = `<p class="shop-meta">${prod.meta || '&nbsp;'}</p>`;
+              const modalId = prod.modalId || 'modal-shirt';
               const modalBtnHtml = prod.hasModal ? `
-                <button type="button" class="shop-more-btn" data-open-modal="modal-shirt">
-                  📷 ดูภาพถ่ายแบบ & ลายเสื้อ →
+                <button type="button" class="shop-more-btn" data-open-modal="${modalId}">
+                  ${prod.modalCta || '📷 ดูภาพถ่ายแบบ & ลายเสื้อ →'}
                 </button>
               ` : '';
 
@@ -488,10 +492,10 @@
               }
 
               art.innerHTML = `
-                <div class="shop-shot" ${prod.hasModal ? 'data-open-modal="modal-shirt" title="คลิกดูภาพขยายและแกลเลอรี"' : ''}>
+                <div class="shop-shot${prod.shotStyle === 'photo' ? ' photo' : ''}" ${prod.hasModal ? `data-open-modal="${modalId}" title="คลิกดูภาพขยายและแกลเลอรี"` : ''}>
                   ${prod.tag ? `<span class="shop-tag">${prod.tag}</span>` : ''}
-                  ${prod.image ? `<img src="${prod.image}" width="360" height="255" loading="lazy" decoding="async" alt="${prod.name || ''}">` : ''}
-                  ${prod.hasModal ? `<span class="shop-shot-overlay">🔍 ดู 4 ภาพ</span>` : ''}
+                  ${prod.image ? `<img src="${prod.image}" width="${prod.imageWidth || 360}" height="${prod.imageHeight || 255}" loading="lazy" decoding="async" alt="${prod.imageAlt || prod.name || ''}">` : ''}
+                  ${prod.hasModal ? `<span class="shop-shot-overlay">${prod.shotOverlay || '🔍 ดู 4 ภาพ'}</span>` : ''}
                 </div>
                 <div class="shop-body">
                   <h3>${prod.name || ''}</h3>
@@ -547,8 +551,8 @@
 
         // Shirt Modal Dialog
         const modal = document.getElementById('modal-shirt');
-        if (modal && data.shop.products && data.shop.products[0]) {
-          const shirt = data.shop.products[0];
+        const shirt = (data.shop.products || []).find(p => p.id === 'shirt') || (data.shop.products || [])[0];
+        if (modal && shirt && shirt.id !== 'poh') {
           const mTitle = modal.querySelector('#modal-shirt-title');
           if (mTitle && shirt.name) mTitle.textContent = shirt.name;
           const mPrice = modal.querySelector('.dialog-price');

@@ -260,6 +260,10 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 @media(min-width:1020px){.shop-grid{grid-template-columns:repeat(4,1fr)}}
 .shop-grid.single-product{grid-template-columns:minmax(0,760px);justify-content:center}
 .shop-grid.single-product .shop-card{width:100%}
+.shop-grid.two-products{grid-template-columns:minmax(0,1fr)}
+@media(min-width:600px){.shop-grid.two-products{grid-template-columns:repeat(2,minmax(0,1fr));max-width:1100px;margin-inline:auto}}
+.shop-shot.photo{padding:0}
+.shop-shot.photo img{width:100%;height:100%;max-height:none;object-fit:cover}
 
 .shop-card{background:#fff;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);
   display:flex;flex-direction:column;position:relative;transition:transform .2s,box-shadow .2s;height:100%}
@@ -362,6 +366,18 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 
 .dialog-actions{margin-top:.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:.8rem}
 .dialog-subnote{font-size:.8rem;color:var(--muted)}
+
+/* Poh: โปสเตอร์แนวตั้ง ใช้กรอบภาพสูงกว่าเสื้อ + กล่อง QR ไลน์ */
+.dialog-main-img.tall{aspect-ratio:3/4}
+.poh-ingredients{display:flex;flex-wrap:wrap;gap:.4rem;margin:.2rem 0 0;padding:0;list-style:none}
+.poh-ingredients li{background:var(--yellow);border:1.5px solid var(--ink);border-radius:999px;
+  font-size:.8rem;font-weight:600;padding:.15em .7em}
+.line-order{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:center;
+  background:#fff;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:.9rem}
+.line-order img{width:132px;height:132px;display:block;image-rendering:pixelated}
+.line-order b{display:block;font-size:1rem;margin-bottom:.2rem}
+.line-order p{margin:0 0 .6rem;font-size:.84rem;color:var(--muted);line-height:1.5}
+@media(max-width:420px){.line-order{grid-template-columns:1fr;justify-items:center;text-align:center}}
 
 
 /* ═══════════ ติดต่อ ═══════════ */
@@ -764,10 +780,10 @@ footer a{color:var(--yellow)}
 <section class="shop shift" id="shop">
   <div class="wrap">
     <p class="tag rise">POH SHOP · โพ้ช็อป</p>
-    <h2 class="rise">เสื้อยืดจากย่าน<br>ถ่ายทอดด้วยใจ</h2>
-    <p class="lede rise">เสื้อยืดกั่วป่าโพ้ที่ออกแบบจากอัตลักษณ์เมืองเก่าตะกั่วป่า ร่วมกับศิลปินและคนในชุมชน รายได้ทั้งหมดจะนำมาสมทบเป็นกองทุนของกลุ่มกั่วป่าโพ้ เพื่อใช้ในการฟื้นฟู ขับเคลื่อนกิจกรรม และดำเนินงานพัฒนาเมืองสร้างสรรค์อย่างต่อเนื่อง</p>
+    <h2 class="rise">ของจากย่าน<br>ถ่ายทอดด้วยใจ</h2>
+    <p class="lede rise">เสื้อยืดและเครื่องดื่มกั่วป่าโพ้ ออกแบบจากอัตลักษณ์เมืองเก่าตะกั่วป่า ร่วมกับศิลปินและคนในชุมชน รายได้ทั้งหมดจะนำมาสมทบเป็นกองทุนของกลุ่มกั่วป่าโพ้ เพื่อใช้ในการฟื้นฟู ขับเคลื่อนกิจกรรม และดำเนินงานพัฒนาเมืองสร้างสรรค์อย่างต่อเนื่อง</p>
 
-    <div class="shop-grid single-product rise">
+    <div class="shop-grid two-products rise">
       <!-- สินค้า 1: เสื้อยืดกั่วป่าโพ้ -->
       <article class="shop-card">
         <div class="shop-shot" style="cursor:pointer" data-open-modal="modal-shirt" title="คลิกเพื่อดูภาพถ่ายแบบและรายละเอียด">
@@ -783,6 +799,26 @@ footer a{color:var(--yellow)}
           <p class="shop-meta">ผ้าฝ้าย Comb 100% · ไซส์ M · L · XL · 2XL</p>
           <div class="shop-foot">
             <span class="shop-price">฿350</span>
+            <a class="shop-buy" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อ</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- สินค้า 2: Poh Sparkling Tea -->
+      <article class="shop-card">
+        <div class="shop-shot photo" style="cursor:pointer" data-open-modal="modal-poh" title="คลิกเพื่ออ่านเรื่องราวของ Poh">
+          <span class="shop-tag">เครื่องดื่มของเมือง</span>
+          <img src="images/poh-bottle.webp" width="960" height="720" loading="lazy" decoding="async" alt="ขวด Poh Sparkling Tea คู่แก้วน้ำแข็ง วางบนขอบหน้าต่างตึกเก่า">
+        </div>
+        <div class="shop-body">
+          <h3>Poh Sparkling Tea · ชาซ่ากั่วป่าโพ้</h3>
+          <p class="shop-desc">ชาสปาร์กลิงจากวัตถุดิบพังงา ดาหลา ส้มแขก ลูกจันทน์ มิ้นท์ และกระเจี๊ยบ ออกแบบรสชาติโดยกลุ่มกั่วป่าโพ้ ดื่มหนึ่งขวด เมืองเก่าได้ผลิบาน</p>
+          <button type="button" class="shop-more-btn" data-open-modal="modal-poh">
+            🌸 อ่านเรื่องราวในขวด →
+          </button>
+          <p class="shop-meta">0% แอลกอฮอล์ · 275 ml. · ขวดแก้ว</p>
+          <div class="shop-foot">
+            <span class="shop-price">฿159</span>
             <a class="shop-buy" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อ</a>
           </div>
         </div>
@@ -882,6 +918,81 @@ footer a{color:var(--yellow)}
             สั่งซื้อทาง LINE @kuapapoh
           </a>
           <span class="dialog-subnote">ราคา 350 บาท | ระบุไซส์ (M, L, XL, 2XL) และจำนวนทาง LINE ได้ทันที</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- ═══════════ MODAL: Poh Sparkling Tea ═══════════ -->
+<dialog id="modal-poh" class="shop-dialog" aria-labelledby="modal-poh-title">
+  <div class="dialog-box">
+    <button type="button" class="dialog-close" data-close-modal aria-label="ปิดหน้าต่างรายละเอียด">✕</button>
+
+    <div class="dialog-grid">
+      <div class="dialog-gallery">
+        <div class="dialog-main-img tall">
+          <img src="images/poh-poster-b.webp" width="800" height="1200" alt="โปสเตอร์ Poh Sparkling Tea ดื่มหนึ่งขวด ให้เมืองเก่าได้ผลิบาน">
+        </div>
+        <div class="dialog-thumbs" role="tablist" aria-label="เลือกรูปภาพ">
+          <button type="button" class="dialog-thumb is-active" data-src="images/poh-poster-b.webp" title="โปสเตอร์ 1" aria-label="โปสเตอร์ 1">
+            <img src="images/poh-poster-b.webp" alt="โปสเตอร์ 1">
+            <span class="dialog-thumb-badge">โปสเตอร์</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="images/poh-poster-a.webp" title="โปสเตอร์ 2" aria-label="โปสเตอร์ 2">
+            <img src="images/poh-poster-a.webp" alt="โปสเตอร์ 2">
+            <span class="dialog-thumb-badge">วัตถุดิบ</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="images/poh-story.webp" title="เรื่องราวบนฉลาก" aria-label="เรื่องราวบนฉลาก">
+            <img src="images/poh-story.webp" alt="เรื่องราวบนฉลาก">
+            <span class="dialog-thumb-badge">เรื่องราว</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="images/poh-real.webp" title="ขวดจริง" aria-label="ขวดจริง">
+            <img src="images/poh-real.webp" alt="ขวด Poh ของจริง">
+            <span class="dialog-thumb-badge">ขวดจริง</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dialog-content">
+        <div>
+          <span class="shop-tag" style="position:static;display:inline-block;margin-bottom:.5rem">เครื่องดื่มของเมือง</span>
+          <h3 id="modal-poh-title">Poh Sparkling Tea · ชาซ่ากั่วป่าโพ้</h3>
+          <p class="dialog-price">฿159 <small>ต่อขวด · 275 ml.</small></p>
+        </div>
+
+        <p class="dialog-lead">"โพ้" คือท่าเรือริมแม่น้ำตะกั่วป่า ท่าที่ทำให้เมืองนี้เกิดขึ้น ครั้งหนึ่งผู้คน เรือสินค้า และวัฒนธรรมจากทะเลอันดามันมาพบกันที่นี่ วันนี้กลุ่มกั่วป่าโพ้เลยเล่าเรื่องเมืองท่าผ่านสิ่งที่ดื่มได้ ชาที่เริ่มต้นจากความทรงจำของเมือง แล้วเติมชีวิตใหม่ด้วยวัตถุดิบจากพังงา จนเกิดเป็นสีชมพูอ่อนที่ไม่เคยมีอยู่ในอดีต</p>
+
+        <div class="dialog-section">
+          <h4>🌸 ในขวดมีเรื่องเล่า 4 ชั้น</h4>
+          <ul class="dialog-icons">
+            <li><b>⚓ อดีตคือรากเหง้า</b><span>ชาที่เคยดื่มกันในอดีต ความทรงจำของเมืองท่า</span></li>
+            <li><b>🌊 ทะเลคือเส้นทาง</b><span>ทะเลอันดามันนำพาผู้คนและวัฒนธรรมมาบรรจบกัน</span></li>
+            <li><b>🌺 ดาหลาคือการผลิบาน</b><span>ดอกไม้พื้นถิ่นบนฉลาก สัญลักษณ์ของคนรุ่นใหม่ที่ทำให้เมืองเก่ามีชีวิต</span></li>
+            <li><b>🩷 สีชมพูคือสีสันของวันนี้</b><span>เกิดจากวัตถุดิบธรรมชาติ รากเดิมผสมกับแรงบันดาลใจใหม่</span></li>
+          </ul>
+        </div>
+
+        <div class="dialog-section">
+          <h4>🍃 วัตถุดิบจากพังงา</h4>
+          <ul class="poh-ingredients">
+            <li>ดาหลา</li><li>ส้มแขก</li><li>ลูกจันทน์</li><li>มิ้นท์</li><li>กระเจี๊ยบ</li>
+          </ul>
+          <p class="dialog-note">0% แอลกอฮอล์ · 275 ml. · แช่เย็นก่อนดื่ม หรือเทใส่แก้วน้ำแข็ง</p>
+        </div>
+
+        <div class="dialog-section">
+          <h4>🏮 ทุกขวดกลับไปที่เมือง</h4>
+          <p class="dialog-note" style="font-size:.86rem;color:var(--ink)">รายได้จาก Poh กลับเข้ากองทุนกลุ่มกั่วป่าโพ้ เพื่อจัดกิจกรรม ฟื้นฟูพื้นที่ และพัฒนาเมืองเก่าตะกั่วป่าต่อไป เพราะเมืองที่มีรากแข็งแรง ผลิบานเป็นสิ่งใหม่ได้เสมอ</p>
+        </div>
+
+        <div class="line-order">
+          <img src="images/line-qr-kuapapoh.png" width="132" height="132" alt="QR code เพิ่มเพื่อน LINE @kuapapoh">
+          <div>
+            <b>สแกนสั่งซื้อทาง LINE</b>
+            <p>เพิ่มเพื่อน @kuapapoh แล้วแจ้งจำนวนขวด สอบถามรอบจัดส่งและจุดรับสินค้าได้ในแชต</p>
+            <a class="btn on-paper" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อทาง LINE @kuapapoh</a>
+          </div>
         </div>
       </div>
     </div>
@@ -1001,7 +1112,7 @@ document.querySelectorAll('.shop-dialog').forEach(dlg => {
 document.querySelectorAll('.dialog-thumb').forEach(thumb => {
   thumb.addEventListener('click', () => {
     const gallery = thumb.closest('.dialog-gallery');
-    const mainImg = gallery.querySelector('#shirt-gallery-main');
+    const mainImg = gallery.querySelector('.dialog-main-img img');
     const src = thumb.getAttribute('data-src');
     if (mainImg && src) {
       mainImg.src = src;

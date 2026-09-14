@@ -165,8 +165,8 @@
             img.src = artwork.src || '';
             img.width = size[0];
             img.height = size[1];
-            img.loading = 'lazy';
-            img.decoding = 'async';
+            if (index === 0) img.fetchPriority = 'high';
+            else { img.loading = 'lazy'; img.decoding = 'async'; }
             // caption เป็นชื่อชุดผลงาน ไม่ใช่คำบรรยายภาพ · เอามาต่อเป็น alt แล้วจะอ่านไม่รู้เรื่อง
             img.alt = artwork.alt || 'ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร';
             const figcaption = document.createElement('figcaption');
@@ -380,14 +380,13 @@
           const h2 = sSec.querySelector('h2');
           if (h2 && data.six.heading) h2.innerHTML = data.six.heading;
 
-          const sixContainer = sSec.querySelector('.six-grid');
+          const sixContainer = sSec.querySelector('.sixgrid');
           if (sixContainer && Array.isArray(data.six.items)) {
             sixContainer.innerHTML = '';
             data.six.items.forEach((item, idx) => {
               const div = document.createElement('div');
-              div.className = 'six-item rise';
+              div.className = 'six-item';
               div.innerHTML = `
-                <div class="six-num">0${idx+1}</div>
                 <b>${item.title || ''}</b>
                 <p>${item.desc || ''}</p>
               `;

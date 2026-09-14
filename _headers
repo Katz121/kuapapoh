@@ -16,6 +16,18 @@
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
 
+/llms.txt
+  Cache-Control: public, max-age=3600
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/site.webmanifest
+  Cache-Control: public, max-age=3600
+
 # สำเนาบน *.pages.dev (ทั้งตัวหลักและ preview) ห้าม index · ให้ Google เก็บแค่ kuapapoh.com
 https://:project.pages.dev/*
   X-Robots-Tag: noindex

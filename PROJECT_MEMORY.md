@@ -91,3 +91,10 @@
 * **Security Headers (`_headers`):** `X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`
 * **Performance:** `CLS = 0.00`, Lazy Loading พร้อมระบุ `width`/`height` บนรูปภาพทุกใบ
 * **SEO:** `robots.txt`, `sitemap.xml`, OpenGraph, Twitter Cards, และ Schema.org JSON-LD (`TouristDestination` & `ItemList`) ครบถ้วน
+
+### 5.5 🔎 SEO รอบ 2 (2026-09-15)
+* **`content.json` → `site.title` / `site.description` ต้องตรงกับ `<title>` / `<meta name="description">` ใน `index.html` เสมอ** · cms-loader เขียนทับ title ทุกครั้งที่หน้าโหลด และ Googlebot รัน JS จึงเห็นค่าจาก content.json
+* **โดเมนเดียว:** `functions/_middleware.js` 301 `kuapapoh.pages.dev` และ `www.kuapapoh.com` → `kuapapoh.com`
+* **หน้าอังกฤษ `/en/`** (`en/index.html`) เป็น static ล้วน ไม่ผ่าน CMS · แก้เนื้อหาหน้าไทยเรื่องไหน (ราคา สินค้า วันเปิด นิทรรศการ) ต้องแก้ `/en/` ตามด้วย · hreflang th/en/x-default อยู่ทั้งสองหน้า + sitemap
+* ส่วน FAQ (`#faq`) มี `FAQPage` ใน JSON-LD คู่กัน · แก้คำถามต้องแก้ทั้งสองที่ให้ตรงกันทุกตัวอักษร
+* `llms.txt` สรุปข้อเท็จจริงให้ AI search · `404.html` คืน status 404 · `robots.txt` อนุญาต AI crawler ชัดเจน

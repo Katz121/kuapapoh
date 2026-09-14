@@ -1,7 +1,7 @@
 {
   "site": {
-    "title": "กั่วป่าโพ้ จีโชว์เมือง · โครงการพื้นที่สร้างสรรค์ พังงา",
-    "description": "โครงการพื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา · บ้านเลขที่ 78 · 109 · 305 · กั่วป่าโพ้ จีโชว์เมือง"
+    "title": "กั่วป่าโพ้ · ย่านเมืองเก่าตะกั่วป่า พังงา | Kuapapoh",
+    "description": "กั่วป่าโพ้ พื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา · ชมนิทรรศการในบ้านเก่ายุคเหมืองแร่ บ้าน 78 · 109 · 305 สัมผัสวัฒนธรรมเปอรานากัน และเลือกซื้อของที่ระลึก"
   },
   "sections": {
     "hero": true,
@@ -29,19 +29,23 @@
     "artworks": [
       {
         "src": "images/event/artwork-1.webp",
-        "caption": "Peranakan Charm"
+        "caption": "Peranakan Charm",
+        "alt": "หญิงสาวในเสื้อเคบายาสีฟ้าปักลายทอง ท่ามกลางดอกโบตั๋นสีชมพูและผีเสื้อ · ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร"
       },
       {
         "src": "images/event/artwork-2.webp",
-        "caption": "Peranakan Charm"
+        "caption": "Peranakan Charm",
+        "alt": "หญิงสาวในเสื้อเคบายาสีชมพูกลัดเข็มกลัดทอง บนพื้นลายดอกไม้สีน้ำเงิน · ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร"
       },
       {
         "src": "images/event/artwork-3.webp",
-        "caption": "Peranakan Charm"
+        "caption": "Peranakan Charm",
+        "alt": "หญิงสาวถักเปียในเสื้อเคบายาสีเขียวอมฟ้า หลับตาท่ามกลางดอกไม้และผีเสื้อ · ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร"
       },
       {
         "src": "images/event/artwork-4.webp",
-        "caption": "Peranakan Charm"
+        "caption": "Peranakan Charm",
+        "alt": "หญิงสาวในเสื้อลูกไม้สีขาวถือปิ่นโต ท่ามกลางดอกไม้และผีเสื้อ · ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร"
       }
     ],
     "btnExploreUrl": "#events"

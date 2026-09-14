@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>กั่วป่าโพ้ · ย่านเมืองเก่าตะกั่วป่า พังงา | Kuapapoh Takua Pa Old Town</title>
-<meta name="description" content="กั่วป่าโพ้ พื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จ.พังงา · นิทรรศการในบ้านเก่ายุคเหมืองแร่ 78 · 109 · 305 วัฒนธรรมเปอรานากัน ของที่ระลึก · ที่เที่ยวพังงา">
+<title>กั่วป่าโพ้ · ย่านเมืองเก่าตะกั่วป่า พังงา | Kuapapoh</title>
+<meta name="description" content="กั่วป่าโพ้ พื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา · ชมนิทรรศการในบ้านเก่ายุคเหมืองแร่ บ้าน 78 · 109 · 305 สัมผัสวัฒนธรรมเปอรานากัน และเลือกซื้อของที่ระลึก">
 <link rel="canonical" href="https://kuapapoh.com/">
 <link rel="alternate" hreflang="th" href="https://kuapapoh.com/">
+<link rel="alternate" hreflang="en" href="https://kuapapoh.com/en/">
 <link rel="alternate" hreflang="x-default" href="https://kuapapoh.com/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <!-- local SEO · ย่านเมืองเก่าตะกั่วป่า (บ้าน 78 Studio) · TH-82 = พังงา -->
@@ -35,6 +36,7 @@
 <meta name="theme-color" content="#FFE81C">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%233B3E7E'/><g fill='none' stroke='%23F7F0C4' stroke-width='3.4' stroke-linejoin='round'><path d='M24 11h16a2 2 0 0 1 2 2v9c0 3 2 4 5 5a6 6 0 0 1 4 6v14a3 3 0 0 1-3 3H16a3 3 0 0 1-3-3V33a6 6 0 0 1 4-6c3-1 5-2 5-5v-9a2 2 0 0 1 2-2z'/><rect x='27' y='15' width='10' height='12' rx='1'/><rect x='18' y='37' width='11' height='12' rx='1'/><rect x='35' y='37' width='11' height='12' rx='1'/></g></svg>">
 <link rel="apple-touch-icon" href="images/icon-180.png">
+<link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
@@ -392,66 +394,6 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 @media(max-width:420px){.line-order{grid-template-columns:1fr;justify-items:center;text-align:center}}
 
 
-/* ═══════════ CONNECTING THE DOTS (งานที่กรุงเทพฯ 12–13 ก.ย. 2569) ═══════════
-   ส่วนแยกของตัวเอง · cms-loader ไม่แตะ · สีพิกเซล 4 สีตามโปสเตอร์ = สีเว็บเดิม */
-.ctd{background:var(--paper);position:relative;overflow:hidden;border-bottom:3px solid var(--ink)}
-.ctd::before,.ctd::after{content:"";position:absolute;width:clamp(72px,9vw,120px);aspect-ratio:1;pointer-events:none;
-  background:
-    linear-gradient(var(--cobalt) 0 0) 0 0/50% 50% no-repeat,
-    linear-gradient(var(--yellow) 0 0) 100% 0/50% 50% no-repeat,
-    linear-gradient(var(--magenta) 0 0) 100% 100%/50% 50% no-repeat}
-/* ตัว L แนบขอบบน+ขวา · ช่องว่างหันเข้ากลางหน้า · มุมล่างซ้ายหมุน 180° ให้แนบขอบล่าง+ซ้าย */
-.ctd::before{top:0;right:0}
-.ctd::after{bottom:0;left:0;transform:rotate(180deg)}
-.ctd-grid{display:grid;gap:clamp(1.6rem,4vw,3.4rem);align-items:start;position:relative;z-index:1}
-@media(min-width:880px){.ctd-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}}
-.ctd-poster{border:3px solid var(--ink);box-shadow:8px 8px 0 var(--ink);background:#fff}
-.ctd-poster a{display:block}
-.ctd-poster figcaption{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
-  padding:.5rem .8rem;border-top:3px solid var(--ink);background:var(--yellow);color:var(--ink)}
-.ctd-kicker{font-family:var(--mono);font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cobalt);margin:0 0 .6rem}
-.ctd-title{font-family:var(--mono);font-weight:700;font-size:clamp(2.3rem,6vw,4.4rem);line-height:1;letter-spacing:-.02em;margin:0 0 .5rem;text-wrap:initial}
-.ctd-title span{display:block;color:var(--cobalt)}
-.ctd-title span+span{color:var(--ink)}
-.ctd-title b{color:var(--magenta)}
-.ctd-sub{font-family:var(--display);font-weight:700;font-size:clamp(1rem,1.8vw,1.3rem);letter-spacing:.02em;margin:0 0 .3rem}
-.ctd-dots{display:flex;flex-wrap:wrap;align-items:center;gap:.2rem .7rem;font-family:var(--display);font-weight:700;
-  font-size:clamp(1.1rem,2vw,1.45rem);margin:0 0 1.3rem}
-.ctd-dots i{width:.55em;height:.55em;display:inline-block}
-.ctd-dots i:nth-of-type(1){background:var(--cobalt)}
-.ctd-dots i:nth-of-type(2){background:var(--magenta)}
-.ctd-dots i:nth-of-type(3){background:var(--yellow);outline:1.5px solid var(--ink)}
-.ctd-lead{font-size:clamp(1rem,1.3vw,1.1rem)}
-.ctd-poh{display:inline-flex;align-items:center;gap:.6rem;background:var(--ink);color:var(--yellow);
-  font-weight:600;font-size:.92rem;padding:.55em 1em;margin:0 0 1.4rem;max-width:none}
-.ctd-poh::before{content:"";width:.7em;height:.7em;background:var(--magenta);flex:none}
-.ctd-acts{list-style:none;margin:0 0 1.4rem;padding:0;display:grid;gap:.5rem}
-@media(min-width:560px){.ctd-acts{grid-template-columns:1fr 1fr}}
-.ctd-acts li{border:2px solid var(--ink);background:#fff;padding:.6rem .8rem;display:grid;gap:.1rem}
-.ctd-acts b{font-family:var(--mono);font-size:.95rem;letter-spacing:.08em;color:var(--cobalt)}
-.ctd-acts li:nth-child(2) b{color:var(--magenta-text)}
-.ctd-acts li:nth-child(3) b{color:var(--ink)}
-.ctd-acts li:nth-child(4) b{color:#8a6d00}
-.ctd-acts span{font-size:.88rem;line-height:1.45}
-.ctd-when{display:grid;grid-template-columns:auto 1fr;gap:.2rem 1.1rem;align-items:center;
-  background:var(--yellow);border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);padding:.9rem 1.1rem;margin:0 0 1.4rem}
-.ctd-date{font-family:var(--mono);font-weight:700;font-size:clamp(1.9rem,4vw,2.6rem);line-height:1;color:var(--magenta-text);grid-row:span 2}
-.ctd-date small{display:block;font-size:.42em;letter-spacing:.14em;color:var(--ink);margin-top:.3rem}
-.ctd-venue{margin:0;font-weight:600;line-height:1.4}
-.ctd-venue a{font-size:.84rem;font-weight:600}
-@media(max-width:520px){.ctd-when{grid-template-columns:1fr}.ctd-date{grid-row:auto;margin-bottom:.5rem}}
-@media(max-width:879px){section.ctd{padding-bottom:calc(var(--gap-shift) + 64px)}}
-.ctd-lightbox{border:0;padding:0;margin:auto;background:transparent;max-width:100vw;max-height:100vh;
-  width:100vw;height:100vh;height:100dvh;cursor:zoom-out;overflow:hidden}
-.ctd-lightbox[open]{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem}
-.ctd-lightbox::backdrop{background:rgba(16,21,56,.92);backdrop-filter:blur(3px)}
-.ctd-lightbox img{max-width:min(94vw,900px);max-height:calc(100dvh - 4.5rem);width:auto;height:auto;
-  border:3px solid var(--paper);box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.ctd-lightbox-hint{margin:0;color:var(--paper);font-size:.85rem;opacity:.85;text-align:center}
-.ctd-link-note{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin:.6rem 0 0}
-.ctd-close{font-weight:500}
-.ctd-close strong{color:var(--magenta-text)}
-.ctd .btn{gap:.4em}
 
 /* ═══════════ ติดต่อ ═══════════ */
 /* ใช้ magenta-text (เข้มกว่า) เพราะขาวบน --magenta ได้ contrast แค่ 4.33:1 · ตก WCAG AA */
@@ -627,13 +569,14 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
   <div class="wrap">
     <b>กั่วป่าโพ้</b>
     <nav aria-label="เมนูหลัก">
-      <a href="#connecting-the-dots" data-ctd-link>Connecting the Dots</a>
       <a href="#events">นิทรรศการ</a>
       <a href="#houses">สามพื้นที่</a>
       <a href="#origin">ที่มาของชื่อ</a>
       <a href="#six">6 อ.</a>
       <a href="#shop">โพ้ช็อป</a>
+      <a href="#faq">คำถามพบบ่อย</a>
       <a href="#contact">ติดต่อ</a>
+      <a href="/en/" lang="en" hreflang="en">EN</a>
     </nav>
   </div>
 </div>
@@ -656,13 +599,13 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
     </div>
     <div class="hero-row">
       <p class="hero-row-label">ผลงานจากนิทรรศการ มนต์เสน่ห์เปอรานากัน</p>
-      <figure><img src="images/event/artwork-1.webp" width="900" height="1092" loading="lazy" decoding="async" alt="ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร">
+      <figure><img src="images/event/artwork-1.webp" width="900" height="1092" fetchpriority="high" alt="หญิงสาวในเสื้อเคบายาสีฟ้าปักลายทอง ท่ามกลางดอกโบตั๋นสีชมพูและผีเสื้อ · ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร">
         <figcaption>Peranakan Charm</figcaption></figure>
-      <figure><img src="images/event/artwork-2.webp" width="900" height="1142" loading="lazy" decoding="async" alt="ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร">
+      <figure><img src="images/event/artwork-2.webp" width="900" height="1142" loading="lazy" decoding="async" alt="หญิงสาวในเสื้อเคบายาสีชมพูกลัดเข็มกลัดทอง บนพื้นลายดอกไม้สีน้ำเงิน · ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร">
         <figcaption>Peranakan Charm</figcaption></figure>
-      <figure><img src="images/event/artwork-3.webp" width="900" height="1121" loading="lazy" decoding="async" alt="ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร">
+      <figure><img src="images/event/artwork-3.webp" width="900" height="1121" loading="lazy" decoding="async" alt="หญิงสาวถักเปียในเสื้อเคบายาสีเขียวอมฟ้า หลับตาท่ามกลางดอกไม้และผีเสื้อ · ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร">
         <figcaption>Peranakan Charm</figcaption></figure>
-      <figure><img src="images/event/artwork-4.webp" width="900" height="908" loading="lazy" decoding="async" alt="ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร">
+      <figure><img src="images/event/artwork-4.webp" width="900" height="908" loading="lazy" decoding="async" alt="หญิงสาวในเสื้อลูกไม้สีขาวถือปิ่นโต ท่ามกลางดอกไม้และผีเสื้อ · ภาพวาดชุด Peranakan Charm โดย ติณณภพ งานสถิร">
         <figcaption>Peranakan Charm</figcaption></figure>
     </div>
   </div>
@@ -670,76 +613,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
 
 <main id="main">
 
-<!-- ═══════════ CONNECTING THE DOTS · 12–13 ก.ย. 2569 · Siam Discovery ═══════════
-     ซ่อนตัวเองอัตโนมัติหลังงานจบ (data-end) · ลบทิ้งทั้งบล็อกได้เมื่อไม่ใช้แล้ว -->
-<section class="ctd shift" id="connecting-the-dots" data-end="2026-09-14T00:00:00+07:00" aria-labelledby="ctd-title">
-  <div class="wrap">
-    <p class="tag rise">กิจกรรมพิเศษ · กรุงเทพฯ</p>
-    <div class="ctd-grid rise">
-      <figure class="ctd-poster">
-        <a href="images/ctd-poster.webp" data-ctd-zoom aria-label="เปิดโปสเตอร์ Connecting the Dots ขนาดเต็ม">
-          <img src="images/ctd-poster.webp" width="1100" height="1555" loading="lazy" decoding="async"
-               alt="โปสเตอร์ Connecting the Dots · Creative Districts Reimagined · 12–13 September 2026 · Discovery Plaza, Siam Discovery · มีภาพกั่วป่าโพ้ จ.พังงา เป็นหนึ่งในพื้นที่ที่ร่วมจัดแสดง">
-        </a>
-        <figcaption>แตะเพื่อดูโปสเตอร์เต็ม</figcaption>
-      </figure>
 
-      <div class="ctd-body">
-        <p class="ctd-kicker" lang="en">Creative Cultural District</p>
-        <h2 class="ctd-title" id="ctd-title" lang="en"><span>CONNECTING</span><span>THE <b>DOTS</b></span></h2>
-        <p class="ctd-sub" lang="en">CREATIVE DISTRICTS REIMAGINED</p>
-        <p class="ctd-dots">ผู้คน <i aria-hidden="true"></i> ชุมชน <i aria-hidden="true"></i> พื้นที่ <i aria-hidden="true"></i> สร้างสรรค์</p>
-
-        <p class="ctd-lead">เมื่อ “พื้นที่” ไม่ได้มีความหมายเพียงแค่สถานที่ แต่เกิดขึ้นจากผู้คน เรื่องราว วัฒนธรรม และความคิดสร้างสรรค์ที่เชื่อมโยงกัน</p>
-        <p>ชวนมาพบกับ 7 พื้นที่ต้นแบบสร้างสรรค์ และ 8 เครือข่ายพื้นที่เพิ่มเติม จากหลากหลายจังหวัดทั่วประเทศ ที่กำลังสร้าง และต่อยอดศักยภาพของพื้นที่ให้กลายเป็นพลังใหม่ของเมือง</p>
-        <p class="ctd-poh">พบกั่วป่าโพ้ จ.พังงา ในนิทรรศการนี้ด้วย</p>
-
-        <ul class="ctd-acts" aria-label="กิจกรรมในงาน">
-          <li><b lang="en">EXHIBITION</b><span>นิทรรศการพื้นที่สร้างสรรค์</span></li>
-          <li><b lang="en">MARKET</b><span>สินค้าและเรื่องราวจากชุมชน</span></li>
-          <li><b lang="en">TALK</b><span>แลกเปลี่ยนมุมมองการพัฒนาเมือง</span></li>
-          <li><b lang="en">WORKSHOP</b><span>ลงมือสร้างสรรค์ไปด้วยกัน</span></li>
-        </ul>
-
-        <div class="ctd-when">
-          <p class="ctd-date" lang="en">12–13<small>SEPTEMBER 2026</small></p>
-          <p class="ctd-venue">Discovery Plaza, G Floor<br>Siam Discovery</p>
-          <p class="ctd-venue"><a href="https://www.google.com/maps/search/?api=1&query=Siam+Discovery+Bangkok" target="_blank" rel="noopener">📍 เปิดแผนที่นำทาง</a></p>
-        </div>
-
-        <p class="ctd-close">มาร่วม Connecting the Dots เชื่อม <strong>“คน”</strong> เชื่อม <strong>“ชุมชน”</strong> เชื่อม <strong>“พื้นที่”</strong> และร่วมมองเห็นความเป็นไปได้ใหม่ ๆ ของ Creative Cultural District ไปด้วยกัน</p>
-        <a class="btn on-paper" href="https://creativeculturaldistrict.com/" target="_blank" rel="noopener">ดูรายละเอียดงาน ↗</a>
-        <p class="ctd-link-note">creativeculturaldistrict.com</p>
-      </div>
-    </div>
-  </div>
-</section>
-<dialog class="ctd-lightbox" id="ctd-lightbox" aria-label="โปสเตอร์ Connecting the Dots ขนาดเต็ม">
-  <img src="images/ctd-poster.webp" width="1100" height="1555" alt="โปสเตอร์ Connecting the Dots ขนาดเต็ม">
-  <p class="ctd-lightbox-hint">แตะตรงไหนก็ได้เพื่อปิด</p>
-</dialog>
-<script>
-/* ซ่อนส่วน Connecting the Dots + ลิงก์เมนู หลังงานจบ */
-(function () {
-  var sec = document.getElementById('connecting-the-dots');
-  if (!sec || Date.now() < Date.parse(sec.getAttribute('data-end'))) return;
-  sec.hidden = true;
-  document.querySelectorAll('[data-ctd-link]').forEach(function (a) { a.hidden = true; });
-})();
-/* แตะโปสเตอร์ → เด้งเต็มจอในหน้าเดียวกัน · แตะตรงไหนก็ปิด (Esc ก็ปิด) */
-(function () {
-  var box = document.getElementById('ctd-lightbox');
-  var trigger = document.querySelector('[data-ctd-zoom]');
-  if (!box || !trigger || typeof box.showModal !== 'function') return; // เบราว์เซอร์เก่า: ลิงก์เปิดรูปตามปกติ
-  trigger.addEventListener('click', function (e) {
-    e.preventDefault();
-    box.showModal();
-    document.body.style.overflow = 'hidden';
-  });
-  box.addEventListener('click', function () { box.close(); });
-  box.addEventListener('close', function () { document.body.style.overflow = ''; });
-})();
-</script>
 
 <!-- ═══════════ นิทรรศการที่กำลังจัดแสดง ═══════════ -->
 <section class="events shift" id="events">
@@ -825,7 +699,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
       <article class="house rise">
         <p class="no">78<small>กั่วป่าเหมืองมิวเซียม</small></p>
         <div class="shotwrap">
-          <div class="plate"><img src="images/line-78.webp" width="237" height="403" loading="lazy" decoding="async" alt=""></div>
+          <div class="plate"><img src="images/line-78.webp" width="237" height="403" loading="lazy" decoding="async" alt="ลายเส้นภาพวาดสถาปัตยกรรมบ้านเลขที่ 78 สตูดิโอ ย่านเมืองเก่าตะกั่วป่า"></div>
           <img class="snap" src="images/house-78.webp" width="400" height="533" loading="lazy" decoding="async"
                alt="ภาพถ่ายอาคารเลขที่ 78 ตึกแถวสามชั้นทาสีขาว ระเบียงลูกกรงฉลุ ชั้นล่างเปิดประตูบานเฟี้ยมสีแดงมีโคมจีนแขวน">
         </div>
@@ -841,7 +715,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
       <article class="house rise">
         <p class="no">109<small>ศาลเจ้ากังตั้งโหยกวน (หวุ่ยกุ่น)</small></p>
         <div class="shotwrap">
-          <div class="plate"><img src="images/line-109.webp" width="226" height="334" loading="lazy" decoding="async" alt=""></div>
+          <div class="plate"><img src="images/line-109.webp" width="226" height="334" loading="lazy" decoding="async" alt="ลายเส้นภาพวาดสถาปัตยกรรมบ้านเลขที่ 109 สมาคมชาวจีน"></div>
           <img class="snap" src="images/house-109.webp" width="400" height="533" loading="lazy" decoding="async"
                alt="ภาพถ่ายอาคารศาลเจ้ากังตั้งโหยกวน ตัวตึกทาสีเหลืองแดง มีป้ายอักษรจีนเหนือประตู">
         </div>
@@ -857,7 +731,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
       <article class="house rise">
         <p class="no">305<small>โรงเรียนเต้าหมิง</small></p>
         <div class="shotwrap">
-          <div class="plate"><img src="images/line-305.webp" width="388" height="250" loading="lazy" decoding="async" alt=""></div>
+          <div class="plate"><img src="images/line-305.webp" width="388" height="250" loading="lazy" decoding="async" alt="ลายเส้นภาพวาดสถาปัตยกรรมบ้านเลขที่ 305 โรงเรียนจีนเต้าหมิง"></div>
           <img class="snap wide" src="images/house-305.webp" width="400" height="300" loading="lazy" decoding="async"
                alt="ภาพถ่ายอาคารโรงเรียนเต้าหมิง อาคารไม้สองชั้นทาสีเหลือง มีระเบียงยาวและหน้าจั่วประดับ">
         </div>
@@ -1000,23 +874,23 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
       <!-- แกลเลอรีภาพถ่ายแบบ + ภาพ 2D + ตารางไซส์ (แสดงเต็มภาพ ไม่ถูกตัด) -->
       <div class="dialog-gallery">
         <div class="dialog-main-img">
-          <img id="shirt-gallery-main" src="images/model-shirt-1.webp" width="799" height="1200" alt="ภาพถ่ายแบบเสื้อยืดกั่วป่าโพ้">
+          <img id="shirt-gallery-main" src="images/model-shirt-1.webp" width="799" height="1200" loading="lazy" decoding="async" alt="ภาพถ่ายแบบเสื้อยืดกั่วป่าโพ้">
         </div>
         <div class="dialog-thumbs" role="tablist" aria-label="เลือกรูปภาพ">
           <button type="button" class="dialog-thumb is-active" data-src="images/model-shirt-1.webp" title="ภาพถ่ายแบบ 1" aria-label="ภาพถ่ายแบบ 1">
-            <img src="images/model-shirt-1.webp" alt="แบบ 1">
+            <img src="images/model-shirt-1.webp" width="799" height="1200" loading="lazy" decoding="async" alt="แบบ 1">
             <span class="dialog-thumb-badge">แบบ 1</span>
           </button>
           <button type="button" class="dialog-thumb" data-src="images/model-shirt-2.webp" title="ภาพถ่ายแบบ 2" aria-label="ภาพถ่ายแบบ 2">
-            <img src="images/model-shirt-2.webp" alt="แบบ 2">
+            <img src="images/model-shirt-2.webp" width="799" height="1200" loading="lazy" decoding="async" alt="แบบ 2">
             <span class="dialog-thumb-badge">แบบ 2</span>
           </button>
           <button type="button" class="dialog-thumb" data-src="images/model-shirt-3.webp" title="ภาพถ่ายแบบ 3" aria-label="ภาพถ่ายแบบ 3">
-            <img src="images/model-shirt-3.webp" alt="แบบ 3">
+            <img src="images/model-shirt-3.webp" width="1200" height="799" loading="lazy" decoding="async" alt="แบบ 3">
             <span class="dialog-thumb-badge">แบบ 3</span>
           </button>
           <button type="button" class="dialog-thumb" data-src="images/shirt-poh.webp" title="ภาพ 2D กราฟิกลายเสื้อ หน้า-หลัง" aria-label="ภาพ 2D กราฟิกลายเสื้อ">
-            <img src="images/shirt-poh.webp" alt="ภาพ 2D ลายเสื้อ">
+            <img src="images/shirt-poh.webp" width="1200" height="850" loading="lazy" decoding="async" alt="ภาพ 2D ลายเสื้อ">
             <span class="dialog-thumb-badge">ภาพ 2D</span>
           </button>
         </div>
@@ -1079,23 +953,23 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
     <div class="dialog-grid">
       <div class="dialog-gallery">
         <div class="dialog-main-img tall">
-          <img src="images/poh-poster-b.webp" width="800" height="1200" alt="โปสเตอร์ Poh Sparkling Tea ดื่มหนึ่งขวด ให้เมืองเก่าได้ผลิบาน">
+          <img src="images/poh-poster-b.webp" width="800" height="1200" loading="lazy" decoding="async" alt="โปสเตอร์ Poh Sparkling Tea ดื่มหนึ่งขวด ให้เมืองเก่าได้ผลิบาน">
         </div>
         <div class="dialog-thumbs" role="tablist" aria-label="เลือกรูปภาพ">
           <button type="button" class="dialog-thumb is-active" data-src="images/poh-poster-b.webp" title="โปสเตอร์ 1" aria-label="โปสเตอร์ 1">
-            <img src="images/poh-poster-b.webp" alt="โปสเตอร์ 1">
+            <img src="images/poh-poster-b.webp" width="800" height="1200" loading="lazy" decoding="async" alt="โปสเตอร์ 1">
             <span class="dialog-thumb-badge">โปสเตอร์</span>
           </button>
           <button type="button" class="dialog-thumb" data-src="images/poh-poster-a.webp" title="โปสเตอร์ 2" aria-label="โปสเตอร์ 2">
-            <img src="images/poh-poster-a.webp" alt="โปสเตอร์ 2">
+            <img src="images/poh-poster-a.webp" width="800" height="1200" loading="lazy" decoding="async" alt="โปสเตอร์ 2">
             <span class="dialog-thumb-badge">วัตถุดิบ</span>
           </button>
           <button type="button" class="dialog-thumb" data-src="images/poh-story.webp" title="เรื่องราวบนฉลาก" aria-label="เรื่องราวบนฉลาก">
-            <img src="images/poh-story.webp" alt="เรื่องราวบนฉลาก">
+            <img src="images/poh-story.webp" width="800" height="1200" loading="lazy" decoding="async" alt="เรื่องราวบนฉลาก">
             <span class="dialog-thumb-badge">เรื่องราว</span>
           </button>
           <button type="button" class="dialog-thumb" data-src="images/poh-real.webp" title="ขวดจริง" aria-label="ขวดจริง">
-            <img src="images/poh-real.webp" alt="ขวด Poh ของจริง">
+            <img src="images/poh-real.webp" width="900" height="1200" loading="lazy" decoding="async" alt="ขวด Poh ของจริง">
             <span class="dialog-thumb-badge">ขวดจริง</span>
           </button>
         </div>
@@ -1134,7 +1008,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
         </div>
 
         <div class="line-order">
-          <img src="images/line-qr-kuapapoh.png" width="132" height="132" alt="QR code เพิ่มเพื่อน LINE @kuapapoh">
+          <img src="images/line-qr-kuapapoh.png" width="132" height="132" loading="lazy" decoding="async" alt="QR code เพิ่มเพื่อน LINE @kuapapoh">
           <div>
             <b>สแกนสั่งซื้อทาง LINE</b>
             <p>เพิ่มเพื่อน @kuapapoh แล้วแจ้งจำนวนขวด สอบถามรอบจัดส่งและจุดรับสินค้าได้ในแชต</p>
@@ -1145,6 +1019,44 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
     </div>
   </div>
 </dialog>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section class="faq shift" id="faq" style="background:#fff">
+  <div class="wrap">
+    <p class="tag rise">คำถามพบบ่อย</p>
+    <h2 class="rise">เรื่องที่หลายคนสงสัย</h2>
+    <div class="faq-list rise" style="display:grid;gap:1rem;margin-top:2rem">
+      <details style="border-bottom:1px solid var(--rule);padding-bottom:.5rem">
+        <summary style="font-weight:600;cursor:pointer;color:var(--cobalt);font-size:1.1rem;padding-block:.5rem">กั่วป่าโพ้คืออะไร</summary>
+        <p style="margin-top:.5rem">กั่วป่าโพ้ เป็นโครงการพื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา ที่นำพื้นที่ว่างในอาคารเก่า 3 แห่งมาสร้างสรรค์กิจกรรมและการออกแบบ เพื่อฟื้นฟูเศรษฐกิจและอนุรักษ์วัฒนธรรมดั้งเดิม</p>
+      </details>
+      <details style="border-bottom:1px solid var(--rule);padding-bottom:.5rem">
+        <summary style="font-weight:600;cursor:pointer;color:var(--cobalt);font-size:1.1rem;padding-block:.5rem">ชื่อกั่วป่าโพ้มาจากไหน</summary>
+        <p style="margin-top:.5rem">กั่วป่าโพ้ คือคำเรียกเมืองตะกั่วป่าของชาวจีนฮกเกี้ยนในอดีต โดย กั่วป่า คือ ตะกั่วป่า และ โพ้ หมายถึง ตลาดหรือท่าเรือ รวมกันหมายถึง ตลาดท่าเรือตะกั่วป่า</p>
+      </details>
+      <details style="border-bottom:1px solid var(--rule);padding-bottom:.5rem">
+        <summary style="font-weight:600;cursor:pointer;color:var(--cobalt);font-size:1.1rem;padding-block:.5rem">สามบ้านอยู่ที่ไหนและเปิดวันไหนบ้าง</summary>
+        <p style="margin-top:.5rem">สามบ้านตั้งอยู่ในย่านเมืองเก่าตะกั่วป่า บ้าน 78 สตูดิโอ เปิดทุกวัน ส่วนบ้าน 109 และบ้าน 305 เต้าหมิง เปิดเฉพาะวันอาทิตย์</p>
+      </details>
+      <details style="border-bottom:1px solid var(--rule);padding-bottom:.5rem">
+        <summary style="font-weight:600;cursor:pointer;color:var(--cobalt);font-size:1.1rem;padding-block:.5rem">6 อ. คืออะไร</summary>
+        <p style="margin-top:.5rem">6 อ. คือแนวคิดโชว์เมืองผ่านมรดก ประกอบด้วย อาภรณ์ อาศัย อาหาร อารมณ์ อาราม และอาคาร ซึ่งเป็นอัตลักษณ์ของย่านเมืองเก่าตะกั่วป่า</p>
+      </details>
+      <details style="border-bottom:1px solid var(--rule);padding-bottom:.5rem">
+        <summary style="font-weight:600;cursor:pointer;color:var(--cobalt);font-size:1.1rem;padding-block:.5rem">ซื้อเสื้อและชาซ่าได้ที่ไหน รับของได้ที่ไหน</summary>
+        <p style="margin-top:.5rem">สามารถสั่งซื้อทางออนไลน์ผ่าน LINE @kuapapoh (มีบริการจัดส่ง) หรือรับสินค้าด้วยตัวเองที่บ้าน 78 Studio ถนนศรีตะกั่วป่า ย่านเมืองเก่า</p>
+      </details>
+      <details style="border-bottom:1px solid var(--rule);padding-bottom:.5rem">
+        <summary style="font-weight:600;cursor:pointer;color:var(--cobalt);font-size:1.1rem;padding-block:.5rem">รายได้จากร้าน POH SHOP ไปไหน</summary>
+        <p style="margin-top:.5rem">รายได้ทั้งหมดจะนำมาสมทบเป็นกองทุนของกลุ่มกั่วป่าโพ้ เพื่อใช้ในการฟื้นฟู ขับเคลื่อนกิจกรรม และดำเนินงานพัฒนาเมืองสร้างสรรค์อย่างต่อเนื่อง</p>
+      </details>
+      <details style="border-bottom:1px solid var(--rule);padding-bottom:.5rem">
+        <summary style="font-weight:600;cursor:pointer;color:var(--cobalt);font-size:1.1rem;padding-block:.5rem">ใครเป็นผู้สนับสนุนโครงการ</summary>
+        <p style="margin-top:.5rem">โครงการกั่วป่าโพ้ได้รับการสนับสนุนจากสำนักงานส่งเสริมเศรษฐกิจสร้างสรรค์ (CEA) และสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง (KMITL)</p>
+      </details>
+    </div>
+  </div>
+</section>
 
 <!-- ═══════════ ติดต่อ ═══════════ -->
 <section class="contact shift" id="contact">
@@ -1172,7 +1084,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
       <b>กั่วป่าโพ้ จีโชว์เมือง</b>
       ภายใต้โครงการ Creative Cultural District (CCD) · สนับสนุนและดำเนินงานโดยสำนักงานส่งเสริมเศรษฐกิจสร้างสรรค์ (CEA)
       ร่วมดำเนินงานโดยสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
-      <p class="about-en" lang="en"><b>About Kuapapoh</b>Kuapapoh is a creative cultural district in Takua Pa Old Town, Phang Nga, on Thailand's Andaman coast. “Kua Pa” is the Hokkien name for the old town, brought by Chinese settlers in the tin mining era, and “Poh” is the river port on the Takua Pa River where the town began. Three historic houses, No. 78, 109 and 305, now host exhibitions, Peranakan heritage and community events. Supported by the Creative Economy Agency (CEA) under the Creative Cultural District (CCD) programme, with KMITL.</p>
+      <p class="about-en" lang="en"><a href="/en/" style="color:inherit;text-decoration:none"><b>About Kuapapoh →</b></a>Kuapapoh is a creative cultural district in Takua Pa Old Town, Phang Nga, on Thailand's Andaman coast. “Kua Pa” is the Hokkien name for the old town, brought by Chinese settlers in the tin mining era, and “Poh” is the river port on the Takua Pa River where the town began. Three historic houses, No. 78, 109 and 305, now host exhibitions, Peranakan heritage and community events. Supported by the Creative Economy Agency (CEA) under the Creative Cultural District (CCD) programme, with KMITL.</p>
     </div>
     <ul class="doclinks">
       <li><a href="images/doc-1.jpg" target="_blank" rel="noopener">เอกสารโครงการ 1</a></li>
@@ -1191,10 +1103,17 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
       "@id": "https://kuapapoh.com/#website",
       "url": "https://kuapapoh.com/",
       "name": "กั่วป่าโพ้ จีโชว์เมือง",
-      "alternateName": ["Kuapapoh", "กั่วป่าโพ้", "Kuapapoh Takua Pa Old Town"],
+      "alternateName": [
+        "Kuapapoh",
+        "กั่วป่าโพ้",
+        "Kuapapoh Takua Pa Old Town",
+        "กั่วป่าโพ้ จีโชว์เมือง"
+      ],
       "description": "โครงการพื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา",
       "inLanguage": "th",
-      "publisher": { "@id": "https://kuapapoh.com/#org" }
+      "publisher": {
+        "@id": "https://kuapapoh.com/#org"
+      }
     },
     {
       "@type": "Organization",
@@ -1202,18 +1121,28 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
       "name": "กั่วป่าโพ้",
       "alternateName": "Kuapapoh",
       "url": "https://kuapapoh.com/",
-      "logo": "https://kuapapoh.com/images/icon-180.png",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://kuapapoh.com/images/icon-180.png",
+        "width": 180,
+        "height": 180
+      },
       "image": "https://kuapapoh.com/images/og-image.jpg",
       "description": "กลุ่มพัฒนาพื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา ภายใต้โครงการ Creative Cultural District (CCD)",
       "email": "kuapapoh@gmail.com",
       "telephone": "+66618749198",
-      "address": { "@id": "https://kuapapoh.com/#address" },
+      "address": {
+        "@id": "https://kuapapoh.com/#address"
+      },
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer support",
         "telephone": "+66618749198",
         "email": "kuapapoh@gmail.com",
-        "availableLanguage": ["th", "en"]
+        "availableLanguage": [
+          "th",
+          "en"
+        ]
       },
       "funder": {
         "@type": "GovernmentOrganization",
@@ -1237,54 +1166,199 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
     {
       "@type": "TouristAttraction",
       "@id": "https://kuapapoh.com/#oldtown",
-      "name": "ย่านเมืองเก่าตะกั่วป่า · กั่วป่าโพ้",
-      "alternateName": ["Takua Pa Old Town", "Kuapapoh Creative District"],
+      "name": "สามบ้าน 78 · 109 · 305 ของกั่วป่าโพ้",
+      "alternateName": [
+        "Kuapapoh Creative District",
+        "Kuapapoh Houses 78 · 109 · 305"
+      ],
       "description": "ย่านเมืองเก่าที่เกิดจากท่าเรือริมแม่น้ำตะกั่วป่าและยุคเหมืองแร่ดีบุก บ้านเก่า 78 · 109 · 305 ถูกฟื้นเป็นพื้นที่สร้างสรรค์ นิทรรศการ และกิจกรรมวัฒนธรรมจีนเปอรานากัน",
       "url": "https://kuapapoh.com/",
       "image": "https://kuapapoh.com/images/og-image.jpg",
-      "address": { "@id": "https://kuapapoh.com/#address" },
-      "geo": { "@type": "GeoCoordinates", "latitude": 8.827130, "longitude": 98.364980 },
+      "address": {
+        "@id": "https://kuapapoh.com/#address"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 8.82713,
+        "longitude": 98.36498
+      },
       "isAccessibleForFree": true,
-      "touristType": ["Cultural tourism", "Heritage", "Art"],
-      "containedInPlace": { "@type": "AdministrativeArea", "name": "จังหวัดพังงา", "alternateName": "Phang Nga Province, Thailand" },
+      "touristType": [
+        "Cultural tourism",
+        "Heritage",
+        "Art"
+      ],
+      "containedInPlace": {
+        "@type": "Place",
+        "name": "ย่านเมืองเก่าตะกั่วป่า / Takua Pa Old Town"
+      },
       "containsPlace": [
-        { "@type": "Place", "name": "บ้านเลขที่ 78 · 78 Studio (บ้านของนายเหมือง)", "geo": { "@type": "GeoCoordinates", "latitude": 8.827130, "longitude": 98.364980 } },
-        { "@type": "Place", "name": "บ้านเลขที่ 109 (สมาคมชาวจีนและศาลเจ้า)" },
-        { "@type": "Place", "name": "บ้านเลขที่ 305 (โรงเรียนจีนในยุคเหมืองแร่)" }
+        {
+          "@type": "Place",
+          "name": "บ้านเลขที่ 78 · 78 Studio (บ้านของนายเหมือง)",
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 8.82713,
+            "longitude": 98.36498
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ]
+            }
+          ]
+        },
+        {
+          "@type": "Place",
+          "name": "บ้านเลขที่ 109 (สมาคมชาวจีนและศาลเจ้า)",
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": "Sunday"
+            }
+          ]
+        },
+        {
+          "@type": "Place",
+          "name": "บ้านเลขที่ 305 (โรงเรียนจีนในยุคเหมืองแร่)",
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": "Sunday"
+            }
+          ]
+        }
       ]
     },
     {
-      "@type": "Event",
-      "name": "Connecting the Dots · Creative Districts Reimagined",
-      "description": "นิทรรศการ 7 พื้นที่ต้นแบบสร้างสรรค์และ 8 เครือข่ายพื้นที่จากทั่วประเทศ รวมถึงกั่วป่าโพ้ จ.พังงา · Exhibition · Market · Talk · Workshop",
-      "startDate": "2026-09-12",
-      "endDate": "2026-09-13",
-      "eventStatus": "https://schema.org/EventScheduled",
+      "@type": "ExhibitionEvent",
+      "name": "มนต์เสน่ห์เปอรานากัน · Peranakan Charm",
+      "startDate": "2026-09",
       "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-      "image": "https://kuapapoh.com/images/ctd-poster.webp",
-      "url": "https://creativeculturaldistrict.com/",
+      "eventStatus": "https://schema.org/EventScheduled",
       "location": {
         "@type": "Place",
-        "name": "Discovery Plaza, G Floor, Siam Discovery",
-        "address": { "@type": "PostalAddress", "addressLocality": "กรุงเทพมหานคร", "addressCountry": "TH" }
+        "name": "78 Studio Takuapa (78 สตูดิโอ)",
+        "address": {
+          "@id": "https://kuapapoh.com/#address"
+        }
       },
-      "organizer": { "@type": "Organization", "name": "Creative Cultural District (CCD)", "url": "https://creativeculturaldistrict.com/" }
+      "organizer": {
+        "@id": "https://kuapapoh.com/#org"
+      },
+      "performer": {
+        "@type": "Person",
+        "name": "ติณณภพ งานสถิร"
+      },
+      "image": "https://kuapapoh.com/images/event-apaporn.webp",
+      "url": "https://kuapapoh.com/#events"
     },
     {
       "@type": "Product",
       "name": "เสื้อยืดกั่วป่าโพ้ KUAPAPOH",
       "image": "https://kuapapoh.com/images/shirt-poh.webp",
       "description": "เสื้อยืดสีดำ ผ้าฝ้าย Comb 100% สกรีนตรากั่วป่าโพ้ ด้านหลังกราฟิกอัตลักษณ์ตะกั่วป่า 6 อ. ไซส์ M · L · XL · 2XL",
-      "brand": { "@id": "https://kuapapoh.com/#org" },
-      "offers": { "@type": "Offer", "price": "350", "priceCurrency": "THB", "availability": "https://schema.org/InStock", "url": "https://kuapapoh.com/#shop" }
+      "brand": {
+        "@id": "https://kuapapoh.com/#org"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "350",
+        "priceCurrency": "THB",
+        "availability": "https://schema.org/InStock",
+        "url": "https://kuapapoh.com/",
+        "seller": {
+          "@id": "https://kuapapoh.com/#org"
+        }
+      }
     },
     {
       "@type": "Product",
       "name": "Poh Sparkling Tea · ชาซ่ากั่วป่าโพ้",
       "image": "https://kuapapoh.com/images/poh-bottle.webp",
       "description": "ชาสปาร์กลิงจากวัตถุดิบพังงา ดาหลา ส้มแขก ลูกจันทน์ มิ้นท์ และกระเจี๊ยบ 0% แอลกอฮอล์ 275 ml. รายได้เข้ากองทุนกลุ่มกั่วป่าโพ้",
-      "brand": { "@id": "https://kuapapoh.com/#org" },
-      "offers": { "@type": "Offer", "price": "159", "priceCurrency": "THB", "availability": "https://schema.org/InStock", "url": "https://kuapapoh.com/#shop" }
+      "brand": {
+        "@id": "https://kuapapoh.com/#org"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "159",
+        "priceCurrency": "THB",
+        "availability": "https://schema.org/InStock",
+        "url": "https://kuapapoh.com/",
+        "seller": {
+          "@id": "https://kuapapoh.com/#org"
+        }
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "กั่วป่าโพ้คืออะไร",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "กั่วป่าโพ้ เป็นโครงการพื้นที่สร้างสรรค์ย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา ที่นำพื้นที่ว่างในอาคารเก่า 3 แห่งมาสร้างสรรค์กิจกรรมและการออกแบบ เพื่อฟื้นฟูเศรษฐกิจและอนุรักษ์วัฒนธรรมดั้งเดิม"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "ชื่อกั่วป่าโพ้มาจากไหน",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "กั่วป่าโพ้ คือคำเรียกเมืองตะกั่วป่าของชาวจีนฮกเกี้ยนในอดีต โดย กั่วป่า คือ ตะกั่วป่า และ โพ้ หมายถึง ตลาดหรือท่าเรือ รวมกันหมายถึง ตลาดท่าเรือตะกั่วป่า"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "สามบ้านอยู่ที่ไหนและเปิดวันไหนบ้าง",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "สามบ้านตั้งอยู่ในย่านเมืองเก่าตะกั่วป่า บ้าน 78 สตูดิโอ เปิดทุกวัน ส่วนบ้าน 109 และบ้าน 305 เต้าหมิง เปิดเฉพาะวันอาทิตย์"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "6 อ. คืออะไร",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "6 อ. คือแนวคิดโชว์เมืองผ่านมรดก ประกอบด้วย อาภรณ์ อาศัย อาหาร อารมณ์ อาราม และอาคาร ซึ่งเป็นอัตลักษณ์ของย่านเมืองเก่าตะกั่วป่า"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "ซื้อเสื้อและชาซ่าได้ที่ไหน รับของได้ที่ไหน",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "สามารถสั่งซื้อทางออนไลน์ผ่าน LINE @kuapapoh (มีบริการจัดส่ง) หรือรับสินค้าด้วยตัวเองที่บ้าน 78 Studio ถนนศรีตะกั่วป่า ย่านเมืองเก่า"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "รายได้จากร้าน POH SHOP ไปไหน",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "รายได้ทั้งหมดจะนำมาสมทบเป็นกองทุนของกลุ่มกั่วป่าโพ้ เพื่อใช้ในการฟื้นฟู ขับเคลื่อนกิจกรรม และดำเนินงานพัฒนาเมืองสร้างสรรค์อย่างต่อเนื่อง"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "ใครเป็นผู้สนับสนุนโครงการ",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "โครงการกั่วป่าโพ้ได้รับการสนับสนุนจากสำนักงานส่งเสริมเศรษฐกิจสร้างสรรค์ (CEA) และสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง (KMITL)"
+          }
+        }
+      ]
     }
   ]
 }

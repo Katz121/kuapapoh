@@ -18,7 +18,7 @@ trap 'rm -rf "$STAGE"' EXIT
 cd "$ROOT"
 
 git ls-files -z \
-  | grep -zEv '^(README\.md|\.gitignore|scripts/.*)$' \
+  | grep -zEv '^(README\.md|\.gitignore|scripts/.*|functions/.*)$' \
   | while IFS= read -r -d '' f; do
       mkdir -p "$STAGE/$(dirname "$f")"
       cp "$f" "$STAGE/$f"

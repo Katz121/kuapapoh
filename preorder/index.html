@@ -806,7 +806,9 @@ var PREORDER = {
       value: data.total,
       content_ids: ['je-shirt'],
       content_type: 'product',
-      num_items: data.qty
+      num_items: data.qty,
+      // ผูกกับเลขออเดอร์ไว้ · ทีหลังจะรู้ว่ายอดนี้มาจากแอดตัวไหน และส่งเข้า Meta ได้แม่นขึ้น
+      orderId: data.id
     });
     form.hidden = true;
     $('bar').hidden = true;

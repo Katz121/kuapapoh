@@ -44,6 +44,14 @@ export async function onRequestGet({ request, env }) {
            FROM visits WHERE sent_meta = 0`
       ),
       db.prepare('SELECT MIN(at) AS first_at, COUNT(*) AS all_rows FROM visits'),
+      // ยอดขายแยกตามที่มา · คำถามที่ต้องตอบให้ได้คือ "เงินเข้ามาจากทางไหน"
+      db.prepare(
+        `SELECT COALESCE(NULLIF(source,''), NULLIF(referrer,''), 'เข้าตรง') AS src,
+                COUNT(*) AS orders, COALESCE(SUM(value),0) AS revenue,
+                SUM(CASE WHEN fbclid IS NOT NULL THEN 1 ELSE 0 END) AS from_ads
+           FROM visits WHERE day >= ? AND event = 'Purchase'
+          GROUP BY src ORDER BY revenue DESC LIMIT 12`
+      ).bind(since),
     ]);
   } catch (error) {
     const message = String(error && error.message || error);
@@ -70,6 +78,7 @@ export async function onRequestGet({ request, env }) {
     topPages: rows[2].results || [],
     topSources: rows[3].results || [],
     browsers: rows[4].results || [],
+    revenueBySource: rows[7].results || [],
     meta: {
       pending: pending.pending || 0,
       withFbclid: pending.with_fbclid || 0,

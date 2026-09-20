@@ -32,19 +32,31 @@ button.small{padding:.32rem .8rem;font-size:.84rem}
 .sizebar li{background:var(--yellow);border:2px solid var(--ink);border-radius:99px;padding:.25rem .8rem;font-weight:600;font-size:.88rem}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .toolbar select{width:auto}
-table{width:100%;border-collapse:collapse;background:#fff;border:2px solid var(--ink);border-radius:12px;overflow:hidden}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:2px solid var(--ink);border-radius:12px;background:#fff}
+table{width:100%;min-width:860px;border-collapse:collapse;background:#fff}
+tbody tr:nth-child(even){background:#faf8f1}
 th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top;font-size:.9rem}
-th{background:var(--yellow);font-family:var(--display);font-size:.86rem}
+th{background:var(--yellow);font-family:var(--display);font-size:.86rem;position:sticky;top:0;z-index:2}
 tr:last-child td{border-bottom:0}
 td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .status{border-radius:99px;padding:.2rem .6rem;font-size:.78rem;font-weight:600;display:inline-block;white-space:nowrap}
 .s-new{background:#fff1c2}.s-paid{background:#d9f3e4;color:#0d5c39}.s-producing{background:#dce6ff}
 .s-ready{background:#ffe0d9}.s-done{background:#e6e8ef;color:var(--muted)}.s-cancelled{background:#f0f0f0;color:#999;text-decoration:line-through}
 .rowline{font-size:.82rem;color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.chip{background:transparent;border:2px solid var(--ink);color:var(--ink);border-radius:99px;padding:.32rem .85rem;font-size:.86rem}
+.chip.is-on{background:var(--ink);color:var(--yellow)}
 .err{background:#ffeceb;border:2px solid var(--red);color:#8e1a0c;border-radius:10px;padding:10px 12px;margin-bottom:14px}
 dialog{border:2px solid var(--ink);border-radius:14px;padding:0;max-width:min(92vw,520px)}
 dialog .box{padding:18px}
-dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
+dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid var(--rule);border-radius:10px}
+.timeline{list-style:none;margin:0;padding:0}
+.timeline li{border-left:3px solid var(--rule);padding:0 0 12px 14px;position:relative}
+.timeline li::before{content:'';position:absolute;left:-7px;top:4px;width:11px;height:11px;border-radius:99px;background:var(--ink)}
+.timeline b{display:block;font-size:.9rem}
+.timeline small{color:var(--muted);font-size:.8rem}
+.pill-warn{background:#ffe0d9;border-radius:99px;padding:.15rem .5rem;font-size:.75rem;font-weight:600;white-space:nowrap}
+.pill-ok{background:#e4f7ec;border-radius:99px;padding:.15rem .5rem;font-size:.75rem;font-weight:600;color:#0d5c39;white-space:nowrap}
 @media(max-width:720px){.hide-sm{display:none}}
 </style>
 </head>
@@ -67,6 +79,7 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
     <div class="cards" id="cards"></div>
     <ul class="sizebar" id="sizebar"></ul>
     <div class="toolbar">
+      <input id="search" placeholder="ค้นเลขออเดอร์ · ชื่อ · เบอร์ · เลขอ้างอิงสลิป" style="width:auto;min-width:260px;flex:1">
       <select id="filter">
         <option value="">ทุกสถานะ</option>
         <option value="new">ใหม่ (รอตรวจสลิป)</option>
@@ -78,18 +91,33 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
       </select>
       <button class="ghost" id="refresh">รีเฟรช</button>
       <button class="ghost" id="csv">ดาวน์โหลด CSV</button>
+      <a class="ghost" id="sheet-link" href="https://docs.google.com/spreadsheets/d/1bzw2chFI7Xp8UQUmSvnpCca9O2Y8kJc6YCU06w_bEl0/edit" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block;padding:.6rem 1.1rem;border-radius:99px;border:2px solid var(--ink);color:var(--ink);font-weight:600">เปิด Google Sheet ↗</a>
       <span id="stamp" style="color:var(--muted);font-size:.84rem"></span>
     </div>
+    <div class="chips" id="chips">
+      <button type="button" class="chip is-on" data-quick="">ทั้งหมด</button>
+      <button type="button" class="chip" data-quick="noslip">ยังไม่แนบสลิป</button>
+      <button type="button" class="chip" data-quick="noref">สลิปไม่มีเลขอ้างอิง</button>
+      <button type="button" class="chip" data-quick="ship">ต้องส่งไปรษณีย์</button>
+    </div>
     <p id="list-msg" class="err" hidden></p>
+    <div class="table-wrap">
     <table>
       <thead><tr>
         <th>ออเดอร์</th><th>ลูกค้า</th><th>รายการ</th><th class="num">ยอด</th>
-        <th class="hide-sm">รับของ</th><th>สลิป</th><th>สถานะ</th>
+        <th>รับของ</th><th>สลิป</th><th>สถานะ</th><th>ประวัติ</th>
       </tr></thead>
       <tbody id="rows"></tbody>
     </table>
+    </div>
   </section>
 </main>
+
+<dialog id="event-dialog"><div class="box">
+  <button class="ghost small" id="event-close" style="float:right">ปิด</button>
+  <h3 style="font-family:var(--display);margin:0 0 10px" id="event-title">ประวัติออเดอร์</h3>
+  <ol class="timeline" id="event-list"></ol>
+</div></dialog>
 
 <dialog id="slip-dialog"><div class="box">
   <button class="ghost small" id="slip-close" style="float:right">ปิด</button>
@@ -102,6 +130,8 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
   var $ = function (id) { return document.getElementById(id); };
   var token = sessionStorage.getItem('kp_admin_token') || '';
   var orders = [];
+  var sheetsOn = false;
+  var quick = '';
 
   var STATUS_TH = {
     new: 'ใหม่', paid: 'ยืนยันยอด', producing: 'กำลังผลิต',
@@ -121,8 +151,30 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
     if (event.key === 'Enter') $('enter').click();
   });
   $('refresh').addEventListener('click', function () { load(false); });
+  var searchTimer = null;
+  $('search').addEventListener('input', function () {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function () { load(false); }, 350);
+  });
+  $('event-close').addEventListener('click', function () { $('event-dialog').close(); });
   $('filter').addEventListener('change', function () { load(false); });
   $('csv').addEventListener('click', exportCsv);
+  $('chips').addEventListener('click', function (event) {
+    var chip = event.target.closest('[data-quick]');
+    if (!chip) return;
+    quick = chip.dataset.quick;
+    $('chips').querySelectorAll('.chip').forEach(function (other) {
+      other.classList.toggle('is-on', other === chip);
+    });
+    renderRows(applyQuick(orders));
+  });
+
+  function applyQuick(list) {
+    if (quick === 'noslip') return list.filter(function (o) { return !o.has_slip; });
+    if (quick === 'noref') return list.filter(function (o) { return o.has_slip && !o.slip_ref; });
+    if (quick === 'ship') return list.filter(function (o) { return o.delivery === 'ship'; });
+    return list;
+  }
   $('slip-close').addEventListener('click', function () {
     $('slip-dialog').close();
     $('slip-img').removeAttribute('src');
@@ -138,7 +190,10 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
 
   function load(fromGate) {
     var status = $('filter').value;
-    api('/api/admin/preorders?limit=500' + (status ? '&status=' + status : '')).then(function (data) {
+    var query = $('search').value.trim();
+    api('/api/admin/preorders?limit=500' +
+        (status ? '&status=' + encodeURIComponent(status) : '') +
+        (query ? '&q=' + encodeURIComponent(query) : '')).then(function (data) {
       if (!data.ok) {
         if (fromGate) { $('gate-msg').hidden = false; $('gate-msg').textContent = data.error; }
         else { $('list-msg').hidden = false; $('list-msg').textContent = data.error; }
@@ -148,18 +203,32 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
       $('gate').hidden = true;
       $('panel').hidden = false;
       $('list-msg').hidden = true;
+      var keepScroll = window.scrollY;
       orders = data.orders;
+      sheetsOn = !!data.sheets;
       renderSummary(data.summary);
-      renderRows(data.orders);
+      renderRows(applyQuick(orders));
+      window.scrollTo(0, keepScroll);
       $('stamp').textContent = 'อัปเดต ' + new Date().toLocaleTimeString('th-TH');
     });
   }
 
   function renderSummary(summary) {
+    // เงินที่ "ยืนยันยอดแล้ว" กับเงินที่ "ยังรอตรวจสลิป" ต้องแยกกัน ไม่งั้นนึกว่าเข้าแล้วทั้งหมด
+    var confirmedMoney = 0;
+    var pendingMoney = 0;
+    var pendingCount = 0;
+    orders.forEach(function (order) {
+      if (order.status === 'cancelled') return;
+      if (order.status === 'new') { pendingMoney += order.total; pendingCount += 1; }
+      else confirmedMoney += order.total;
+    });
     $('cards').innerHTML =
       card(summary.orders, 'ออเดอร์ทั้งหมด') +
       card(summary.shirts, 'เสื้อที่ต้องสั่งผลิต') +
-      card('฿' + summary.revenue.toLocaleString('th-TH'), 'ยอดรวม (ไม่นับที่ยกเลิก)');
+      card('฿' + confirmedMoney.toLocaleString('th-TH'), 'ยืนยันยอดแล้ว') +
+      card('฿' + pendingMoney.toLocaleString('th-TH'), 'รอตรวจสลิป ' + pendingCount + ' ออเดอร์') +
+      (sheetsOn ? card(summary.unsynced, summary.unsynced ? 'ยังไม่ขึ้นชีต · กดซิงก์ในแถว' : 'ขึ้น Google Sheet ครบแล้ว') : '');
     var sizes = Object.keys(summary.bySize).sort();
     $('sizebar').innerHTML = sizes.length
       ? sizes.map(function (size) {
@@ -174,7 +243,7 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
 
   function renderRows(list) {
     if (!list.length) {
-      $('rows').innerHTML = '<tr><td colspan="7" style="color:var(--muted)">ยังไม่มีออเดอร์ในสถานะนี้</td></tr>';
+      $('rows').innerHTML = '<tr><td colspan="8" style="color:var(--muted)">ไม่พบออเดอร์ที่ตรงกับที่ค้น</td></tr>';
       return;
     }
     $('rows').innerHTML = list.map(function (order) {
@@ -188,11 +257,14 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
           (order.contact ? ' · ' + escapeHtml(order.contact) : '') + '</div></td>' +
         '<td>' + items + (order.note ? '<div class="rowline">หมายเหตุ: ' + escapeHtml(order.note) + '</div>' : '') + '</td>' +
         '<td class="num">฿' + order.total.toLocaleString('th-TH') + '</td>' +
-        '<td class="hide-sm">' + (order.delivery === 'ship'
+        '<td>' + (order.delivery === 'ship'
             ? 'ส่งไปรษณีย์<div class="rowline">' + escapeHtml(order.address || '') + '</div>'
             : 'รับเองที่บ้าน 78') + '</td>' +
         '<td>' + (order.has_slip
-            ? '<button class="ghost small" data-slip="' + order.id + '">ดูสลิป</button>'
+            ? '<button class="ghost small" data-slip="' + order.id + '">ดูสลิป</button>' +
+              (order.slip_ref
+                ? '<div class="rowline"><span class="pill-ok">มีเลขอ้างอิง</span></div>'
+                : '<div class="rowline"><span class="pill-warn">ไม่มีเลขอ้างอิง</span></div>')
             : '<span class="rowline">ยังไม่แนบ</span>') + '</td>' +
         '<td><span class="status s-' + order.status + '">' + (STATUS_TH[order.status] || order.status) + '</span>' +
           '<div style="margin-top:6px"><select data-status="' + order.id + '" style="font-size:.82rem;padding:5px 8px">' +
@@ -200,16 +272,70 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
               return '<option value="' + key + '"' + (key === order.status ? ' selected' : '') + '>' + STATUS_TH[key] + '</option>';
             }).join('') +
           '</select></div></td>' +
+        '<td><button class="ghost small" data-events="' + order.id + '">ดูประวัติ</button>' +
+          (sheetsOn && !order.sheet_ok
+            ? '<div style="margin-top:6px"><button class="ghost small" data-resync="' + order.id + '">ซิงก์ขึ้นชีต</button></div>'
+            : '') + '</td>' +
       '</tr>';
     }).join('');
   }
+
+  var EVENT_TH = {
+    created: 'ลูกค้าส่งออเดอร์', slip_attached: 'แนบสลิป', status: 'เปลี่ยนสถานะ',
+    sheet_synced: 'ขึ้น Google Sheet', sheet_failed: 'ขึ้นชีตไม่สำเร็จ', note: 'บันทึกของทีมงาน'
+  };
+  var ACTOR_TH = { customer: 'ลูกค้า', admin: 'ทีมงาน', system: 'ระบบ' };
+
+  document.addEventListener('click', function (event) {
+    var btn = event.target.closest('[data-events]');
+    if (!btn) return;
+    var id = btn.dataset.events;
+    $('event-title').textContent = 'ประวัติออเดอร์ ' + id;
+    $('event-list').innerHTML = '<li><small>กำลังโหลด...</small></li>';
+    $('event-dialog').showModal();
+    api('/api/admin/events?id=' + encodeURIComponent(id)).then(function (data) {
+      if (!data.ok) { $('event-list').innerHTML = '<li><small>' + escapeHtml(data.error) + '</small></li>'; return; }
+      if (!data.events.length) { $('event-list').innerHTML = '<li><small>ยังไม่มีประวัติ</small></li>'; return; }
+      $('event-list').innerHTML = data.events.map(function (item) {
+        var when = new Date(item.at).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' });
+        return '<li><b>' + (EVENT_TH[item.kind] || item.kind) + '</b>' +
+          '<small>' + when + ' · ' + (ACTOR_TH[item.actor] || item.actor) +
+          (item.detail ? ' · ' + escapeHtml(item.detail) : '') + '</small></li>';
+      }).join('');
+    });
+  });
+
+  document.addEventListener('click', function (event) {
+    var btn = event.target.closest('[data-resync]');
+    if (!btn) return;
+    btn.disabled = true;
+    btn.textContent = 'กำลังซิงก์...';
+    api('/api/admin/preorders', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: btn.dataset.resync, action: 'resync' })
+    }).then(function (data) {
+      if (!data.ok) {
+        btn.disabled = false;
+        btn.textContent = 'ซิงก์ขึ้นชีต';
+        $('list-msg').hidden = false;
+        $('list-msg').textContent = 'ซิงก์ไม่สำเร็จ: ' + data.error;
+        return;
+      }
+      load(false);
+    });
+  });
 
   var slipUrl = '';
   document.addEventListener('click', function (event) {
     var slipBtn = event.target.closest('[data-slip]');
     if (!slipBtn) return;
     var id = slipBtn.dataset.slip;
-    $('slip-title').textContent = 'สลิปของ ' + id;
+    var order = orders.filter(function (o) { return o.id === id; })[0];
+    $('slip-title').textContent = order
+      ? 'สลิป ' + id + ' · ต้องได้ ฿' + order.total.toLocaleString('th-TH') +
+        ' · ' + order.items.map(function (i) { return (SIZE_TH[i.size] || i.size) + ' x' + i.qty; }).join(' · ')
+      : 'สลิปของ ' + id;
     $('slip-dialog').showModal();
     // ดึงเป็น blob พร้อม header · ไม่ใส่รหัสใน URL ของรูป จะได้ไม่ติดในประวัติ/ล็อก
     fetch('/api/admin/slip?id=' + encodeURIComponent(id), { headers: { 'x-admin-token': token } })
@@ -240,14 +366,14 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
 
   /* ส่งให้โรงงาน/ขนส่งได้เลย ไม่ต้องก๊อปทีละแถว */
   function exportCsv() {
-    var header = ['order_id', 'created_at', 'name', 'phone', 'contact', 'items', 'qty', 'total', 'delivery', 'address', 'note', 'status'];
+    var header = ['order_id', 'created_at', 'name', 'phone', 'contact', 'items', 'qty', 'total', 'delivery', 'address', 'note', 'slip_ref', 'status'];
     var lines = [header.join(',')];
     orders.forEach(function (order) {
       var items = order.items.map(function (item) { return item.size + 'x' + item.qty; }).join(' ');
       lines.push([
         order.id, order.created_at, order.name, order.phone, order.contact || '', items,
         order.qty, order.total, order.delivery === 'ship' ? 'ส่งไปรษณีย์' : 'รับเอง',
-        order.address || '', order.note || '', STATUS_TH[order.status] || order.status
+        order.address || '', order.note || '', order.slip_ref || '', STATUS_TH[order.status] || order.status
       ].map(csvCell).join(','));
     });
     // BOM ให้ Excel ไทยอ่านไม่เป็นต่างด้าว
@@ -259,8 +385,12 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
     URL.revokeObjectURL(link.href);
   }
 
+  // Excel กับ Google Sheets ตีความเซลล์ที่ขึ้นต้นด้วย = + - @ เป็นสูตร
+  // ลูกค้าพิมพ์ชื่อเป็น =HYPERLINK(...) แล้วทีมงานเปิดไฟล์ = โดนหลอกได้ ต้องเติม ' นำหน้ากันไว้
   function csvCell(value) {
-    return '"' + String(value == null ? '' : value).replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"';
+    var text = String(value == null ? '' : value).replace(/\r?\n/g, ' ');
+    if (/^[=+@\t\r-]/.test(text)) text = "'" + text;
+    return '"' + text.replace(/"/g, '""') + '"';
   }
 
   function escapeHtml(value) {

@@ -1,8 +1,9 @@
 // POST /api/preorders · รับออเดอร์พรีจากหน้า /preorder
 import {
   PRICE, SHIPPING, SIZES, MAX_QTY_PER_LINE, MAX_QTY_PER_ORDER, MAX_SLIP_BYTES, MAX_BODY_BYTES,
-  json, bad, requireDb, makeOrderId, clean, normalisePhone, ipFingerprint,
+  json, bad, requireDb, makeOrderId, clean, normalisePhone, ipFingerprint, logEvent,
 } from './_shared.js';
+import { pushToSheet, sheetsReady } from './_sheets.js';
 
 const RATE_WINDOW_MINUTES = 10;
 const RATE_MAX_ORDERS = 8;          // คนเดียวสั่งถี่กว่านี้ใน 10 นาที = ไม่ใช่ลูกค้าแล้ว
@@ -71,6 +72,19 @@ export async function onRequestPost(context) {
     slip = { mime: match[1], data: match[2], bytes };
   }
 
+  // เลขอ้างอิงจากคิวอาร์ในสลิป + ลายนิ้วมือไฟล์ · ใช้ตรวจย้อนหลังและกันสลิปใบเดิมถูกใช้ซ้ำ
+  const slipRef = clean(body.slipRef, 200);
+  const slipHash = /^[a-f0-9]{64}$/.test(String(body.slipHash || '')) ? body.slipHash : '';
+  if (slipRef || slipHash) {
+    const used = await db
+      .prepare('SELECT id FROM preorders WHERE (slip_ref IS NOT NULL AND slip_ref = ?) OR (slip_hash IS NOT NULL AND slip_hash = ?)')
+      .bind(slipRef || '\u0000', slipHash || '\u0000')
+      .first();
+    if (used) {
+      return bad(`สลิปใบนี้ถูกใช้กับออเดอร์ ${used.id} ไปแล้ว กรุณาแนบสลิปของรายการนี้ หรือทักทีมงานทาง LINE`, 409);
+    }
+  }
+
   const fingerprint = await ipFingerprint(request);
 
   // เน็ตหลุดตอนกดยืนยันแล้วกดใหม่ = ส่ง clientRef เดิมมา ต้องได้ออเดอร์เดิม ไม่ใช่ออเดอร์ที่สอง
@@ -114,11 +128,12 @@ export async function onRequestPost(context) {
       db.prepare(
         `INSERT INTO preorders
            (id, created_at, name, phone, contact, items, qty, subtotal, shipping, total,
-            delivery, address, note, has_slip, client_ref, ip_hash, status)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new')`
+            delivery, address, note, has_slip, client_ref, ip_hash, slip_ref, slip_hash, status)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new')`
       ).bind(
         candidate, now, name, phone, contact, JSON.stringify(items), qty, subtotal, shipping, total,
-        delivery, delivery === 'ship' ? address : '', note, slip ? 1 : 0, clientRef || null, fingerprint
+        delivery, delivery === 'ship' ? address : '', note, slip ? 1 : 0, clientRef || null, fingerprint,
+        slipRef || null, slipHash || null
       ),
     ];
     if (slip) {
@@ -160,11 +175,43 @@ export async function onRequestPost(context) {
     return bad('บันทึกออเดอร์ไม่สำเร็จ กรุณาลองใหม่หรือสั่งทาง LINE', 500);
   }
 
-  // แจ้งเตือนทีมงานต้องไม่หน่วงลูกค้า · ปล่อยให้วิ่งต่อหลังตอบกลับไปแล้ว
-  const notify = notifyTelegram(env, { id, name, phone, items, qty, total, delivery, hasSlip: !!slip });
-  if (context.waitUntil) context.waitUntil(notify);
+  const order = {
+    id, created_at: now, name, phone, contact, items, qty, subtotal, shipping, total,
+    delivery, address: delivery === 'ship' ? address : '', note,
+    has_slip: !!slip, slip_ref: slipRef, status: 'new',
+  };
+
+  // งานหลังบ้านทั้งหมดต้องไม่หน่วงลูกค้า · ปล่อยให้วิ่งต่อหลังตอบกลับไปแล้ว
+  const background = (async () => {
+    await logEvent(db, id, 'created', `${qty} ตัว · ${total} บาท`, 'customer');
+    if (slip) {
+      await logEvent(db, id, 'slip_attached', slipRef ? 'อ่านเลขอ้างอิงจากสลิปได้' : 'ไม่มีเลขอ้างอิงในสลิป', 'customer');
+    }
+    await notifyTelegram(env, { id, name, phone, items, qty, total, delivery, hasSlip: !!slip });
+    await syncSheet(db, env, order);
+  })();
+  if (context.waitUntil) context.waitUntil(background); else await background;
 
   return json({ ok: true, id, qty, subtotal, shipping, total, hasSlip: !!slip });
+}
+
+// ขึ้นชีตสำเร็จก็จดแถวไว้ · พลาดก็จดเหตุผลไว้ ทีมงานกดซิงก์ซ้ำจากหน้าหลังบ้านได้
+async function syncSheet(db, env, order) {
+  if (!sheetsReady(env)) return;
+  const result = await pushToSheet(env, order, 'append');
+  try {
+    if (result.ok) {
+      await db.prepare('UPDATE preorders SET sheet_row = ?, sheet_error = NULL WHERE id = ?')
+        .bind(result.row, order.id).run();
+      await logEvent(db, order.id, 'sheet_synced', `แถวที่ ${result.row}`, 'system');
+    } else {
+      await db.prepare('UPDATE preorders SET sheet_error = ? WHERE id = ?')
+        .bind(result.error, order.id).run();
+      await logEvent(db, order.id, 'sheet_failed', result.error, 'system');
+    }
+  } catch {
+    /* จดไม่ได้ก็ไม่เป็นไร ออเดอร์อยู่ใน D1 แล้ว */
+  }
 }
 
 async function notifyTelegram(env, order) {

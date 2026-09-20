@@ -35,6 +35,19 @@ export async function ipFingerprint(request) {
   return [...new Uint8Array(digest)].slice(0, 8).map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+// บันทึกเหตุการณ์ของออเดอร์ · ใช้ตรวจย้อนหลังว่าใครทำอะไรตอนไหน
+export async function logEvent(db, orderId, kind, detail, actor = 'system') {
+  if (!db || !orderId) return;
+  try {
+    await db
+      .prepare('INSERT INTO preorder_events (order_id, at, kind, detail, actor) VALUES (?,?,?,?,?)')
+      .bind(orderId, new Date().toISOString(), kind, String(detail || '').slice(0, 300), actor)
+      .run();
+  } catch {
+    // ตารางประวัติล้มไม่ควรทำให้ออเดอร์ล้มตาม
+  }
+}
+
 export function adminOk(request, env) {
   const expected = env && env.ADMIN_TOKEN;
   if (!expected) return false;

@@ -23,10 +23,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="../pixel.js" defer></script>
+<script src="vendor/qrcode.js"></script>
+<script src="promptpay.js"></script>
 <style>
 :root{
   --yellow:#FFE81C; --red:#F4331F; --cobalt:#1E3FA8;
-  --paper:#FBF7EC; --ink:#101538; --muted:#4d5474; --rule:rgba(16,21,56,.16);
+  --paper:#FBF7EC; --ink:#101538; --muted:#3c4569; --rule:rgba(16,21,56,.16);
   --ok:#0d7a4a;
   --display:'Bai Jamjuree','IBM Plex Sans Thai',sans-serif;
   --body:'IBM Plex Sans Thai',sans-serif;
@@ -34,6 +36,7 @@
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
 img{max-width:100%;display:block}
+[hidden]{display:none !important}   /* กัน img{display:block} ด้านบนไปทับ hidden ของเบราว์เซอร์ */
 a{color:var(--cobalt)}
 .wrap{max-width:760px;margin:0 auto;padding:0 18px}
 
@@ -44,19 +47,19 @@ a{color:var(--cobalt)}
 .top .pill{background:var(--red);color:#fff;font-weight:600;font-size:.78rem;padding:.25rem .7rem;border-radius:99px}
 
 .hero{background:var(--yellow);padding:22px 0 26px;border-bottom:3px solid var(--ink)}
-.hero h1{font-family:var(--display);font-size:clamp(1.55rem,6vw,2.3rem);line-height:1.18;margin:.2rem 0 .5rem}
+.hero h1{font-family:var(--display);font-size:clamp(1.55rem,6vw,2.3rem);line-height:1.32;margin:.2rem 0 .5rem}
 .hero .lede{margin:0 0 14px;max-width:52ch;font-size:.98rem}
 .hero .shot{border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:#fff}
 .hero .shot img{width:100%;height:auto}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0;padding:0;list-style:none}
-.facts li{background:var(--paper);border:2px solid var(--ink);border-radius:99px;padding:.3rem .75rem;font-size:.84rem;font-weight:600}
+.facts li{background:var(--paper);border:2px solid var(--ink);border-radius:99px;padding:.34rem .8rem;font-size:.9rem;font-weight:600}
 
 /* ขั้นตอน */
 main{padding:26px 0 140px}
 .step{background:#fff;border:2px solid var(--ink);border-radius:16px;padding:18px;margin:0 0 18px;box-shadow:4px 4px 0 rgba(16,21,56,.1)}
 .step > h2{font-family:var(--display);font-size:1.12rem;margin:0 0 4px;display:flex;align-items:center;gap:.55rem}
 .step > h2 .n{background:var(--red);color:#fff;width:28px;height:28px;border-radius:99px;display:grid;place-items:center;font-size:.92rem;flex:none}
-.step .hint{margin:.1rem 0 14px;color:var(--muted);font-size:.88rem}
+.step .hint{margin:.1rem 0 14px;color:var(--muted);font-size:.92rem}
 
 /* ตัวเลือกไซส์ */
 .size-group h3{font-size:.9rem;margin:14px 0 8px;color:var(--muted);font-weight:600}
@@ -64,11 +67,11 @@ main{padding:26px 0 140px}
 .size-row.on{border-color:var(--red);background:#fff6f4}
 .size-row .label{min-width:0}
 .size-row b{font-family:var(--display);font-size:1.02rem}
-.size-row small{display:block;color:var(--muted);font-size:.8rem}
-.stepper{display:flex;align-items:center;gap:6px;flex:none}
-.stepper button{width:40px;height:40px;border-radius:10px;border:2px solid var(--ink);background:var(--paper);font-size:1.25rem;font-weight:700;color:var(--ink);cursor:pointer;line-height:1}
+.size-row small{display:block;color:var(--muted);font-size:.86rem}
+.stepper{display:flex;align-items:center;gap:8px;flex:none}
+.stepper button{width:48px;height:48px;border-radius:10px;border:2px solid var(--ink);background:var(--paper);font-size:1.45rem;font-weight:700;color:var(--ink);cursor:pointer;line-height:1}
 .stepper button:disabled{opacity:.35;cursor:not-allowed}
-.stepper .qty{min-width:34px;text-align:center;font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.stepper .qty{min-width:38px;text-align:center;font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums}
 details.chart{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
 details.chart summary{cursor:pointer;font-weight:600;font-size:.9rem;color:var(--cobalt)}
 details.chart .charts{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:12px}
@@ -87,17 +90,23 @@ textarea{min-height:88px;resize:vertical}
 .choice:focus-within{outline:3px solid var(--cobalt);outline-offset:2px}
 .choice input{position:absolute;opacity:0;width:0;height:0}
 .choice b{display:block;font-family:var(--display);font-size:.98rem}
-.choice small{color:var(--muted);font-size:.82rem}
+.choice small{color:var(--muted);font-size:.88rem;line-height:1.5}
 
 /* ชำระเงิน */
 .due{background:var(--ink);color:#fff;border-radius:12px;padding:14px;margin-bottom:12px;text-align:center}
 .due-label{font-size:.84rem;opacity:.8}
-.due-amount{font-family:var(--display);font-size:2rem;color:var(--yellow);line-height:1.2;font-variant-numeric:tabular-nums}
+.due-amount{font-family:var(--display);font-size:2rem;color:var(--yellow);line-height:1.4;font-variant-numeric:tabular-nums}
 .due-break{font-size:.84rem;opacity:.85}
 .pay{background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:14px;margin-bottom:14px}
 .pay .bank{font-family:var(--display);font-size:1.05rem;margin:.25rem 0}
 .pay .num{font-size:1.22rem;font-weight:700;letter-spacing:.06em;font-variant-numeric:tabular-nums}
-.pay .qr{max-width:200px;margin:12px auto 0;border:2px solid var(--ink);border-radius:10px}
+.qr-box{text-align:center;padding-bottom:14px;margin-bottom:12px;border-bottom:1px dashed var(--rule)}
+.qr-box > b{display:block;font-family:var(--display);font-size:.98rem;margin-bottom:8px}
+.qr-note{display:block;font-size:.9rem;color:var(--muted);margin-top:6px}
+.qr-steps{font-size:.88rem;color:var(--ink);margin-top:10px;text-align:left;line-height:1.6;background:#fff;border-radius:10px;padding:10px 12px}
+.pay .qr{max-width:210px;margin:0 auto;border:2px solid var(--ink);border-radius:10px;background:#fff;padding:6px;image-rendering:pixelated}
+.pay-manual{text-align:left}
+.slip-ref{display:block;font-size:.8rem;color:var(--ok);margin-top:6px;font-weight:600}
 .copy{margin-top:8px;background:var(--cobalt);color:#fff;border:0;border-radius:99px;padding:.45rem 1rem;font:inherit;font-weight:600;font-size:.86rem;cursor:pointer}
 .slip-drop{display:block;border:2px dashed var(--rule);border-radius:12px;padding:16px;text-align:center;cursor:pointer;background:var(--paper)}
 .slip-drop.on{border-color:var(--ok);background:#f2fbf6}
@@ -107,7 +116,7 @@ textarea{min-height:88px;resize:vertical}
 /* แถบสรุปยอดติดล่าง */
 .bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;border-top:3px solid var(--red);z-index:20}
 .bar-in{max-width:760px;margin:0 auto;padding:10px 18px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px}
-.bar .sum{flex:1;min-width:0;font-size:.82rem;line-height:1.35}
+.bar .sum{flex:1;min-width:0;font-size:.86rem;line-height:1.5}
 .bar .sum b{display:block;font-family:var(--display);font-size:1.3rem;color:var(--yellow);font-variant-numeric:tabular-nums}
 .bar button{flex:none;background:var(--red);color:#fff;border:0;border-radius:99px;padding:.85rem 1.5rem;font:inherit;font-family:var(--display);font-weight:700;font-size:1rem;cursor:pointer}
 .bar button:disabled{opacity:.5;cursor:not-allowed}
@@ -115,6 +124,17 @@ textarea{min-height:88px;resize:vertical}
 .msg{margin:0 0 14px;padding:12px 14px;border-radius:10px;font-size:.92rem;display:none}
 .msg.err{display:block;background:#ffeceb;border:2px solid var(--red);color:#8e1a0c}
 .line-btn{display:inline-block;background:#06C755;color:#fff;text-decoration:none;font-weight:700;padding:.75rem 1.3rem;border-radius:99px;margin-top:10px}
+
+/* แผงทวนรายการก่อนยืนยัน */
+.review{background:#fff;border:3px solid var(--red);border-radius:16px;padding:18px;margin:0 0 18px;box-shadow:4px 4px 0 rgba(244,51,31,.18)}
+.review h2{font-family:var(--display);font-size:1.15rem;margin:0 0 12px}
+.review-list div{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed var(--rule);font-size:.95rem}
+.review-list div:last-child{border-bottom:0}
+.review-list span{color:var(--muted);flex:none}
+.review-list b{text-align:right}
+.review-actions{display:flex;gap:10px;margin-top:14px}
+.review-back{flex:none;background:transparent;border:2px solid var(--ink);color:var(--ink);border-radius:99px;padding:.7rem 1.1rem;font:inherit;font-weight:600;cursor:pointer}
+.review-go{flex:1;background:var(--red);color:#fff;border:0;border-radius:99px;padding:.8rem 1rem;font:inherit;font-family:var(--display);font-weight:700;font-size:1.02rem;cursor:pointer}
 
 /* หน้าจอสำเร็จ */
 .done{display:none;text-align:center;background:#fff;border:2px solid var(--ink);border-radius:16px;padding:26px 18px;box-shadow:4px 4px 0 rgba(16,21,56,.1)}
@@ -143,7 +163,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
       <li>ตัวละ 350 บาท</li>
       <li>ไซส์ผู้ใหญ่ S ถึง 2XL</li>
       <li>ไซส์เด็ก S · M · L</li>
-      <li>รับเองที่บ้าน 78 หรือส่งไปรษณีย์</li>
+      <li>รับเองที่บ้าน 78 · ส่งไปรษณีย์ +50 ต่อออเดอร์</li>
     </ul>
   </div>
 </header>
@@ -155,10 +175,10 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
     <section class="step">
       <h2><span class="n">1</span> เลือกไซส์และจำนวน</h2>
       <p class="hint">กดปุ่มบวกตามจำนวนที่ต้องการ สั่งหลายไซส์ในออเดอร์เดียวได้เลย</p>
-      <div class="size-group" id="sizes-adult"><h3>ไซส์ผู้ใหญ่</h3></div>
-      <div class="size-group" id="sizes-kid"><h3>ไซส์เด็ก <span style="font-weight:400">(วัดรอบอกเสื้อตัวที่ลูกใส่อยู่แล้วเทียบตัวเลขด้านขวา)</span></h3></div>
+      <div class="size-group" id="sizes-adult"><h3>ไซส์ผู้ใหญ่ <span style="font-weight:400">(ตัวเลขคือขนาดตัวเสื้อ ไม่ใช่รอบตัวคน วัดจากเสื้อที่ใส่อยู่แล้วเทียบ)</span></h3></div>
+      <div class="size-group" id="sizes-kid"><h3>ไซส์เด็ก <span style="font-weight:400">(วัดเสื้อตัวที่ลูกใส่อยู่แล้วเทียบตัวเลขด้านขวา)</span></h3></div>
       <details class="chart">
-        <summary>ดูตารางไซส์ (นิ้ว)</summary>
+        <summary>กดดูรูปตารางไซส์เต็ม ๆ (หน่วยนิ้ว)</summary>
         <div class="charts">
           <figure style="margin:0"><img src="../images/je-size-adult.webp" width="847" height="1117" loading="lazy" alt="ตารางไซส์ผู้ใหญ่ S ถึง 2XL"><figcaption style="font-size:.82rem;color:var(--muted);margin-top:4px">ผู้ใหญ่</figcaption></figure>
           <figure style="margin:0"><img src="../images/je-size-kids.webp" width="620" height="572" loading="lazy" alt="ตารางไซส์เด็ก S M L"><figcaption style="font-size:.82rem;color:var(--muted);margin-top:4px">เด็ก</figcaption></figure>
@@ -177,7 +197,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
       <div class="choices">
         <label class="choice on">
           <input type="radio" name="delivery" value="pickup" checked>
-          <b>รับเองที่บ้าน 78</b><small>ถนนศรีตะกั่วป่า · ไม่มีค่าส่ง</small>
+          <b>รับเองที่บ้าน 78</b><small>บ้าน 78 Studio ถนนศรีตะกั่วป่า · ไม่มีค่าส่ง<br><a href="https://www.google.com/maps/search/?api=1&amp;query=8.827130055794738,98.36498044583587" target="_blank" rel="noopener">เปิดแผนที่นำทาง</a></small>
         </label>
         <label class="choice">
           <input type="radio" name="delivery" value="ship">
@@ -197,27 +217,49 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
         <div class="due-break" id="due-break">ยังไม่ได้เลือกไซส์</div>
       </div>
       <div class="pay">
-        <div style="font-size:.84rem;color:var(--muted)">โอนเข้าบัญชี</div>
-        <div class="bank" id="pay-bank">—</div>
-        <div class="num" id="pay-number">—</div>
-        <div style="font-size:.84rem;color:var(--muted)" id="pay-name">—</div>
-        <button type="button" class="copy" id="copy-acct">คัดลอกเลขบัญชี</button>
-        <img class="qr" id="pay-qr" src="" alt="คิวอาร์พร้อมเพย์สำหรับโอนเงิน" hidden>
+        <div class="qr-box" id="qr-box" hidden>
+          <b>สแกนจ่ายได้เลย · ยอดขึ้นให้อัตโนมัติ</b>
+          <img class="qr" id="pay-qr" src="" alt="คิวอาร์พร้อมเพย์ที่ฝังยอดของออเดอร์นี้">
+          <span class="qr-note" id="qr-note">พร้อมเพย์ · <span id="qr-name">—</span></span>
+          <button type="button" class="copy" id="save-qr">บันทึกรูป QR ลงเครื่อง</button>
+          <div class="qr-steps">
+            สั่งจากมือถือเครื่องเดียวกัน ทำตามนี้: <b>1</b> กดบันทึกรูป (ถ้ากดแล้วไม่มีอะไรเกิดขึ้น ให้กดค้างที่รูปแล้วเลือกบันทึกรูปภาพ)
+            · <b>2</b> เปิดแอปธนาคาร · <b>3</b> เลือกเมนูสแกน แล้วกดรูปภาพจากคลังภาพ
+          </div>
+        </div>
+        <div class="pay-manual">
+          <div id="pay-or" style="font-size:.88rem;color:var(--muted)">หรือโอนเข้าบัญชี</div>
+          <div class="bank" id="pay-bank">—</div>
+          <div class="num" id="pay-number">—</div>
+          <div style="font-size:.84rem;color:var(--muted)" id="pay-name">—</div>
+          <button type="button" class="copy" id="copy-acct">คัดลอกเลขบัญชี</button>
+        </div>
       </div>
       <label class="slip-drop" id="slip-drop">
         <input type="file" id="f-slip" accept="image/*">
         <b id="slip-label">📎 แตะเพื่อแนบสลิป</b>
-        <div style="font-size:.84rem;color:var(--muted);margin-top:4px">ถ่ายรูปหรือเลือกจากคลังภาพ · ถ้ายังไม่สะดวก ส่งทีหลังทาง LINE ได้</div>
+        <div style="font-size:.9rem;color:var(--ink);margin-top:6px">ถ่ายรูปหรือเลือกจากคลังภาพ · <b>ยังไม่สะดวกตอนนี้ก็กดยืนยันไปก่อนได้ แล้วส่งสลิปทาง LINE ทีหลัง</b></div>
         <img class="slip-preview" id="slip-preview" alt="ตัวอย่างสลิปที่แนบ" hidden>
+        <span class="slip-ref" id="slip-ref" hidden></span>
       </label>
     </section>
   </form>
+
+  <section class="review" id="review" hidden aria-live="polite">
+    <h2>ตรวจอีกครั้งก่อนส่ง</h2>
+    <div class="review-list" id="review-list"></div>
+    <div class="review-actions">
+      <button type="button" class="review-back" id="review-back">ขอแก้ก่อน</button>
+      <button type="button" class="review-go" id="review-go">ถูกต้อง ยืนยันเลย</button>
+    </div>
+  </section>
 
   <section class="done" id="done" aria-live="polite">
     <div class="tick">🧧</div>
     <h2>รับออเดอร์เรียบร้อย</h2>
     <p style="margin:.2rem 0;color:var(--muted);font-size:.92rem">เลขออเดอร์ของคุณ · <b style="color:var(--red)">แคปหน้าจอนี้เก็บไว้</b></p>
     <div class="code" id="done-code">—</div>
+    <button type="button" class="copy" id="copy-code">คัดลอกเลขออเดอร์</button>
     <p style="font-size:.93rem;max-width:44ch;margin:0 auto">ทีมงานจะตรวจสลิปและทักกลับไปยืนยันรอบผลิต ถ้าอยากเช็คสถานะหรือส่งสลิปเพิ่ม ทักมาที่ LINE พร้อมเลขออเดอร์นี้ได้เลย</p>
     <div class="recap" id="done-recap"></div>
     <a class="line-btn" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">ทักทีมงานทาง LINE</a>
@@ -246,10 +288,15 @@ var PREORDER = {
   shipping: 50,
   closeText: 'รอบพรีออเดอร์',
   pay: {
-    bank: 'ธนาคาร — (รอเติมข้อมูล)',
-    number: '—',
-    name: 'ชื่อบัญชี — (รอเติมข้อมูล)',
-    qr: ''
+    // เบอร์พร้อมเพย์ (หรือเลขบัตรประชาชน 13 หลัก) ที่ผูกกับบัญชีด้านล่าง
+    // ใส่ตรงนี้ที่เดียว หน้าเว็บจะสร้าง QR ที่ฝังยอดของออเดอร์นั้นให้เอง
+    // เว้นว่าง = ไม่โชว์กล่อง QR เลย ลูกค้าโอนเข้าเลขบัญชีตามปกติ
+    promptpay: '',
+    promptpayName: 'โพ้ช้อป',
+    bank: 'ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร (ธ.ก.ส.)',
+    number: '0202-5642-3342',
+    name: 'ชื่อบัญชี โพ้ช้อป',
+    qr: ''    // ใส่รูป QR ที่ถ่ายมาเองได้ ถ้าไม่อยากให้เว็บสร้างให้
   },
   sizes: {
     adult: [
@@ -270,8 +317,11 @@ var PREORDER = {
 (function () {
   var cart = {};
   var slipDataUrl = '';
+  var slipRef = '';        // เลขอ้างอิงที่อ่านได้จากคิวอาร์ในสลิป
+  var slipHash = '';       // ลายนิ้วมือไฟล์สลิป
   var touchedCart = false;
   var startedCheckout = false;
+  var reviewed = false;   // ผ่านแผงทวนรายการแล้วหรือยัง
   var submitRef = '';     // รหัสอ้างอิงของการกดยืนยันครั้งนี้ · กดซ้ำตอนเน็ตหลุดจะไม่ได้ออเดอร์ซ้ำ
 
   var $ = function (id) { return document.getElementById(id); };
@@ -347,6 +397,28 @@ var PREORDER = {
     $('due-break').textContent = t.qty
       ? 'เสื้อ ' + t.qty + ' ตัว × ' + PREORDER.price + (t.shipping ? ' + ค่าส่ง ' + t.shipping : ' · ไม่มีค่าส่ง')
       : 'ยังไม่ได้เลือกไซส์';
+
+    renderQr(t.total);
+  }
+
+  // QR ต้องอัปเดตตามยอดทุกครั้งที่เปลี่ยนไซส์หรือวิธีรับ ไม่งั้นลูกค้าสแกนได้ยอดเก่า
+  function renderQr(total) {
+    var box = $('qr-box');
+    if (!PREORDER.pay.promptpay) {
+      // ไม่ได้ตั้งพร้อมเพย์ไว้ แต่ถ้ามีรูป QR ที่ถ่ายมาเองก็โชว์รูปนั้นแทน
+      if (PREORDER.pay.qr) {
+        $('pay-qr').src = PREORDER.pay.qr;
+        $('qr-note').textContent = 'สแกนแล้วพิมพ์ยอด ' + baht(total) + ' เอง';
+        box.hidden = false;
+      }
+      return;
+    }
+    var text = window.KPPromptPay ? window.KPPromptPay.payload(PREORDER.pay.promptpay, total) : '';
+    if (!text || !window.KPPromptPay.draw($('pay-qr'), text, 6)) return;
+    $('qr-name').textContent = PREORDER.pay.promptpayName || '';
+    $('qr-note').innerHTML = 'พร้อมเพย์ · <span id="qr-name">' + (PREORDER.pay.promptpayName || '') +
+      '</span> · ยอดในคิวอาร์ ' + baht(total);
+    box.hidden = !total;
   }
 
   document.querySelectorAll('.choice').forEach(function (choice) {
@@ -365,24 +437,41 @@ var PREORDER = {
   $('pay-bank').textContent = PREORDER.pay.bank;
   $('pay-number').textContent = PREORDER.pay.number;
   $('pay-name').textContent = PREORDER.pay.name;
-  if (PREORDER.pay.qr) { $('pay-qr').src = PREORDER.pay.qr; $('pay-qr').hidden = false; }
+  // ยังไม่มีคิวอาร์ (ไม่ได้ตั้งพร้อมเพย์ ไม่มีรูป) = พาดหัวต้องไม่ขึ้นว่า "หรือ" ลอยๆ
+  if (!PREORDER.pay.promptpay && !PREORDER.pay.qr) {
+    $('pay-or').textContent = 'โอนเข้าบัญชี';
+  }
+  // แอปธนาคารส่วนใหญ่ให้เลือกรูป QR จากคลังภาพได้ · คนสแกนจากมือถือเครื่องเดียวกันจึงต้องเซฟรูปก่อน
+  $('save-qr').addEventListener('click', function () {
+    var src = $('pay-qr').getAttribute('src');
+    if (!src) return;
+    var link = document.createElement('a');
+    link.href = src;
+    link.download = 'kuapapoh-promptpay-' + totals().total + '.png';
+    link.click();
+  });
+
   $('copy-acct').addEventListener('click', function () {
     var button = this;
     if (!navigator.clipboard) { button.textContent = 'กดค้างที่ตัวเลขเพื่อคัดลอก'; return; }
-    navigator.clipboard.writeText(PREORDER.pay.number).then(function () {
+    navigator.clipboard.writeText(String(PREORDER.pay.number).replace(/\D/g, '')).then(function () {
       button.textContent = 'คัดลอกแล้ว ✓';
       setTimeout(function () { button.textContent = 'คัดลอกเลขบัญชี'; }, 1800);
     }).catch(function () { button.textContent = 'กดค้างที่ตัวเลขเพื่อคัดลอก'; });
   });
 
-  /* สลิปจากกล้องมือถือใหญ่หลายเมกะไบต์ ย่อเป็น webp ก่อนส่งเสมอ */
+  /* สลิปจากกล้องมือถือใหญ่หลายเมกะไบต์ ย่อเป็น webp ก่อนส่งเสมอ
+     พร้อมกันนั้นอ่านคิวอาร์ในตัวสลิปเก็บเลขอ้างอิงจริงของธนาคารไว้ตรวจย้อนหลัง */
   $('f-slip').addEventListener('change', function () {
     var file = this.files && this.files[0];
     if (!file) return;
+    slipRef = '';
+    $('slip-ref').hidden = true;
     var reader = new FileReader();
     reader.onload = function () {
       var image = new Image();
       image.onload = function () {
+        readSlipRef(image);
         var scale = Math.min(1, 1100 / Math.max(image.width, image.height));
         var canvas = document.createElement('canvas');
         canvas.width = Math.round(image.width * scale);
@@ -407,6 +496,7 @@ var PREORDER = {
         $('slip-preview').hidden = false;
         $('slip-label').textContent = '📎 แนบสลิปแล้ว · แตะเพื่อเปลี่ยนรูป';
         $('slip-drop').classList.add('on');
+        hashSlip(slipDataUrl);
       };
       image.onerror = function () {
         slipDataUrl = '';
@@ -420,6 +510,54 @@ var PREORDER = {
     };
     reader.readAsDataURL(file);
   });
+
+  /* คิวอาร์ในสลิปคือเลขอ้างอิงรายการโอนของจริง · เก็บไว้ทำให้ตรวจย้อนหลังได้
+     และทำให้สลิปใบเดิมถูกเอาไปใช้กับอีกออเดอร์ไม่ได้ · ไลบรารีตัวอ่านหนัก โหลดต่อเมื่อมีคนแนบสลิปจริง */
+  function readSlipRef(image) {
+    loadJsQR(function (ok) {
+      if (!ok) return;
+      try {
+        var side = Math.min(1000, Math.max(image.width, image.height));
+        var scale = side / Math.max(image.width, image.height);
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(image.width * scale);
+        canvas.height = Math.round(image.height * scale);
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var found = window.jsQR(data.data, data.width, data.height, { inversionAttempts: 'attemptBoth' });
+        if (found && found.data) {
+          slipRef = String(found.data).slice(0, 200);
+          $('slip-ref').textContent = '✓ อ่านเลขอ้างอิงจากสลิปได้แล้ว ใช้ตรวจสอบย้อนหลังได้';
+          $('slip-ref').hidden = false;
+        }
+      } catch (error) {
+        /* อ่านไม่ได้ก็ไม่เป็นไร ทีมงานตรวจจากรูปได้อยู่ */
+      }
+    });
+  }
+
+  var jsQrState = '';
+  function loadJsQR(done) {
+    if (jsQrState === 'ready') return done(true);
+    if (jsQrState === 'failed') return done(false);
+    var script = document.createElement('script');
+    script.src = 'vendor/jsQR.js';
+    script.onload = function () { jsQrState = 'ready'; done(true); };
+    script.onerror = function () { jsQrState = 'failed'; done(false); };
+    document.head.appendChild(script);
+  }
+
+  // ลายนิ้วมือของไฟล์ · ใช้จับกรณีอัปสลิปใบเดิมซ้ำ
+  function hashSlip(dataUrl) {
+    if (!window.crypto || !crypto.subtle) return;
+    var bytes = new TextEncoder().encode(dataUrl);
+    crypto.subtle.digest('SHA-256', bytes).then(function (buffer) {
+      slipHash = [].map.call(new Uint8Array(buffer), function (b) {
+        return b.toString(16).padStart(2, '0');
+      }).join('');
+    }).catch(function () { slipHash = ''; });
+  }
 
   var form = $('order-form');
   form.addEventListener('focusin', function () {
@@ -441,21 +579,17 @@ var PREORDER = {
       address: $('f-address').value.trim(),
       note: $('f-note').value.trim(),
       items: Object.keys(cart).map(function (code) { return { size: code, qty: cart[code] }; }),
-      slip: slipDataUrl
+      slip: slipDataUrl,
+      slipRef: slipRef,
+      slipHash: slipHash
     };
 
     var problem = validate(payload, t);
     if (problem) { fail(problem.message, null, problem.field); return; }
 
-    // ทวนอีกรอบก่อนส่ง · กลุ่มลูกค้าหลักอยากเช็คชื่อ ที่อยู่ และยอดก่อนกดจริง
-    var review = [
-      'ยืนยันพรีออเดอร์',
-      cartLines().join(' · '),
-      payload.name + ' · ' + payload.phone,
-      payload.delivery === 'ship' ? 'ส่งไปรษณีย์: ' + payload.address : 'รับเองที่บ้าน 78',
-      'ยอดที่ต้องโอน ' + t.total + ' บาท'
-    ].join('\n');
-    if (!window.confirm(review)) return;
+    // ทวนอีกรอบก่อนส่ง · ใช้แผงในหน้าเว็บ ไม่ใช้ป๊อปอัปเบราว์เซอร์ที่ดูเหมือนของหลอก
+    if (!reviewed) { showReview(payload, t); return; }
+    reviewed = false;
 
     var button = $('submit-btn');
     button.disabled = true;
@@ -476,6 +610,51 @@ var PREORDER = {
       button.textContent = 'ยืนยันพรีออเดอร์';
       fail(error.message + ' · สั่งทาง LINE ได้ทันที', lineFallback(payload, t));
     });
+  });
+
+  function showReview(payload, t) {
+    $('review-list').innerHTML =
+      reviewRow('รายการ', cartLines().join(' · ')) +
+      reviewRow('ชื่อ', payload.name) +
+      reviewRow('เบอร์โทร', payload.phone) +
+      reviewRow('รับสินค้า', payload.delivery === 'ship' ? 'ส่งไปรษณีย์' : 'รับเองที่บ้าน 78') +
+      (payload.delivery === 'ship' ? reviewRow('ที่อยู่', payload.address) : '') +
+      reviewRow('สลิป', slipDataUrl ? 'แนบแล้ว' : 'ยังไม่แนบ (ส่งทาง LINE ทีหลังได้)') +
+      reviewRow('ยอดที่ต้องโอน', baht(t.total));
+    $('review').hidden = false;
+    $('review').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // ประกอบด้วย DOM ไม่ต่อสตริง · ชื่อหรือที่อยู่ที่มีอักขระพิเศษจะได้ไม่กลายเป็น HTML
+  function reviewRow(label, value) {
+    var wrap = document.createElement('div');
+    var left = document.createElement('span');
+    var right = document.createElement('b');
+    left.textContent = label;
+    right.textContent = value;
+    wrap.appendChild(left);
+    wrap.appendChild(right);
+    return wrap.outerHTML;
+  }
+
+  $('review-back').addEventListener('click', function () {
+    $('review').hidden = true;
+    reviewed = false;
+  });
+
+  $('review-go').addEventListener('click', function () {
+    reviewed = true;
+    $('review').hidden = true;
+    form.dispatchEvent(new Event('submit', { cancelable: true }));
+  });
+
+  $('copy-code').addEventListener('click', function () {
+    var button = this;
+    var code = $('done-code').textContent.trim();
+    if (!navigator.clipboard || !code) { button.textContent = 'กดค้างที่เลขเพื่อคัดลอก'; return; }
+    navigator.clipboard.writeText(code).then(function () {
+      button.textContent = 'คัดลอกแล้ว ✓';
+    }).catch(function () { button.textContent = 'กดค้างที่เลขเพื่อคัดลอก'; });
   });
 
   function newRef() {

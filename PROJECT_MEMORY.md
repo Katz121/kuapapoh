@@ -43,6 +43,9 @@
 * **ช่องทางสั่ง:** หน้า `kuapapoh.com/preorder/` (ฟอร์มหน้าเดียว → Cloudflare D1) · LINE เป็นตัวสำรองเท่านั้น
 * **หลังบ้าน:** `kuapapoh.com/preorder-admin.html` (ใส่ `ADMIN_TOKEN`) · มีสรุปยอดไซส์ไว้สั่งโรงงาน + ดาวน์โหลด CSV
 * **คู่มือเปิดใช้งาน:** `docs/PREORDER_SETUP.md` (D1 binding · ADMIN_TOKEN · ข้อมูลบัญชีโอน · Pixel ID)
+* **จ่ายเงิน:** คิวอาร์พร้อมเพย์สร้างในหน้าเว็บเอง (`preorder/promptpay.js` · EMVCo + CRC16) ฝังยอดของออเดอร์นั้น ยอดเปลี่ยนคิวอาร์เปลี่ยนตาม · ใส่เบอร์พร้อมเพย์ที่ `PREORDER.pay.promptpay` ที่เดียว
+* **ตรวจสลิปย้อนหลัง:** อ่านคิวอาร์ในตัวสลิปด้วย jsQR เก็บ `slip_ref` + `slip_hash` (unique ทั้งคู่) · สลิปใบเดิมใช้ซ้ำสองออเดอร์ไม่ได้ · ทุกเหตุการณ์ลง `preorder_events` · ค้นย้อนหลังจากเลขออเดอร์/ชื่อ/เบอร์/เลขอ้างอิงสลิป
+* **Google Sheet:** ออเดอร์เด้งขึ้นชีตทันทีผ่าน Apps Script Web App (`docs/google-sheet-apps-script.js`) · ชีตของวา id `1bzw2chFI7Xp8UQUmSvnpCca9O2Y8kJc6YCU06w_bEl0` · env `SHEETS_WEBHOOK_URL` + `SHEETS_SECRET` · ชีตล่มไม่กระทบลูกค้า มีปุ่มซิงก์ซ้ำในหน้าหลังบ้าน
 * **ราคา/ค่าส่งอยู่ 2 ที่ ต้องแก้ให้ตรงกันเสมอ:** `preorder/index.html` (บล็อก `PREORDER`) และ `functions/api/_shared.js` (ยอดจริงคิดที่เซิร์ฟเวอร์)
 
 ### 3.2 🏮 จุดรับสินค้าหน้าร้าน (Store Pickup Location)

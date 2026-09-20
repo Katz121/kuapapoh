@@ -61,6 +61,8 @@ main{padding:26px 0 140px}
 .step > h2 .n{background:var(--red);color:#fff;width:28px;height:28px;border-radius:99px;display:grid;place-items:center;font-size:.92rem;flex:none}
 .step .hint{margin:.1rem 0 14px;color:var(--muted);font-size:.92rem}
 
+.notice{background:#fff8dd;border:2px solid var(--ink);border-radius:10px;padding:10px 12px;font-size:.9rem;margin:0 0 14px;line-height:1.6}
+
 /* ตัวเลือกไซส์ */
 .size-group h3{font-size:.9rem;margin:14px 0 8px;color:var(--muted);font-weight:600}
 .size-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border:2px solid var(--rule);border-radius:12px;padding:10px 12px;margin-bottom:8px;transition:border-color .15s,background .15s}
@@ -175,6 +177,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
     <section class="step">
       <h2><span class="n">1</span> เลือกไซส์และจำนวน</h2>
       <p class="hint">กดปุ่มบวกตามจำนวนที่ต้องการ สั่งหลายไซส์ในออเดอร์เดียวได้เลย</p>
+      <p class="notice">รอบนี้ยังเปิดรับอยู่ ยังไม่มีวันปิด · พอครบจำนวนที่สั่งผลิตได้ ทีมงานจะแจ้งวันปิดรับและรอบได้ของทางเพจ LINE และทักกลับไปที่เบอร์ที่กรอกไว้</p>
       <div class="size-group" id="sizes-adult"><h3>ไซส์ผู้ใหญ่ <span style="font-weight:400">(ตัวเลขคือขนาดตัวเสื้อ ไม่ใช่รอบตัวคน วัดจากเสื้อที่ใส่อยู่แล้วเทียบ)</span></h3></div>
       <div class="size-group" id="sizes-kid"><h3>ไซส์เด็ก <span style="font-weight:400">(วัดเสื้อตัวที่ลูกใส่อยู่แล้วเทียบตัวเลขด้านขวา)</span></h3></div>
       <details class="chart">
@@ -222,7 +225,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
           <img class="qr" id="pay-qr" src="" alt="คิวอาร์พร้อมเพย์ที่ฝังยอดของออเดอร์นี้">
           <span class="qr-note" id="qr-note">พร้อมเพย์ · <span id="qr-name">—</span></span>
           <button type="button" class="copy" id="save-qr">บันทึกรูป QR ลงเครื่อง</button>
-          <div class="qr-steps">
+          <div class="qr-steps" id="qr-steps">
             สั่งจากมือถือเครื่องเดียวกัน ทำตามนี้: <b>1</b> กดบันทึกรูป (ถ้ากดแล้วไม่มีอะไรเกิดขึ้น ให้กดค้างที่รูปแล้วเลือกบันทึกรูปภาพ)
             · <b>2</b> เปิดแอปธนาคาร · <b>3</b> เลือกเมนูสแกน แล้วกดรูปภาพจากคลังภาพ
           </div>
@@ -286,7 +289,8 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
 var PREORDER = {
   price: 350,
   shipping: 50,
-  closeText: 'รอบพรีออเดอร์',
+  // ป้ายมุมขวาบน · พอเคาะวันปิดรับได้แล้วแก้เป็น 'ปิดรับ 12 ต.ค.' บรรทัดนี้บรรทัดเดียว
+  closeText: 'เปิดรับพรีออเดอร์',
   pay: {
     // เบอร์พร้อมเพย์ (หรือเลขบัตรประชาชน 13 หลัก) ที่ผูกกับบัญชีด้านล่าง
     // ใส่ตรงนี้ที่เดียว หน้าเว็บจะสร้าง QR ที่ฝังยอดของออเดอร์นั้นให้เอง
@@ -405,14 +409,19 @@ var PREORDER = {
   function renderQr(total) {
     var box = $('qr-box');
     if (!PREORDER.pay.promptpay) {
-      // ไม่ได้ตั้งพร้อมเพย์ไว้ แต่ถ้ามีรูป QR ที่ถ่ายมาเองก็โชว์รูปนั้นแทน
+      // ไม่ได้ตั้งพร้อมเพย์ไว้ แต่ถ้ามีรูปคิวอาร์ของบัญชีก็ใช้รูปนั้นแทน
+      // รูปแบบนี้ไม่มียอดฝังมา ต้องบอกให้ชัดว่าลูกค้าต้องพิมพ์ยอดเอง
       if (PREORDER.pay.qr) {
         $('pay-qr').src = PREORDER.pay.qr;
-        $('qr-note').textContent = 'สแกนแล้วพิมพ์ยอด ' + baht(total) + ' เอง';
-        box.hidden = false;
+        $('pay-qr').hidden = false;
+        $('qr-box').querySelector('b').textContent = 'สแกนคิวอาร์ แล้วพิมพ์ยอดเอง';
+        $('qr-note').textContent = 'คิวอาร์นี้ไม่ได้ระบุยอด กรุณาใส่ยอด ' + baht(total) + ' ในแอปธนาคารเอง';
+        $('qr-steps').textContent = 'สั่งจากมือถือเครื่องเดียวกัน: 1 กดบันทึกรูป (ถ้ากดแล้วไม่มีอะไรเกิดขึ้น ให้กดค้างที่รูปแล้วเลือกบันทึกรูปภาพ) · 2 เปิดแอปธนาคาร · 3 เลือกเมนูสแกน แล้วกดรูปภาพจากคลังภาพ · 4 พิมพ์ยอด ' + baht(total);
+        box.hidden = !total;
       }
       return;
     }
+    $('pay-qr').hidden = false;
     var text = window.KPPromptPay ? window.KPPromptPay.payload(PREORDER.pay.promptpay, total) : '';
     if (!text || !window.KPPromptPay.draw($('pay-qr'), text, 6)) return;
     $('qr-name').textContent = PREORDER.pay.promptpayName || '';

@@ -80,10 +80,21 @@ pay: {
 ชีตสร้างไว้แล้ว: **พรีออเดอร์เสื้อเทศกาลกินผัก · กั่วป่าโพ้**
 `https://docs.google.com/spreadsheets/d/1bzw2chFI7Xp8UQUmSvnpCca9O2Y8kJc6YCU06w_bEl0/edit`
 
+**ติดตั้งเสร็จแล้ว (2026-09-20)** · Apps Script ถูกวางและ Deploy เป็นเว็บแอปเรียบร้อย ทดสอบยิงข้อมูลจากเว็บเข้าชีตจริงแล้วผ่าน
+
+เหลือขั้นเดียว: ใส่ค่า 2 ตัวนี้ใน **Cloudflare Pages → kuapapoh → Settings → Variables and Secrets** (ตั้งเป็น Secret ทั้งคู่ ทั้ง Production และ Preview)
+
+| ชื่อ | ค่า |
+|---|---|
+| `SHEETS_WEBHOOK_URL` | `https://script.google.com/macros/s/AKfycbzqZ0j6S2lZHe_dU8Hhao07mP1IFZzHZt7ms0MuoWM-aOTfkPLIY-SFuX3XcUh7LYVu/exec` |
+| `SHEETS_SECRET` | รหัสลับที่ฝังอยู่ในสคริปต์ (ดูบรรทัด `var SECRET` ใน Apps Script ของชีต) |
+
+⚠️ รหัสลับตัวจริงไม่ได้เก็บไว้ในโปรเจกต์นี้โดยตั้งใจ ถ้าต้องการเปลี่ยน แก้ที่ `var SECRET` ใน Apps Script แล้วแก้ค่าใน Cloudflare ให้ตรงกัน แล้ว **Deploy ใหม่หนึ่งรอบ** (Deploy → จัดการการทำให้ใช้งานได้ → แก้ไข → เวอร์ชันใหม่)
+
+ถ้าต้องติดตั้งใหม่ตั้งแต่ต้น:
 1. เปิดชีต → เมนู **ส่วนขยาย → Apps Script**
 2. ลบโค้ดเดิม วางไฟล์ `docs/google-sheet-apps-script.js` ลงไป แก้ `SECRET` เป็นรหัสลับของตัวเอง
 3. **Deploy → New deployment → Web app** · Execute as: **Me** · Who has access: **Anyone** → คัดลอก URL
-4. ใส่ใน Cloudflare Pages เป็น Secret: `SHEETS_WEBHOOK_URL` = URL ที่ได้ · `SHEETS_SECRET` = รหัสเดียวกับในสคริปต์
 
 ได้อะไร: ออเดอร์ใหม่เด้งขึ้นชีตทันที · เปลี่ยนสถานะในหน้าหลังบ้านแล้วแถวเดิมในชีตอัปเดตตาม (ไม่เกิดแถวซ้ำ) · แถวไหนขึ้นชีตไม่สำเร็จจะมีปุ่ม **ซิงก์ขึ้นชีต** ในหน้าหลังบ้านให้กดซ้ำ · ชีตล่มไม่กระทบลูกค้า ออเดอร์อยู่ใน D1 เสมอ
 

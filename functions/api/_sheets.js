@@ -60,7 +60,10 @@ export async function pushToSheet(env, order, action = 'append') {
     if (!data.ok) return { ok: false, error: data.error || 'ชีตปฏิเสธข้อมูล' };
     return { ok: true, row: data.row || null };
   } catch (error) {
-    return { ok: false, error: String(error && error.message ? error.message : error).slice(0, 180) };
+    // ต่อชีตไม่ติด/หมดเวลา บางทีไม่มีข้อความมาด้วย ต้องเดาให้ทีมงานพออ่านรู้เรื่อง
+    var reason = (error && (error.message || error.name)) || '';
+    if (!String(reason).trim()) reason = 'ต่อ Google Sheet ไม่ได้ (ชีตไม่ตอบ หรือ URL ผิด)';
+    return { ok: false, error: String(reason).slice(0, 180) };
   }
 }
 

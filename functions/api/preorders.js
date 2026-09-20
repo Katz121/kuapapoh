@@ -128,8 +128,8 @@ export async function onRequestPost(context) {
       db.prepare(
         `INSERT INTO preorders
            (id, created_at, name, phone, contact, items, qty, subtotal, shipping, total,
-            delivery, address, note, has_slip, client_ref, ip_hash, slip_ref, slip_hash, status)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new')`
+            delivery, address, note, has_slip, client_ref, ip_hash, slip_ref, slip_hash, status, sheet_error)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new', 'ยังไม่ได้ซิงก์ขึ้นชีต')`
       ).bind(
         candidate, now, name, phone, contact, JSON.stringify(items), qty, subtotal, shipping, total,
         delivery, delivery === 'ship' ? address : '', note, slip ? 1 : 0, clientRef || null, fingerprint,

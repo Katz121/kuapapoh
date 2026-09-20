@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="../pixel.js" defer></script>
+<script src="../pixel.js?v=202609210002" defer></script>
 <script src="vendor/qrcode.js"></script>
 <script src="promptpay.js"></script>
 <style>
@@ -356,7 +356,11 @@ var PREORDER = {
 
   var $ = function (id) { return document.getElementById(id); };
   var baht = function (n) { return '฿' + n.toLocaleString('th-TH'); };
-  var track = function (name, params) { if (window.kpTrack) window.kpTrack(name, params); };
+  // pixel.js โหลดแบบ defer จึงอาจยังไม่พร้อมตอนสคริปต์นี้รัน · เก็บใส่คิวไว้ให้มันมาเก็บเอง
+  var track = function (name, params) {
+    if (window.kpTrack) return window.kpTrack(name, params);
+    (window.kpPending = window.kpPending || []).push([name, params]);
+  };
 
   function buildSizes(groupId, list) {
     var host = $(groupId);

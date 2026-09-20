@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /preorder-admin.html
+Disallow: /stats.html
 
 User-agent: GPTBot
 User-agent: OAI-SearchBot
@@ -11,5 +13,7 @@ User-agent: Google-Extended
 User-agent: Applebot-Extended
 Allow: /
 Disallow: /admin.html
+Disallow: /preorder-admin.html
+Disallow: /stats.html
 
 Sitemap: https://kuapapoh.com/sitemap.xml

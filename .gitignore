@@ -3,6 +3,7 @@
 _scrape/
 pohshop/
 *.jpg
+!images/*.jpg      # รูปที่ใช้จริงบนเว็บต้องขึ้น git (การ์ดลิงก์ og, ภาพประกอบ)
 
 # แคชของ wrangler ตอน deploy
 .wrangler/

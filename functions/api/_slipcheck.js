@@ -90,3 +90,17 @@ export async function verifySlip(env, { payload, amount }) {
     transRef: info.transRef || '',
   };
 }
+
+// ยอดเงินมาได้หลายแบบแล้วแต่ธนาคารต้นทาง: ตัวเลขตรงๆ, "1,050.00",
+// {amount: 350}, หรือ {local: {amount: 350}} · อ่านให้ครบทุกแบบ
+// ไม่งั้นระบบจะเห็นเป็น 0 แล้วไปสรุปว่า "โอนไม่ครบ" ทั้งที่ลูกค้าโอนจริง
+function readAmount(value) {
+  if (value == null) return 0;
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+  if (typeof value === 'string') return Number(value.replace(/[^\d.]/g, '')) || 0;
+  if (typeof value === 'object') {
+    return readAmount(value.amount) || readAmount(value.value) ||
+      (value.local ? readAmount(value.local.amount) : 0);
+  }
+  return 0;
+}

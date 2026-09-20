@@ -52,13 +52,44 @@
     }
   }
 
-  // Current shop mode: the public catalog sells the shirt + Poh Sparkling Tea only
+  // Current shop mode: the vegetarian-festival shirt (pre-order round) leads,
+  // then the heritage shirt + Poh Sparkling Tea.
   // (old placeholder products in saved CMS data stay hidden).
-  const SHOP_PRODUCT_IDS = ['shirt', 'poh'];
+  const SHOP_PRODUCT_IDS = ['je-shirt', 'shirt', 'poh'];
+
+  // สินค้าที่มากับโค้ด · ถ้าข้อมูลที่บันทึกไว้ (localStorage / cloud) ยังไม่มีสินค้านี้
+  // ให้เติมลงไปเอง ไม่งั้นเครื่องที่เคยเปิดหน้า admin จะไม่เห็นสินค้าใหม่เลย
+  const PRODUCT_FALLBACKS = {
+    'je-shirt': {
+      id: 'je-shirt',
+      category: 'เสื้อผ้า & แฟชั่น',
+      tag: 'พรีออเดอร์ · เทศกาลกินผัก',
+      name: 'เสื้อเทศกาลกินผัก กั่วป่าโพ้',
+      price: 350,
+      priceLabel: '฿350',
+      desc: 'เสื้อยืดสีขาว อกซ้ายเป็นตราผ้ากันเปื้อนกั่วป่าโพ้สีแดง ด้านหลังรวมสัญลักษณ์เทศกาลกินผักของตะกั่วป่า ศาลเจ้า มังกร เสือ และเตาไฟ',
+      meta: 'ผ้าฝ้าย 100% เกรด 32 คอมบ์ · ไซส์ผู้ใหญ่ S-2XL และไซส์เด็ก S-L',
+      image: 'images/je-shirt.webp',
+      imageWidth: 1400,
+      imageHeight: 933,
+      imageAlt: 'เสื้อเทศกาลกินผักกั่วป่าโพ้ ด้านหน้าและด้านหลัง',
+      hasModal: true,
+      modalId: 'modal-je',
+      modalCta: '🧧 ดูลายเสื้อ & ตารางไซส์ →',
+      shotOverlay: '🧧 ดูลายเสื้อ',
+      status: 'preorder',
+      buyUrl: 'preorder/',
+      buyLabel: 'สั่งพรีออเดอร์'
+    }
+  };
+
   function limitShopProducts(data) {
     if (data?.shop && Array.isArray(data.shop.products)) {
       const pick = (id) => data.shop.products.find(product => product.id === id)
-        || (id === 'shirt' ? data.shop.products.find(product => String(product.name || '').includes('เสื้อ')) : null);
+        || PRODUCT_FALLBACKS[id]
+        || (id === 'shirt'
+              ? data.shop.products.find(product => !SHOP_PRODUCT_IDS.includes(product.id) && String(product.name || '').includes('เสื้อ'))
+              : null);
       data.shop.products = SHOP_PRODUCT_IDS.map(pick).filter(Boolean);
       if (data.shop.heading === 'ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ' || data.shop.heading === 'เสื้อยืดจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ') {
         data.shop.heading = 'เสื้อยืดจากย่าน<br>ถ่ายทอดด้วยใจ';
@@ -466,6 +497,7 @@
           if (shopGrid) {
             shopGrid.classList.toggle('single-product', products.length === 1);
             shopGrid.classList.toggle('two-products', products.length === 2);
+            shopGrid.classList.toggle('three-products', products.length === 3);
             shopGrid.innerHTML = '';
             products.forEach((prod) => {
               const art = document.createElement('article');
@@ -481,11 +513,14 @@
                 </button>
               ` : '';
 
-              let buyBtnHtml = `<a class="shop-buy" href="${data.shop.lineUrl || '#'}" target="_blank" rel="noopener">สั่งซื้อ</a>`;
+              // buyUrl = ลิงก์ในเว็บเรา (เช่น หน้าพรีออเดอร์) · ไม่ใส่ = ไปที่ LINE เหมือนเดิม
+              const buyHref = prod.buyUrl || data.shop.lineUrl || '#';
+              const buyTargetAttr = prod.buyUrl ? '' : ' target="_blank" rel="noopener"';
+              let buyBtnHtml = `<a class="shop-buy" href="${buyHref}"${buyTargetAttr}>${prod.buyLabel || 'สั่งซื้อ'}</a>`;
               if (prod.status === 'soldout') {
                 buyBtnHtml = `<span class="shop-buy" style="background:#888;color:#fff;cursor:not-allowed;border-color:#666">สินค้าหมด</span>`;
               } else if (prod.status === 'preorder') {
-                buyBtnHtml = `<a class="shop-buy" href="${data.shop.lineUrl || '#'}" target="_blank" rel="noopener" style="background:var(--cobalt);color:#fff">สั่งจอง (Pre-Order)</a>`;
+                buyBtnHtml = `<a class="shop-buy" href="${buyHref}"${buyTargetAttr} style="background:var(--red);color:#fff;border-color:var(--ink)">${prod.buyLabel || 'สั่งจอง (Pre-Order)'}</a>`;
               } else if (prod.status === 'coming_soon') {
                 buyBtnHtml = `<span class="shop-buy" style="background:var(--rule);color:var(--muted);cursor:default">เร็ว ๆ นี้</span>`;
               }

@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>จัดการพรีออเดอร์ · กั่วป่าโพ้</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--yellow:#FFE81C;--red:#F4331F;--cobalt:#1E3FA8;--paper:#FBF7EC;--ink:#101538;--muted:#4d5474;--rule:rgba(16,21,56,.16);--ok:#0d7a4a;
+--display:'Bai Jamjuree','IBM Plex Sans Thai',sans-serif;--body:'IBM Plex Sans Thai',sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+header{background:var(--ink);color:#fff;padding:14px 0}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header h1{font-family:var(--display);font-size:1.1rem;margin:0}
+header a{color:var(--yellow)}
+main{padding:20px 0 60px}
+.gate{max-width:380px;margin:60px auto;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:20px}
+input,select,textarea{font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--rule);border-radius:10px;background:var(--paper);color:var(--ink);width:100%}
+button{font:inherit;font-weight:600;border:0;border-radius:99px;padding:.6rem 1.1rem;background:var(--ink);color:#fff;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+button.small{padding:.32rem .8rem;font-size:.84rem}
+.cards{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:18px}
+.card{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:12px}
+.card b{display:block;font-family:var(--display);font-size:1.6rem}
+.card small{color:var(--muted)}
+.sizebar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;padding:0;list-style:none}
+.sizebar li{background:var(--yellow);border:2px solid var(--ink);border-radius:99px;padding:.25rem .8rem;font-weight:600;font-size:.88rem}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.toolbar select{width:auto}
+table{width:100%;border-collapse:collapse;background:#fff;border:2px solid var(--ink);border-radius:12px;overflow:hidden}
+th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top;font-size:.9rem}
+th{background:var(--yellow);font-family:var(--display);font-size:.86rem}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.status{border-radius:99px;padding:.2rem .6rem;font-size:.78rem;font-weight:600;display:inline-block;white-space:nowrap}
+.s-new{background:#fff1c2}.s-paid{background:#d9f3e4;color:#0d5c39}.s-producing{background:#dce6ff}
+.s-ready{background:#ffe0d9}.s-done{background:#e6e8ef;color:var(--muted)}.s-cancelled{background:#f0f0f0;color:#999;text-decoration:line-through}
+.rowline{font-size:.82rem;color:var(--muted)}
+.err{background:#ffeceb;border:2px solid var(--red);color:#8e1a0c;border-radius:10px;padding:10px 12px;margin-bottom:14px}
+dialog{border:2px solid var(--ink);border-radius:14px;padding:0;max-width:min(92vw,520px)}
+dialog .box{padding:18px}
+dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
+@media(max-width:720px){.hide-sm{display:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>พรีออเดอร์เสื้อเทศกาลกินผัก</h1>
+  <div><a href="/preorder/" target="_blank" rel="noopener">เปิดหน้าสั่งซื้อ ↗</a></div>
+</div></header>
+
+<main class="wrap">
+  <section class="gate" id="gate">
+    <h2 style="font-family:var(--display);margin:0 0 4px;font-size:1.05rem">ใส่รหัสผู้ดูแล</h2>
+    <p style="color:var(--muted);font-size:.88rem;margin:0 0 12px">รหัสเดียวกับค่า ADMIN_TOKEN ที่ตั้งไว้ใน Cloudflare Pages</p>
+    <input id="token" type="password" autocomplete="current-password" placeholder="รหัสผู้ดูแล">
+    <p id="gate-msg" class="err" hidden></p>
+    <button style="margin-top:12px;width:100%" id="enter">เข้าระบบ</button>
+  </section>
+
+  <section id="panel" hidden>
+    <div class="cards" id="cards"></div>
+    <ul class="sizebar" id="sizebar"></ul>
+    <div class="toolbar">
+      <select id="filter">
+        <option value="">ทุกสถานะ</option>
+        <option value="new">ใหม่ (รอตรวจสลิป)</option>
+        <option value="paid">ยืนยันยอดแล้ว</option>
+        <option value="producing">กำลังผลิต</option>
+        <option value="ready">ของพร้อม/ส่งแล้ว</option>
+        <option value="done">ปิดออเดอร์</option>
+        <option value="cancelled">ยกเลิก</option>
+      </select>
+      <button class="ghost" id="refresh">รีเฟรช</button>
+      <button class="ghost" id="csv">ดาวน์โหลด CSV</button>
+      <span id="stamp" style="color:var(--muted);font-size:.84rem"></span>
+    </div>
+    <p id="list-msg" class="err" hidden></p>
+    <table>
+      <thead><tr>
+        <th>ออเดอร์</th><th>ลูกค้า</th><th>รายการ</th><th class="num">ยอด</th>
+        <th class="hide-sm">รับของ</th><th>สลิป</th><th>สถานะ</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </section>
+</main>
+
+<dialog id="slip-dialog"><div class="box">
+  <button class="ghost small" id="slip-close" style="float:right">ปิด</button>
+  <h3 style="font-family:var(--display);margin:0 0 10px" id="slip-title">สลิป</h3>
+  <img id="slip-img" alt="สลิปโอนเงิน">
+</div></dialog>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var token = sessionStorage.getItem('kp_admin_token') || '';
+  var orders = [];
+
+  var STATUS_TH = {
+    new: 'ใหม่', paid: 'ยืนยันยอด', producing: 'กำลังผลิต',
+    ready: 'ของพร้อม', done: 'ปิดแล้ว', cancelled: 'ยกเลิก'
+  };
+  var SIZE_TH = {
+    'S': 'S', 'M': 'M', 'L': 'L', 'XL': 'XL', '2XL': '2XL',
+    'KID-S': 'เด็ก S', 'KID-M': 'เด็ก M', 'KID-L': 'เด็ก L'
+  };
+
+  $('enter').addEventListener('click', function () {
+    token = $('token').value.trim();
+    if (!token) return;
+    load(true);
+  });
+  $('token').addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') $('enter').click();
+  });
+  $('refresh').addEventListener('click', function () { load(false); });
+  $('filter').addEventListener('change', function () { load(false); });
+  $('csv').addEventListener('click', exportCsv);
+  $('slip-close').addEventListener('click', function () { $('slip-dialog').close(); });
+
+  function api(path, options) {
+    var opts = options || {};
+    opts.headers = Object.assign({ 'x-admin-token': token }, opts.headers || {});
+    return fetch(path, opts).then(function (response) {
+      return response.json().catch(function () { return { ok: false, error: 'ระบบตอบกลับผิดพลาด' }; });
+    });
+  }
+
+  function load(fromGate) {
+    var status = $('filter').value;
+    api('/api/admin/preorders?limit=500' + (status ? '&status=' + status : '')).then(function (data) {
+      if (!data.ok) {
+        if (fromGate) { $('gate-msg').hidden = false; $('gate-msg').textContent = data.error; }
+        else { $('list-msg').hidden = false; $('list-msg').textContent = data.error; }
+        return;
+      }
+      sessionStorage.setItem('kp_admin_token', token);
+      $('gate').hidden = true;
+      $('panel').hidden = false;
+      $('list-msg').hidden = true;
+      orders = data.orders;
+      renderSummary(data.summary);
+      renderRows(data.orders);
+      $('stamp').textContent = 'อัปเดต ' + new Date().toLocaleTimeString('th-TH');
+    });
+  }
+
+  function renderSummary(summary) {
+    $('cards').innerHTML =
+      card(summary.orders, 'ออเดอร์ทั้งหมด') +
+      card(summary.shirts, 'เสื้อที่ต้องสั่งผลิต') +
+      card('฿' + summary.revenue.toLocaleString('th-TH'), 'ยอดรวม (ไม่นับที่ยกเลิก)');
+    var sizes = Object.keys(summary.bySize).sort();
+    $('sizebar').innerHTML = sizes.length
+      ? sizes.map(function (size) {
+          return '<li>' + (SIZE_TH[size] || size) + ' · ' + summary.bySize[size] + ' ตัว</li>';
+        }).join('')
+      : '<li style="background:#fff">ยังไม่มีออเดอร์</li>';
+  }
+
+  function card(value, label) {
+    return '<div class="card"><b>' + value + '</b><small>' + label + '</small></div>';
+  }
+
+  function renderRows(list) {
+    if (!list.length) {
+      $('rows').innerHTML = '<tr><td colspan="7" style="color:var(--muted)">ยังไม่มีออเดอร์ในสถานะนี้</td></tr>';
+      return;
+    }
+    $('rows').innerHTML = list.map(function (order) {
+      var items = order.items.map(function (item) {
+        return (SIZE_TH[item.size] || item.size) + ' x' + item.qty;
+      }).join(' · ');
+      var when = new Date(order.created_at).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' });
+      return '<tr>' +
+        '<td><b>' + order.id + '</b><div class="rowline">' + when + '</div></td>' +
+        '<td>' + escapeHtml(order.name) + '<div class="rowline">' + escapeHtml(order.phone) +
+          (order.contact ? ' · ' + escapeHtml(order.contact) : '') + '</div></td>' +
+        '<td>' + items + (order.note ? '<div class="rowline">หมายเหตุ: ' + escapeHtml(order.note) + '</div>' : '') + '</td>' +
+        '<td class="num">฿' + order.total.toLocaleString('th-TH') + '</td>' +
+        '<td class="hide-sm">' + (order.delivery === 'ship'
+            ? 'ส่งไปรษณีย์<div class="rowline">' + escapeHtml(order.address || '') + '</div>'
+            : 'รับเองที่บ้าน 78') + '</td>' +
+        '<td>' + (order.has_slip
+            ? '<button class="ghost small" data-slip="' + order.id + '">ดูสลิป</button>'
+            : '<span class="rowline">ยังไม่แนบ</span>') + '</td>' +
+        '<td><span class="status s-' + order.status + '">' + (STATUS_TH[order.status] || order.status) + '</span>' +
+          '<div style="margin-top:6px"><select data-status="' + order.id + '" style="font-size:.82rem;padding:5px 8px">' +
+            Object.keys(STATUS_TH).map(function (key) {
+              return '<option value="' + key + '"' + (key === order.status ? ' selected' : '') + '>' + STATUS_TH[key] + '</option>';
+            }).join('') +
+          '</select></div></td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  document.addEventListener('click', function (event) {
+    var slipBtn = event.target.closest('[data-slip]');
+    if (!slipBtn) return;
+    var id = slipBtn.dataset.slip;
+    $('slip-title').textContent = 'สลิปของ ' + id;
+    $('slip-img').src = '/api/admin/slip?id=' + encodeURIComponent(id) + '&token=' + encodeURIComponent(token);
+    $('slip-dialog').showModal();
+  });
+
+  document.addEventListener('change', function (event) {
+    var select = event.target.closest('[data-status]');
+    if (!select) return;
+    var id = select.dataset.status;
+    select.disabled = true;
+    api('/api/admin/preorders', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: id, status: select.value })
+    }).then(function (data) {
+      select.disabled = false;
+      if (!data.ok) { $('list-msg').hidden = false; $('list-msg').textContent = data.error; return; }
+      load(false);
+    });
+  });
+
+  /* ส่งให้โรงงาน/ขนส่งได้เลย ไม่ต้องก๊อปทีละแถว */
+  function exportCsv() {
+    var header = ['order_id', 'created_at', 'name', 'phone', 'contact', 'items', 'qty', 'total', 'delivery', 'address', 'note', 'status'];
+    var lines = [header.join(',')];
+    orders.forEach(function (order) {
+      var items = order.items.map(function (item) { return item.size + 'x' + item.qty; }).join(' ');
+      lines.push([
+        order.id, order.created_at, order.name, order.phone, order.contact || '', items,
+        order.qty, order.total, order.delivery === 'ship' ? 'ส่งไปรษณีย์' : 'รับเอง',
+        order.address || '', order.note || '', STATUS_TH[order.status] || order.status
+      ].map(csvCell).join(','));
+    });
+    // BOM ให้ Excel ไทยอ่านไม่เป็นต่างด้าว
+    var blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'preorders-' + new Date().toISOString().slice(0, 10) + '.csv';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
+  function csvCell(value) {
+    return '"' + String(value == null ? '' : value).replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"';
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value).replace(/[&<>"]/g, function (char) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char];
+    });
+  }
+
+  if (token) load(true);
+})();
+</script>
+</body>
+</html>

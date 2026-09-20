@@ -1,0 +1,13 @@
+# ใช้ทดสอบในเครื่องเท่านั้น (npx wrangler pages dev -c wrangler.dev.toml)
+# Cloudflare Pages ตอน deploy ไม่อ่านไฟล์นี้ · ของจริงผูก D1 + ตัวแปรลับในหน้า Dashboard
+name = "kuapapoh"
+compatibility_date = "2026-09-01"
+pages_build_output_dir = "."
+
+[vars]
+ADMIN_TOKEN = "devtoken"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kuapapoh"
+database_id = "local-dev"

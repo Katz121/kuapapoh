@@ -36,6 +36,7 @@
 <meta name="theme-color" content="#FFE81C">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%233B3E7E'/><g fill='none' stroke='%23F7F0C4' stroke-width='3.4' stroke-linejoin='round'><path d='M24 11h16a2 2 0 0 1 2 2v9c0 3 2 4 5 5a6 6 0 0 1 4 6v14a3 3 0 0 1-3 3H16a3 3 0 0 1-3-3V33a6 6 0 0 1 4-6c3-1 5-2 5-5v-9a2 2 0 0 1 2-2z'/><rect x='27' y='15' width='10' height='12' rx='1'/><rect x='18' y='37' width='11' height='12' rx='1'/><rect x='35' y='37' width='11' height='12' rx='1'/></g></svg>">
 <link rel="apple-touch-icon" href="images/icon-180.png">
+<script src="pixel.js" defer></script>
 <link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -272,6 +273,9 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .shop-grid{display:grid;gap:clamp(20px,2.5vw,28px);margin-top:2rem;align-items:stretch}
 @media(min-width:600px){.shop-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1020px){.shop-grid{grid-template-columns:repeat(4,1fr)}}
+.shop-grid.three-products{grid-template-columns:minmax(0,1fr)}
+@media(min-width:600px){.shop-grid.three-products{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1020px){.shop-grid.three-products{grid-template-columns:repeat(3,minmax(0,1fr));max-width:1200px;margin-inline:auto}}
 .shop-grid.single-product{grid-template-columns:minmax(0,760px);justify-content:center}
 .shop-grid.single-product .shop-card{width:100%}
 .shop-grid.two-products{grid-template-columns:minmax(0,1fr)}
@@ -804,8 +808,29 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
     <h2 class="rise">ของจากย่าน<br>ถ่ายทอดด้วยใจ</h2>
     <p class="lede rise">เสื้อยืดและเครื่องดื่มกั่วป่าโพ้ ออกแบบจากอัตลักษณ์เมืองเก่าตะกั่วป่า ร่วมกับศิลปินและคนในชุมชน รายได้ทั้งหมดจะนำมาสมทบเป็นกองทุนของกลุ่มกั่วป่าโพ้ เพื่อใช้ในการฟื้นฟู ขับเคลื่อนกิจกรรม และดำเนินงานพัฒนาเมืองสร้างสรรค์อย่างต่อเนื่อง</p>
 
-    <div class="shop-grid two-products rise">
-      <!-- สินค้า 1: เสื้อยืดกั่วป่าโพ้ -->
+    <div class="shop-grid three-products rise">
+      <!-- สินค้า 1: เสื้อเทศกาลกินผัก (รอบพรีออเดอร์) -->
+      <article class="shop-card" data-category="เสื้อผ้า &amp; แฟชั่น">
+        <div class="shop-shot" style="cursor:pointer" data-open-modal="modal-je" title="คลิกเพื่อดูลายเสื้อและตารางไซส์">
+          <span class="shop-tag">พรีออเดอร์ · เทศกาลกินผัก</span>
+          <img src="images/je-shirt.webp" width="1400" height="933" loading="lazy" decoding="async" alt="เสื้อเทศกาลกินผักกั่วป่าโพ้ ด้านหน้าและด้านหลัง">
+          <span class="shop-shot-overlay">🧧 ดูลายเสื้อ</span>
+        </div>
+        <div class="shop-body">
+          <h3>เสื้อเทศกาลกินผัก กั่วป่าโพ้</h3>
+          <p class="shop-desc">เสื้อยืดสีขาว อกซ้ายเป็นตราผ้ากันเปื้อนกั่วป่าโพ้สีแดง ด้านหลังรวมสัญลักษณ์เทศกาลกินผักของตะกั่วป่า ศาลเจ้า มังกร เสือ และเตาไฟ</p>
+          <button type="button" class="shop-more-btn" data-open-modal="modal-je">
+            🧧 ดูลายเสื้อ &amp; ตารางไซส์ →
+          </button>
+          <p class="shop-meta">ผ้าฝ้าย 100% เกรด 32 คอมบ์ · ไซส์ผู้ใหญ่ S-2XL และไซส์เด็ก S-L</p>
+          <div class="shop-foot">
+            <span class="shop-price">฿350</span>
+            <a class="shop-buy" href="preorder/" style="background:var(--red);color:#fff;border-color:var(--ink)">สั่งพรีออเดอร์</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- สินค้า 2: เสื้อยืดกั่วป่าโพ้ -->
       <article class="shop-card">
         <div class="shop-shot" style="cursor:pointer" data-open-modal="modal-shirt" title="คลิกเพื่อดูภาพถ่ายแบบและรายละเอียด">
           <span class="shop-tag">Official Merch</span>
@@ -864,6 +889,99 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
     </div>
   </div>
 </section>
+
+<!-- ═══════════ MODAL: เสื้อเทศกาลกินผัก (พรีออเดอร์) ═══════════ -->
+<dialog id="modal-je" class="shop-dialog" aria-labelledby="modal-je-title">
+  <div class="dialog-box">
+    <button type="button" class="dialog-close" data-close-modal aria-label="ปิดหน้าต่างรายละเอียด">✕</button>
+
+    <div class="dialog-grid">
+      <div class="dialog-gallery">
+        <div class="dialog-main-img">
+          <img id="je-gallery-main" src="images/je-shirt.webp" width="1400" height="933" loading="lazy" decoding="async" alt="เสื้อเทศกาลกินผักกั่วป่าโพ้ หน้าและหลัง">
+        </div>
+        <div class="dialog-thumbs" role="tablist" aria-label="เลือกรูปภาพ">
+          <button type="button" class="dialog-thumb is-active" data-src="images/je-shirt.webp" title="หน้าและหลัง" aria-label="หน้าและหลัง">
+            <img src="images/je-shirt.webp" width="1400" height="933" loading="lazy" decoding="async" alt="หน้าและหลัง">
+            <span class="dialog-thumb-badge">หน้า-หลัง</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="images/je-shirt-front.webp" title="ด้านหน้า" aria-label="ด้านหน้า">
+            <img src="images/je-shirt-front.webp" width="1200" height="801" loading="lazy" decoding="async" alt="ด้านหน้า">
+            <span class="dialog-thumb-badge">ด้านหน้า</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="images/je-shirt-back.webp" title="ด้านหลัง" aria-label="ด้านหลัง">
+            <img src="images/je-shirt-back.webp" width="1200" height="802" loading="lazy" decoding="async" alt="ด้านหลัง">
+            <span class="dialog-thumb-badge">ด้านหลัง</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="images/je-size-adult.webp" title="ตารางไซส์ผู้ใหญ่" aria-label="ตารางไซส์ผู้ใหญ่">
+            <img src="images/je-size-adult.webp" width="847" height="1117" loading="lazy" decoding="async" alt="ตารางไซส์ผู้ใหญ่">
+            <span class="dialog-thumb-badge">ไซส์ผู้ใหญ่</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="images/je-size-kids.webp" title="ตารางไซส์เด็ก" aria-label="ตารางไซส์เด็ก">
+            <img src="images/je-size-kids.webp" width="620" height="572" loading="lazy" decoding="async" alt="ตารางไซส์เด็ก">
+            <span class="dialog-thumb-badge">ไซส์เด็ก</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dialog-content">
+        <div>
+          <span class="shop-tag" style="position:static;display:inline-block;margin-bottom:.5rem">พรีออเดอร์ · เทศกาลกินผัก</span>
+          <h3 id="modal-je-title">เสื้อเทศกาลกินผัก กั่วป่าโพ้</h3>
+          <p class="dialog-price">฿350 <small>รับเองที่บ้าน 78 หรือส่งไปรษณีย์</small></p>
+        </div>
+
+        <p class="dialog-lead">เสื้อของเทศกาลกินผักตะกั่วป่า ตัวสีขาวตามธรรมเนียมช่วงถือศีลกินผัก อกซ้ายเป็นตราผ้ากันเปื้อนกั่วป่าโพ้สีแดง ด้านหลังรวมภาพที่คนในย่านเห็นกันทุกปี ทั้งศาลเจ้า มังกร เสือ ประทัด และเตาไฟ</p>
+
+        <div class="dialog-section">
+          <h4>🧧 บนผืนผ้ามีอะไรบ้าง</h4>
+          <ul class="dialog-icons">
+            <li><b>อกซ้าย:</b> ตราผ้ากันเปื้อน “กั่วป่าโพ้” (高埠巴) สีแดง</li>
+            <li><b>ด้านหลัง:</b> บล็อกกราฟิกสีสันจัดเต็ม
+              <span>🏮 ศาลเจ้าและเกี้ยว · 🐉 มังกรกับเมฆมงคล · 🐯 เสือขาวและเสือเหลือง · 🔥 เตาไฟและกระถางธูป · 🎆 ประทัด · คำว่า KUAPAPOH ตัวแดง</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dialog-section">
+          <h4>📏 ตารางขนาดเสื้อ (Size Chart · นิ้ว)</h4>
+          <div class="size-table-wrap">
+            <table class="size-table">
+              <thead>
+                <tr><th>ไซส์ผู้ใหญ่</th><th>รอบอก (นิ้ว)</th><th>ความยาว (นิ้ว)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>S</td><td>32"</td><td>25"</td></tr>
+                <tr><td>M</td><td>36"</td><td>26"</td></tr>
+                <tr><td>L</td><td>40"</td><td>28"</td></tr>
+                <tr><td>XL</td><td>44"</td><td>30"</td></tr>
+                <tr><td>2XL</td><td>48"</td><td>31"</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="size-table-wrap" style="margin-top:.6rem">
+            <table class="size-table">
+              <thead>
+                <tr><th>ไซส์เด็ก</th><th>รอบอก (นิ้ว)</th><th>ความยาว (นิ้ว)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>S</td><td>23.5"</td><td>16"</td></tr>
+                <tr><td>M</td><td>27.5"</td><td>18"</td></tr>
+                <tr><td>L</td><td>31.5"</td><td>20"</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="dialog-note">* ผ้าฝ้าย Cotton 100% เกรด 32 คอมบ์ เนื้อละเอียด ใส่สบาย | ไซส์เด็กราคาเท่ากัน 350 บาท | รอบนี้เป็นรอบ <b>พรีออเดอร์</b> สั่งแล้วรอรอบผลิตตามที่ทีมงานแจ้ง</p>
+        </div>
+
+        <div class="dialog-actions">
+          <a class="btn on-paper" href="preorder/">สั่งพรีออเดอร์ในหน้าเดียว →</a>
+          <span class="dialog-subnote">ราคา 350 บาท | เลือกไซส์ กรอกชื่อ-เบอร์ แนบสลิป จบในหน้าเดียว · อยากคุยก่อนทักได้ที่ LINE @kuapapoh</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
 
 <!-- ═══════════ MODAL: เสื้อยืด KUAPAPOH ═══════════ -->
 <dialog id="modal-shirt" class="shop-dialog" aria-labelledby="modal-shirt-title">
@@ -1435,19 +1553,19 @@ document.querySelectorAll('.dialog-thumb').forEach(thumb => {
 <script src="cms-loader.js"></script>
 
 <!-- ═══════════ Sticky Floating Merch Card (การ์ดลอยติดตามหน้าจอ) ═══════════ -->
-<a href="#shop" id="stickyMerchBadge" class="sticky-merch-badge" aria-label="ไปที่ส่วนของที่ระลึก POH SHOP">
+<a href="preorder/" id="stickyMerchBadge" class="sticky-merch-badge" aria-label="ไปหน้าพรีออเดอร์เสื้อเทศกาลกินผัก">
   <div class="sticky-thumb">
-    <img id="stickyBadgeImg" src="images/shirt-poh.webp" alt="เสื้อยืดกั่วป่าโพ้" width="60" height="60" loading="lazy">
+    <img id="stickyBadgeImg" src="images/je-shirt.webp" alt="เสื้อเทศกาลกินผักกั่วป่าโพ้" width="60" height="60" loading="lazy">
   </div>
   <div class="sticky-info">
     <div class="sticky-tag-row">
-      <span id="stickyBadgeTag" class="sticky-tag">Official Merch</span>
+      <span id="stickyBadgeTag" class="sticky-tag">พรีออเดอร์</span>
       <button type="button" class="sticky-close" id="btnDismissSticky" aria-label="ซ่อนชั่วคราว" title="ซ่อนชั่วคราว">×</button>
     </div>
-    <span id="stickyBadgeTitle" class="sticky-title">เสื้อยืดกั่วป่าโพ้ KUAPAPOH</span>
+    <span id="stickyBadgeTitle" class="sticky-title">เสื้อเทศกาลกินผัก กั่วป่าโพ้</span>
     <div class="sticky-foot">
       <span id="stickyBadgePrice" class="sticky-price">฿350</span>
-      <span id="stickyBadgeCta" class="sticky-cta">สั่งซื้อ / ดูรายละเอียด →</span>
+      <span id="stickyBadgeCta" class="sticky-cta">สั่งพรีออเดอร์ →</span>
     </div>
   </div>
 </a>

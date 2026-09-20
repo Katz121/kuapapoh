@@ -35,6 +35,16 @@
 * **ภาพใน Modal Gallery:** มี 4 ภาพ (ภาพถ่ายแบบ 1, 2, 3 และภาพ 2D กราฟิกลายเสื้อรวม 6 อ. คมชัดเต็มตา)
 * **ตารางไซส์:** นำภาพตารางไซส์เดิมออกเนื่องจากมี HTML Table ในตัวแล้ว
 
+### 3.1.1 🧧 เสื้อเทศกาลกินผัก (งานเจ · รอบพรีออเดอร์ · เริ่ม 2026-09-20)
+* **ราคา:** **350 บาท** ทุกไซส์ รวมไซส์เด็ก · ค่าส่งไปรษณีย์ 50 บาทต่อออเดอร์ (รับเองที่บ้าน 78 ไม่มีค่าส่ง)
+* **ตัวเสื้อ:** สีขาว ผ้าฝ้าย 100% เกรด 32 คอมบ์ · อกซ้ายตราผ้ากันเปื้อน "กั่วป่าโพ้" สีแดง · หลังเป็นบล็อกกราฟิกเทศกาลกินผัก (ศาลเจ้า มังกร เสือ เตาไฟ ประทัด + KUAPAPOH)
+* **ไซส์ผู้ใหญ่:** S 32"/25" · M 36"/26" · L 40"/28" · XL 44"/30" · 2XL 48"/31"
+* **ไซส์เด็ก:** S 23.5"/16" · M 27.5"/18" · L 31.5"/20"
+* **ช่องทางสั่ง:** หน้า `kuapapoh.com/preorder/` (ฟอร์มหน้าเดียว → Cloudflare D1) · LINE เป็นตัวสำรองเท่านั้น
+* **หลังบ้าน:** `kuapapoh.com/preorder-admin.html` (ใส่ `ADMIN_TOKEN`) · มีสรุปยอดไซส์ไว้สั่งโรงงาน + ดาวน์โหลด CSV
+* **คู่มือเปิดใช้งาน:** `docs/PREORDER_SETUP.md` (D1 binding · ADMIN_TOKEN · ข้อมูลบัญชีโอน · Pixel ID)
+* **ราคา/ค่าส่งอยู่ 2 ที่ ต้องแก้ให้ตรงกันเสมอ:** `preorder/index.html` (บล็อก `PREORDER`) และ `functions/api/_shared.js` (ยอดจริงคิดที่เซิร์ฟเวอร์)
+
 ### 3.2 🏮 จุดรับสินค้าหน้าร้าน (Store Pickup Location)
 * **ข้อความ:** "รับสินค้าได้ที่บ้าน 78 Studio Takuapa ถนนศรีตะกั่วป่า"
 * **พิกัด GPS:** `8.827130055794738, 98.36498044583587`
@@ -92,9 +102,24 @@
 * **Performance:** `CLS = 0.00`, Lazy Loading พร้อมระบุ `width`/`height` บนรูปภาพทุกใบ
 * **SEO:** `robots.txt`, `sitemap.xml`, OpenGraph, Twitter Cards, และ Schema.org JSON-LD (`TouristDestination` & `ItemList`) ครบถ้วน
 
+### 5.4.1 🧾 ระบบพรีออเดอร์ (Cloudflare Pages Functions + D1)
+* `functions/api/preorders.js` รับออเดอร์ · `functions/api/admin/*.js` อ่าน/อัปเดตสถานะ + ดูสลิป · `functions/api/_shared.js` เก็บราคา ไซส์ และตัวตรวจรหัสผู้ดูแล
+* ตาราง `preorders` + `preorder_slips` (สลิปแยกตาราง หน้าหลังบ้านจะได้ไม่ลากรูปมาทั้งก้อน)
+* **ไม่มี D1 ผูกไว้ = ฟอร์มไม่พัง** ขึ้นปุ่มคัดลอกรายการแล้วเปิด LINE ให้แทน
+* **`wrangler.toml` อยู่ใน .gitignore โดยตั้งใจ** ใช้เฉพาะตอนเทสในเครื่อง (`cp wrangler.dev.toml wrangler.toml`) ถ้าหลุดขึ้น production Pages จะอ่าน binding จากไฟล์แทนแดชบอร์ด
+* สินค้าใหม่ต้องใส่ทั้ง `content.json` และ `PRODUCT_FALLBACKS` ใน `cms-loader.js` เพราะเครื่องที่เคยเปิดหน้า admin จะอ่านจาก localStorage ไม่แตะ content.json
+
 ### 5.5 🔎 SEO รอบ 2 (2026-09-15)
 * **`content.json` → `site.title` / `site.description` ต้องตรงกับ `<title>` / `<meta name="description">` ใน `index.html` เสมอ** · cms-loader เขียนทับ title ทุกครั้งที่หน้าโหลด และ Googlebot รัน JS จึงเห็นค่าจาก content.json
 * **โดเมนเดียว:** `functions/_middleware.js` 301 `kuapapoh.pages.dev` และ `www.kuapapoh.com` → `kuapapoh.com`
 * **หน้าอังกฤษ `/en/`** (`en/index.html`) เป็น static ล้วน ไม่ผ่าน CMS · แก้เนื้อหาหน้าไทยเรื่องไหน (ราคา สินค้า วันเปิด นิทรรศการ) ต้องแก้ `/en/` ตามด้วย · hreflang th/en/x-default อยู่ทั้งสองหน้า + sitemap
 * ส่วน FAQ (`#faq`) มี `FAQPage` ใน JSON-LD คู่กัน · แก้คำถามต้องแก้ทั้งสองที่ให้ตรงกันทุกตัวอักษร
 * `llms.txt` สรุปข้อเท็จจริงให้ AI search · `404.html` คืน status 404 · `robots.txt` อนุญาต AI crawler ชัดเจน
+
+---
+
+## 📈 6. Meta Pixel (เริ่ม 2026-09-20)
+
+* สคริปต์กลาง `pixel.js` โหลดทั้งหน้าไทย หน้าอังกฤษ และหน้าพรีออเดอร์ · ใส่ Pixel ID ที่บรรทัดเดียวในไฟล์นั้น (ว่าง = ไม่ยิงอะไรเลย ไม่มี error)
+* Event: `PageView` · `ViewContent` (เปิดหน้าพรีออเดอร์) · `AddToCart` (เลือกไซส์ครั้งแรก) · `InitiateCheckout` (เริ่มกรอก) · `Purchase` (ส่งออเดอร์สำเร็จ ส่งยอดจริง) · `Lead` (กดไป LINE ตอนระบบมีปัญหา)
+* เรียกผ่าน `window.kpTrack('ชื่อ event', { value: ... })` เสมอ ห้ามเรียก `fbq` ตรง เพราะหน้าจะพังถ้ายังไม่ได้ใส่ ID

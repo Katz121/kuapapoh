@@ -255,6 +255,9 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 
 .shop{background:var(--paper)}
 .shop-grid{display:grid;gap:clamp(20px,2.5vw,28px);margin-top:2rem;align-items:stretch}
+.shop-grid.three-products{grid-template-columns:minmax(0,1fr)}
+@media(min-width:600px){.shop-grid.three-products{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1020px){.shop-grid.three-products{grid-template-columns:repeat(3,minmax(0,1fr));max-width:1200px;margin-inline:auto}}
 .shop-grid.two-products{grid-template-columns:minmax(0,1fr)}
 @media(min-width:600px){.shop-grid.two-products{grid-template-columns:repeat(2,minmax(0,1fr));max-width:1100px;margin-inline:auto}}
 .shop-shot.photo{padding:0}
@@ -351,6 +354,7 @@ footer p{max-width:72ch}
   .six h2,.six .tag,.six-item b,.contact .tag,.shop h2,.shop .tag{color:#000!important}
 }
 </style>
+<script src="/pixel.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -623,9 +627,51 @@ footer p{max-width:72ch}
   <div class="wrap">
     <p class="tag rise">POH SHOP · <span lang="th">โพ้ช็อป</span></p>
     <h2 class="rise">From the district, made with care</h2>
-    <p class="lede rise">The Kuapapoh tee and drink are designed from the identity of Takua Pa Old Town, with artists and people in the community. All proceeds go to the Kuapapoh group fund, to restore, run activities, and keep building the creative town.</p>
+    <p class="lede rise">The Kuapapoh tees and drink are designed from the identity of Takua Pa Old Town, with artists and people in the community. The Vegetarian Festival tee is open for pre-order this round. All proceeds go to the Kuapapoh group fund, to restore, run activities, and keep building the creative town.</p>
 
-    <div class="shop-grid two-products rise">
+    <div class="shop-grid three-products rise">
+      <article class="shop-card">
+        <div class="shop-shot">
+          <span class="shop-tag">Pre-order · Vegetarian Festival</span>
+          <img src="/images/je-shirt.webp" width="1400" height="933" loading="lazy" decoding="async" alt="Kuapapoh Vegetarian Festival tee, front and back">
+        </div>
+        <div class="shop-body">
+          <h3>Vegetarian Festival tee (<span lang="th">เสื้อเทศกาลกินผัก</span>)</h3>
+          <p class="shop-desc">A white tee for the Vegetarian Festival in Takua Pa. The red Kuapapoh apron seal sits on the left chest; the back collects the festival as the town sees it every year: shrines, a dragon, tigers, firecrackers and the fire pot.</p>
+          <p class="shop-meta">100% cotton, 32 comb · adult S-2XL and kids S-L</p>
+          <div class="size-table-wrap">
+            <table class="size-table">
+              <thead>
+                <tr><th>Adult</th><th>Chest</th><th>Length</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>S</td><td>32"</td><td>25"</td></tr>
+                <tr><td>M</td><td>36"</td><td>26"</td></tr>
+                <tr><td>L</td><td>40"</td><td>28"</td></tr>
+                <tr><td>XL</td><td>44"</td><td>30"</td></tr>
+                <tr><td>2XL</td><td>48"</td><td>31"</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="size-table-wrap" style="margin-top:.5rem">
+            <table class="size-table">
+              <thead>
+                <tr><th>Kids</th><th>Chest</th><th>Length</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>S</td><td>23.5"</td><td>16"</td></tr>
+                <tr><td>M</td><td>27.5"</td><td>18"</td></tr>
+                <tr><td>L</td><td>31.5"</td><td>20"</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="shop-foot">
+            <span class="shop-price">฿350</span>
+            <a class="shop-buy" href="/preorder/">Pre-order</a>
+          </div>
+        </div>
+      </article>
+
       <article class="shop-card">
         <div class="shop-shot">
           <span class="shop-tag">Official Merch</span>

@@ -37,3 +37,17 @@ https://:version.:project.pages.dev/*
 
 /admin.html
   X-Robots-Tag: noindex, nofollow
+
+/preorder-admin.html
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+# ฟอร์มพรีออเดอร์และตัวโหลด Pixel ห้ามค้างแคช จะได้แก้ราคา/รอบ แล้วเห็นทันที
+/preorder/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/pixel.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/api/*
+  Cache-Control: no-store

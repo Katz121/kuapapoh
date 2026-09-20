@@ -3,7 +3,8 @@
 _scrape/
 pohshop/
 *.jpg
-!images/*.jpg      # รูปที่ใช้จริงบนเว็บต้องขึ้น git (การ์ดลิงก์ og, ภาพประกอบ)
+# รูปที่ใช้จริงบนเว็บต้องขึ้น git (gitignore ไม่รองรับคอมเมนต์ท้ายบรรทัด ต้องแยกบรรทัด)
+!images/*.jpg
 
 # แคชของ wrangler ตอน deploy
 .wrangler/

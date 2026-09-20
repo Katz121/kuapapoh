@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS preorders (
   address     TEXT,
   note        TEXT,
   has_slip    INTEGER NOT NULL DEFAULT 0,
+  client_ref  TEXT,                       -- กันออเดอร์ซ้ำตอนเน็ตหลุดแล้วกดยืนยันใหม่
   status      TEXT NOT NULL DEFAULT 'new',-- new | paid | producing | ready | done | cancelled
   admin_note  TEXT
 );
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS preorders (
 CREATE INDEX IF NOT EXISTS idx_preorders_created ON preorders(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_preorders_status  ON preorders(status);
 CREATE INDEX IF NOT EXISTS idx_preorders_phone   ON preorders(phone);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_preorders_ref ON preorders(client_ref) WHERE client_ref IS NOT NULL;
 
 -- สลิปเก็บแยกตาราง เพื่อให้หน้ารายการโหลดเร็ว (ไม่ลากรูปมาด้วย)
 CREATE TABLE IF NOT EXISTS preorder_slips (

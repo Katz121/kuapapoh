@@ -263,6 +263,7 @@ var PREORDER = {
   var slipDataUrl = '';
   var touchedCart = false;
   var startedCheckout = false;
+  var submitRef = '';     // รหัสอ้างอิงของการกดยืนยันครั้งนี้ · กดซ้ำตอนเน็ตหลุดจะไม่ได้ออเดอร์ซ้ำ
 
   var $ = function (id) { return document.getElementById(id); };
   var baht = function (n) { return '฿' + n.toLocaleString('th-TH'); };
@@ -394,7 +395,9 @@ var PREORDER = {
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     var t = totals();
+    if (!submitRef) submitRef = newRef();
     var payload = {
+      clientRef: submitRef,
       name: $('f-name').value.trim(),
       phone: $('f-phone').value.trim(),
       contact: $('f-contact').value.trim(),
@@ -428,6 +431,11 @@ var PREORDER = {
       fail(error.message + ' · สั่งทาง LINE ได้ทันที', lineFallback(payload, t));
     });
   });
+
+  function newRef() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'r' + Date.now() + Math.random().toString(36).slice(2, 10);
+  }
 
   function validate(payload, t) {
     if (!t.qty) return 'กรุณาเลือกไซส์อย่างน้อย 1 ตัว';

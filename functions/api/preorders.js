@@ -55,6 +55,27 @@ export async function onRequestPost({ request, env }) {
     slip = { mime: match[1], data: match[2], bytes };
   }
 
+  // เน็ตหลุดตอนกดยืนยันแล้วกดใหม่ = ส่ง clientRef เดิมมา ต้องได้ออเดอร์เดิม ไม่ใช่ออเดอร์ที่สอง
+  const clientRef = clean(body.clientRef, 60);
+  if (clientRef) {
+    const existing = await db
+      .prepare('SELECT id, qty, subtotal, shipping, total, has_slip FROM preorders WHERE client_ref = ?')
+      .bind(clientRef)
+      .first();
+    if (existing) {
+      return json({
+        ok: true,
+        id: existing.id,
+        qty: existing.qty,
+        subtotal: existing.subtotal,
+        shipping: existing.shipping,
+        total: existing.total,
+        hasSlip: !!existing.has_slip,
+        duplicate: true,
+      });
+    }
+  }
+
   const id = makeOrderId();
   const now = new Date().toISOString();
 
@@ -62,11 +83,11 @@ export async function onRequestPost({ request, env }) {
     db.prepare(
       `INSERT INTO preorders
          (id, created_at, name, phone, contact, items, qty, subtotal, shipping, total,
-          delivery, address, note, has_slip, status)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new')`
+          delivery, address, note, has_slip, client_ref, status)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new')`
     ).bind(
       id, now, name, phone, contact, JSON.stringify(items), qty, subtotal, shipping, total,
-      delivery, delivery === 'ship' ? address : '', note, slip ? 1 : 0
+      delivery, delivery === 'ship' ? address : '', note, slip ? 1 : 0, clientRef || null
     ),
   ];
   if (slip) {

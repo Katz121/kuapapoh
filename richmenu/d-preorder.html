@@ -1,0 +1,134 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* ริชเมนู 5 ช่อง · เรนเดอร์ viewport 1250x843 @2x = 2500x1686
+   ซ้ายครึ่งจอ = พรีออเดอร์เสื้อ (ของที่กำลังขาย) · ขวาแบ่ง 2x2 เป็นทางลัดอีก 4 ทาง */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1250px;height:843px;overflow:hidden}
+body{
+  font-family:'IBM Plex Sans Thai','Noto Sans Thai',sans-serif;
+  display:grid;grid-template-columns:625px 1fr 1fr;grid-template-rows:1fr 1fr;
+  background:#101538;
+}
+
+/* ---------- ช่องใหญ่: พรีออเดอร์ ---------- */
+.hero{
+  grid-row:1 / 3;position:relative;overflow:hidden;
+  background:#FFE81C;border-right:7px solid #101538;
+  display:flex;flex-direction:column;
+}
+/* กรอบรูป · ลายเสื้อต้องอยู่ครบไม่โดนตัวหนังสือทับ เลยแยกเป็นคนละชั้นกับแถบข้อความ */
+.shot{position:relative;flex:1;overflow:hidden}
+.shot img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:50% 40%;
+}
+.badge{
+  position:absolute;top:48px;left:46px;z-index:2;
+  background:#EC0A72;color:#FBF7EC;
+  font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;
+  font-size:19px;letter-spacing:.22em;text-transform:uppercase;
+  padding:12px 22px 14px;border-radius:999px;
+  box-shadow:5px 5px 0 #101538;
+}
+.price{
+  position:absolute;top:44px;right:44px;z-index:2;
+  width:146px;height:146px;border-radius:50%;
+  background:#FBF7EC;color:#101538;border:5px solid #101538;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:6px 6px 0 rgba(16,21,56,.22);
+}
+.price b{font-family:'Bai Jamjuree',sans-serif;font-size:52px;line-height:1;font-weight:700}
+.price span{font-size:20px;font-weight:600;margin-top:6px}
+.hero .copy{
+  flex:none;background:#101538;color:#FBF7EC;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:38px 42px 42px;
+}
+.hero .kicker{
+  /* บรรทัดแบรนด์อยู่บนพื้นทึบแล้ว อ่านออกทุกตัว */
+  font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:500;
+  font-size:22px;letter-spacing:.22em;text-transform:uppercase;
+  color:#FFE81C;margin-bottom:20px;
+}
+.hero .big{
+  font-family:'Bai Jamjuree',sans-serif;font-weight:700;
+  font-size:62px;line-height:1.3;letter-spacing:.01em;
+}
+.hero .sub{
+  font-size:36px;font-weight:700;line-height:1.45;margin-top:18px;color:#FFE81C;
+}
+
+/* ---------- สี่ช่องเล็ก ---------- */
+.cell{
+  position:relative;background:#FFE81C;color:#101538;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  padding:26px 18px;text-align:center;overflow:hidden;
+  border-right:7px solid #101538;border-bottom:7px solid #101538;
+}
+.cell:nth-child(3),.cell:nth-child(5){border-right:0}
+.cell:nth-child(4),.cell:nth-child(5){border-bottom:0}
+/* ช่องโพ้ชมเป็นสีชมพูตัดกับเหลือง · ภาพวาดพื้นดอกโบตั๋นเข้ากับชมพูพอดี */
+.cell.chom{background:#EC0A72;color:#FBF7EC}
+.art{height:186px;flex:none;display:flex;align-items:center;justify-content:center}
+.ico{width:132px;height:132px}
+.ico svg{width:100%;height:100%;display:block}
+.tile{height:100%;width:auto;display:block;border-radius:12px}
+/* ภาพวาดของช่างป๋องในงาน · ใส่กรอบหมึกให้ดูเป็นรูปที่แขวนไว้ ไม่ใช่รูปลอย */
+.paint{height:100%;width:auto;display:block;border:4px solid #101538;box-shadow:6px 6px 0 rgba(16,21,56,.2)}
+/* โลโก้ทำเป็นตัวถุงช้อป · หูหิ้ววาดทับด้านบน */
+.shop{position:relative;height:100%;display:flex;align-items:flex-end;justify-content:center}
+.shop img{height:120px;width:auto;display:block;border-radius:12px;position:relative;z-index:1}
+.shop .handle{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:74px;height:48px;z-index:0}
+.th{
+  font-family:'Bai Jamjuree','IBM Plex Sans Thai',sans-serif;font-weight:700;
+  font-size:44px;line-height:1.4;letter-spacing:.01em;
+}
+</style></head><body>
+
+<div class="hero">
+  <div class="shot">
+    <img src="../images/je-shirt-back.webp" alt="">
+    <div class="badge">Pre-order</div>
+    <div class="price"><b>350</b><span>บาท</span></div>
+  </div>
+  <div class="copy">
+    <div class="kicker">Kuapa Poh Shop</div>
+    <div class="big">สั่งเสื้อ<br>เทศกาลกินผัก</div>
+    <div class="sub">เปิดรับพรีออเดอร์ · กดสั่งตรงนี้</div>
+  </div>
+</div>
+
+<div class="cell">
+  <div class="art"><div class="ico"><svg viewBox="0 0 100 100">
+    <path d="M22 32h56a4 4 0 0 1 4 4.3l-4 48a6 6 0 0 1-6 5.7H26a6 6 0 0 1-6-5.7l-4-48a4 4 0 0 1 4-4.3z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M37 32v-6a13 13 0 0 1 26 0v6" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+    <path d="M38 78V62a12 12 0 0 1 24 0v16" fill="none" stroke="#EC0A72" stroke-width="6" stroke-linecap="round"/>
+  </svg></div></div>
+  <div><div class="th">โพ้ช็อป</div></div>
+</div>
+
+<div class="cell chom">
+  <div class="art"><img class="paint" src="art-chompong.webp" alt=""></div>
+  <div><div class="th">โพ้ชม</div></div>
+</div>
+
+<div class="cell">
+  <div class="art"><div class="ico"><svg viewBox="0 0 100 100">
+    <path d="M50 92C50 92 78 64 78 42a28 28 0 1 0-56 0c0 22 28 50 28 50z" stroke="currentColor" fill="none" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="50" cy="41" r="11" stroke="currentColor" fill="none" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg></div></div>
+  <div><div class="th">โพ้พานำ</div></div>
+</div>
+
+<div class="cell">
+  <div class="art"><div class="ico"><svg viewBox="0 0 100 100">
+    <rect x="14" y="14" width="72" height="72" rx="16" stroke="currentColor" fill="none" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M62 34h-8a9 9 0 0 0-9 9v43M38 54h22" stroke="currentColor" fill="none" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg></div></div>
+  <div><div class="th">โพ้บอกข่าว</div></div>
+</div>
+
+</body></html>

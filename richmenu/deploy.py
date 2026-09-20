@@ -2,7 +2,7 @@
 
 ใช้:
     set LINE_CHANNEL_ACCESS_TOKEN=...   (อย่าเก็บ token ไว้ในไฟล์นี้)
-    python richmenu/deploy.py richmenu/a-poster.png
+    python richmenu/deploy.py richmenu/d-preorder.jpg
 
 ทำอะไรบ้าง: สร้าง rich menu → อัปรูป → ตั้ง default → ลบเมนูเก่าที่ไม่ใช้
 """
@@ -32,26 +32,27 @@ MAPS = ("https://www.google.com/maps/search/?api=1&query="
 FB = "https://www.facebook.com/profile.php?id=61590430773715"
 
 W, H = 2500, 1686
-CW, CH = 833, 843  # ช่องละ 1/3 กว้าง · ครึ่งสูง (ช่องขวาสุดกว้าง 834 ให้เต็มพอดี)
+HALF = 1250          # ช่องพรีออเดอร์กินครึ่งซ้ายเต็มความสูง
+QW, QH = 625, 843    # อีกสี่ช่องแบ่งครึ่งขวาเป็น 2x2
 
-ACTIONS = [
-    ("โพ้ชม", {"type": "uri", "uri": f"{SITE}/#schedule"}),
-    ("โพ้รวมทีม", {"type": "uri", "uri": f"{SITE}/#houses"}),
-    ("โพ้พานำ", {"type": "uri", "uri": MAPS}),
-    ("โพ้ชวนแล", {"type": "uri", "uri": f"{SITE}/"}),
-    ("โพ้บอกข่าว", {"type": "uri", "uri": FB}),
-    # #ws บังคับให้ป๊อปอัปลงทะเบียนเด้งทันที ไม่ต้องรอ และไม่สนว่าเคยกดปิดไปแล้ว
-    ("โพ้เวิร์คช้อป", {"type": "uri", "uri": f"{SITE}/#ws"}),
+# เวิร์กชอปจบไปแล้ว (12-16 ส.ค.) จึงถอดช่องนั้นกับโปสเตอร์หมดอายุออก
+# แล้วดันของที่กำลังขายจริง (พรีออเดอร์เสื้อเทศกาลกินผัก) ขึ้นเป็นช่องใหญ่แทน
+AREAS = [
+    # (x, y, w, h, label, uri) · เรียงให้ตรงกับช่องในภาพ d-preorder.png
+    (0, 0, HALF, H, "พรีออเดอร์เสื้อ", f"{SITE}/preorder/"),
+    (HALF, 0, QW, QH, "โพ้ช็อป", f"{SITE}/#shop"),
+    (HALF + QW, 0, W - HALF - QW, QH, "โพ้ชม", f"{SITE}/#events"),
+    (HALF, QH, QW, H - QH, "โพ้พานำ", MAPS),
+    (HALF + QW, QH, W - HALF - QW, H - QH, "โพ้บอกข่าว", FB),
 ]
 
-areas = []
-for i, (label, action) in enumerate(ACTIONS):
-    col, row = i % 3, i // 3
-    x = col * CW
-    areas.append({
-        "bounds": {"x": x, "y": row * CH, "width": (W - x) if col == 2 else CW, "height": CH},
-        "action": {**action, "label": label},
-    })
+areas = [
+    {
+        "bounds": {"x": x, "y": y, "width": w, "height": h},
+        "action": {"type": "uri", "uri": uri, "label": label},
+    }
+    for x, y, w, h, label, uri in AREAS
+]
 
 MENU = {
     "size": {"width": W, "height": H},
@@ -87,7 +88,7 @@ def assert_channel(expect_basic, expect_premium):
 
 assert_channel("@239sbnsh", "@kuapapoh")
 
-img = Path(sys.argv[1] if len(sys.argv) > 1 else "richmenu/a-poster.png")
+img = Path(sys.argv[1] if len(sys.argv) > 1 else "richmenu/d-preorder.jpg")
 
 old = call(f"{API}/v2/bot/richmenu/list").get("richmenus", [])
 
@@ -95,7 +96,11 @@ rid = call(f"{API}/v2/bot/richmenu",
            json.dumps(MENU, ensure_ascii=False).encode())["richMenuId"]
 print("สร้างเมนู:", rid)
 
-call(f"{API_DATA}/v2/bot/richmenu/{rid}/content", img.read_bytes(), "image/png")
+# LINE รับได้ไม่เกิน 1 MB · ไฟล์ PNG ของเมนูนี้เกิน เลยอัปเป็น JPEG
+ctype = "image/jpeg" if img.suffix.lower() in (".jpg", ".jpeg") else "image/png"
+if img.stat().st_size > 1024 * 1024:
+    sys.exit(f"รูปใหญ่เกิน 1 MB ({img.stat().st_size // 1024} KB) · LINE จะไม่รับ")
+call(f"{API_DATA}/v2/bot/richmenu/{rid}/content", img.read_bytes(), ctype)
 print("อัปรูป:", img.name, f"({img.stat().st_size // 1024} KB)")
 
 call(f"{API}/v2/bot/user/all/richmenu/{rid}", b"", method="POST")

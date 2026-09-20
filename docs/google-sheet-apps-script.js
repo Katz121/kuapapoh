@@ -82,8 +82,8 @@ function updateRow(sheet, body) {
   var order = body.order || {};
   var row = findRow(sheet, order.id);
   if (!row) {
-    sheet.appendRow(rowFrom(order));
-    row = sheet.getLastRow();
+    row = firstEmptyRow(sheet);
+    sheet.getRange(row, 1, 1, HEADERS.length).setValues([rowFrom(order)]);
     formatRow(sheet, row);
     return { ok: true, row: row, created: true };
   }
@@ -96,25 +96,36 @@ function rowFrom(order) {
   return [
     order.id || '',
     order.createdAt || '',
-    order.name || '',
+    safeText(order.name),
     "'" + (order.phone || ''),          // ใส่ ' นำหน้า ไม่งั้นชีตกิน 0 ตัวหน้าเบอร์
-    order.contact || '',
+    safeText(order.contact),
     order.items || '',
     order.qty || 0,
     order.subtotal || 0,
     order.shipping || 0,
     order.total || 0,
     order.delivery || '',
-    order.address || '',
-    order.note || '',
+    safeText(order.address),
+    safeText(order.note),
     order.hasSlip ? 'แนบแล้ว' : 'ยังไม่แนบ',
     order.slipRef || '',
     order.status || '',
     order.updatedAt || new Date().toISOString(),
-    order.adminNote || '',
+    safeText(order.adminNote),
     order.payStatus || '',
     order.paidAmount || ''
   ];
+}
+
+/* ช่องข้อความอิสระที่ลูกค้าพิมพ์เอง · ขึ้นต้นด้วย = + - @ ชีตจะตีเป็นสูตร ต้องเติม ' กันไว้ */
+function safeText(value) {
+  var text = String(value == null ? '' : value);
+  var code = text.charCodeAt(0);
+  // = + - @ แท็บ และ carriage return · ห้าหกตัวนี้ทำให้ชีตตีข้อความเป็นสูตร
+  if (code === 61 || code === 43 || code === 45 || code === 64 || code === 9 || code === 13) {
+    return "'" + text;
+  }
+  return text;
 }
 
 function findRow(sheet, orderId) {
@@ -360,30 +371,49 @@ function pullFromSystem() {
     return;
   }
 
-  var response = UrlFetchApp.fetch(API_BASE + '/api/admin/preorders?limit=500', {
-    headers: { 'x-admin-token': token },
-    muteHttpExceptions: true
-  });
-  var data = JSON.parse(response.getContentText());
-  if (!data.ok) throw new Error('ดึงข้อมูลไม่สำเร็จ: ' + (data.error || response.getResponseCode()));
+  // กันตัวจับเวลากับคนกดมือชนกันจนเขียนทับกลางคัน
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(30000)) return;
 
-  var sheet = SpreadsheetApp.getActive().getSheets()[0];
-  ensureHeaders(sheet);
+  try {
+    var response = UrlFetchApp.fetch(API_BASE + '/api/admin/preorders?limit=500', {
+      headers: { 'x-admin-token': token },
+      muteHttpExceptions: true
+    });
+    if (response.getResponseCode() !== 200) {
+      throw new Error('ระบบตอบกลับ ' + response.getResponseCode());
+    }
+    var data = JSON.parse(response.getContentText());
+    if (!data.ok || !Array.isArray(data.orders)) {
+      throw new Error('ดึงข้อมูลไม่สำเร็จ: ' + (data.error || 'รูปแบบข้อมูลไม่ถูกต้อง'));
+    }
 
-  // เรียงจากเก่าไปใหม่ให้ตรงกับลำดับที่ลูกค้าสั่งจริง
-  var orders = (data.orders || []).slice().reverse();
-  var rows = orders.map(function (order) { return rowFrom(fromApi(order)); });
+    var sheet = SpreadsheetApp.getActive().getSheets()[0];
+    ensureHeaders(sheet);
 
-  // ล้างเฉพาะส่วนข้อมูล แล้วเขียนใหม่ทั้งชุด · ชีตจะตรงกับระบบเป๊ะทุกครั้ง
-  var last = sheet.getLastRow();
-  if (last > 1) sheet.getRange(2, 1, last - 1, HEADERS.length).clearContent().setBackground(null);
-  if (rows.length) {
-    sheet.getRange(2, 1, rows.length, HEADERS.length).setValues(rows);
+    var orders = data.orders.slice().reverse();          // เก่าไปใหม่ ตามลำดับที่ลูกค้าสั่ง
+    var rows = orders.map(function (order) { return rowFrom(fromApi(order)); });
+    var had = Math.max(sheet.getLastRow() - 1, 0);
+
+    // กันข้อมูลหายเงียบ: ถ้าจำนวนที่ดึงมาหดผิดปกติ ไม่ต้องล้างของเดิม
+    // (ลบออเดอร์จริงทีละใบจะไม่เข้าเงื่อนไขนี้ เพราะหดทีละน้อย)
+    if (had >= 5 && rows.length < had * 0.7) {
+      throw new Error('ข้อมูลจากระบบหดผิดปกติ (' + had + ' → ' + rows.length + ' แถว) จึงไม่ล้างชีต');
+    }
+
+    // เขียนทับก่อน แล้วค่อยลบส่วนเกิน · ถ้าพังกลางคันข้อมูลเดิมยังอยู่
+    if (rows.length) sheet.getRange(2, 1, rows.length, HEADERS.length).setValues(rows);
+    var extra = had - rows.length;
+    if (extra > 0) {
+      sheet.getRange(rows.length + 2, 1, extra, HEADERS.length).clearContent().setBackground(null);
+    }
     for (var i = 0; i < rows.length; i++) formatRow(sheet, i + 2);
-  }
 
-  SpreadsheetApp.getActive().toast('ดึงข้อมูลจากระบบแล้ว ' + rows.length + ' ออเดอร์');
-  return rows.length;
+    SpreadsheetApp.getActive().toast('ดึงข้อมูลจากระบบแล้ว ' + rows.length + ' ออเดอร์');
+    return rows.length;
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 /* แปลงข้อมูลจาก API (ชื่อช่องแบบฐานข้อมูล) ให้เป็นรูปแบบที่ rowFrom ใช้ */

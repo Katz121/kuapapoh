@@ -45,17 +45,30 @@ export async function verifySlip(env, { payload, amount, checkDuplicate = true }
       signal: AbortSignal.timeout(12000),
     });
     data = await response.json();
+    if (!response.ok && !(data && data.error)) {
+      // ตอบไม่สำเร็จแต่ไม่บอกรหัสผิดพลาด = ตรวจไม่ได้ ห้ามปล่อยผ่าน
+      return { checked: false, verified: null, note: `ตรวจไม่ได้ (HTTP ${response.status})` };
+    }
   } catch {
     return { checked: false, verified: null, note: 'ตรวจกับธนาคารไม่สำเร็จ (ระบบตรวจสลิปไม่ตอบ)' };
   }
 
   const errorCode = data && data.error && data.error.code;
-  if (errorCode === 'SLIP_NOT_FOUND' || errorCode === 'VALIDATION_ERROR') {
+  // ไม่พบรายการ = สลิปใช้ไม่ได้จริง · อันนี้ชี้ชัดได้
+  if (errorCode === 'SLIP_NOT_FOUND') {
     return { checked: true, verified: false, note: 'ธนาคารไม่พบรายการโอนตามสลิปนี้' };
+  }
+  // รูปแบบไม่ถูก อาจเป็นที่สลิปหรือที่เราส่งไปก็ได้ · ไม่ฟันธงว่าลูกค้าผิด
+  if (errorCode === 'VALIDATION_ERROR') {
+    return { checked: true, verified: null, note: 'ธนาคารอ่านสลิปนี้ไม่ได้ · ตรวจด้วยตาอีกครั้ง' };
   }
   if (errorCode) {
     // โควตาหมด คีย์ผิด ไอพีไม่ได้รับอนุญาต ฯลฯ ไม่ใช่ความผิดลูกค้า
     return { checked: false, verified: null, note: `ตรวจไม่ได้ (${errorCode})` };
+  }
+  // ตอบกลับมาว่าไม่สำเร็จแต่ไม่มีรหัส หรือไม่มีก้อนข้อมูลเลย = ตรวจไม่ได้
+  if ((data && data.success === false) || !(data && data.data)) {
+    return { checked: false, verified: null, note: 'ตรวจไม่ได้ (ระบบตรวจสลิปตอบไม่ครบ)' };
   }
 
   const root = (data && data.data) || {};
@@ -71,14 +84,33 @@ export async function verifySlip(env, { payload, amount, checkDuplicate = true }
   const receiverMatch = matchReceiver(env, receiverAccount, receiver);
 
   const problems = [];
-  // อ่านยอดไม่ได้ ไม่เท่ากับยอดผิด · ถ้าไม่รู้ยอดต้องบอกตามจริง ไม่ใช่ฟันธงว่าโอนไม่ครบ
   if (amountMatch === false) {
     problems.push(`ยอดไม่ตรง · โอนมา ${paid} บาท ต้องได้ ${amount} บาท`);
-  } else if (amount && !paid) {
-    problems.push('ธนาคารไม่ได้ส่งยอดเงินกลับมา · ตรวจยอดด้วยตาอีกครั้ง');
   }
   if (receiverMatch === false) {
     problems.push(`โอนเข้าบัญชีอื่น (${receiver || receiverAccount || 'ไม่ทราบบัญชี'})`);
+  }
+
+  // อ่านยอดไม่ได้ ไม่เท่ากับยอดผิด · และห้ามตัดสินว่า "ผ่าน" ทั้งที่ไม่เคยเทียบยอด
+  const cannotJudge = !problems.length && (!amount || !paid || amountMatch !== true);
+  if (cannotJudge) {
+    return {
+      checked: true,
+      verified: null,
+      note: paid
+        ? `โอนมา ${paid} บาท แต่เทียบยอดอัตโนมัติไม่ได้ · ตรวจด้วยตาอีกครั้ง`
+        : 'ธนาคารไม่ได้ส่งยอดเงินกลับมา · ตรวจยอดด้วยตาอีกครั้ง',
+      amount: paid || null,
+      amountMatch,
+      sender,
+      receiver,
+      receiverAccount,
+      receiverMatch,
+      bankName,
+      date: slip.date || '',
+      transRef: slip.transRef || '',
+      duplicate: root.isDuplicate === true,
+    };
   }
 
   return {

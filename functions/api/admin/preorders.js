@@ -45,24 +45,28 @@ export async function onRequestGet({ request, env }) {
     pay: payStatus(row),
   }));
 
-  // สรุปไซส์ไว้สั่งโรงงานรอบเดียว (ไม่นับที่ยกเลิก)
+  // สรุปยอดต้องนับจากทั้งฐานข้อมูล ไม่ใช่เฉพาะแถวที่แสดงในหน้านี้
+  // ไม่งั้นพอออเดอร์เกิน limit ตัวเลขสั่งโรงงานจะขาดโดยไม่มีใครรู้
+  const { results: allRows } = await db
+    .prepare("SELECT items, qty, total, status, sheet_row FROM preorders")
+    .all();
   const bySize = {};
   let shirts = 0;
   let revenue = 0;
   let unsynced = 0;
-  for (const order of orders) {
-    if (!order.sheet_ok) unsynced += 1;
-    if (order.status === 'cancelled') continue;
-    shirts += order.qty;
-    revenue += order.total;
-    for (const item of order.items) bySize[item.size] = (bySize[item.size] || 0) + item.qty;
+  for (const row of allRows || []) {
+    if (!row.sheet_row) unsynced += 1;
+    if (row.status === 'cancelled') continue;
+    shirts += row.qty;
+    revenue += row.total;
+    for (const item of safeParse(row.items)) bySize[item.size] = (bySize[item.size] || 0) + item.qty;
   }
 
   return json({
     ok: true,
     orders,
     sheets: sheetsReady(env),
-    summary: { orders: orders.length, shirts, revenue, bySize, unsynced },
+    summary: { orders: (allRows || []).length, shown: orders.length, shirts, revenue, bySize, unsynced },
   });
 }
 
@@ -128,14 +132,20 @@ export async function onRequestPost(context) {
 
   // ลบออเดอร์ · ลบจากฐานข้อมูลก่อน แล้วค่อยลบแถวในชีตตาม
   if (body.action === 'delete') {
+    // ลบแถวในชีตก่อน · ถ้าชีตพลาดแล้วเราลบ D1 ไปแล้ว จะเหลือแถวผีในชีตที่ซ่อมไม่ได้
+    if (sheetsReady(env)) {
+      const sheetResult = await pushToSheet(env, { ...current, items: safeParse(current.items) }, 'delete');
+      if (!sheetResult.ok) {
+        await db.prepare('UPDATE preorders SET sheet_error = ? WHERE id = ?')
+          .bind(`ลบแถวในชีตไม่สำเร็จ: ${sheetResult.error}`, id).run();
+        return bad(`ลบแถวในชีตไม่สำเร็จ จึงยังไม่ลบออเดอร์: ${sheetResult.error}`, 502);
+      }
+    }
     await db.batch([
       db.prepare('DELETE FROM preorder_slips WHERE order_id = ?').bind(id),
       db.prepare('DELETE FROM preorder_events WHERE order_id = ?').bind(id),
       db.prepare('DELETE FROM preorders WHERE id = ?').bind(id),
     ]);
-    if (sheetsReady(env)) {
-      await pushToSheet(env, { ...current, items: safeParse(current.items) }, 'delete');
-    }
     return json({ ok: true, id, deleted: true });
   }
 

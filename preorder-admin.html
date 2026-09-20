@@ -123,7 +123,10 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
   $('refresh').addEventListener('click', function () { load(false); });
   $('filter').addEventListener('change', function () { load(false); });
   $('csv').addEventListener('click', exportCsv);
-  $('slip-close').addEventListener('click', function () { $('slip-dialog').close(); });
+  $('slip-close').addEventListener('click', function () {
+    $('slip-dialog').close();
+    $('slip-img').removeAttribute('src');
+  });
 
   function api(path, options) {
     var opts = options || {};
@@ -201,13 +204,22 @@ dialog img{max-width:100%;border:2px solid var(--rule);border-radius:10px}
     }).join('');
   }
 
+  var slipUrl = '';
   document.addEventListener('click', function (event) {
     var slipBtn = event.target.closest('[data-slip]');
     if (!slipBtn) return;
     var id = slipBtn.dataset.slip;
     $('slip-title').textContent = 'สลิปของ ' + id;
-    $('slip-img').src = '/api/admin/slip?id=' + encodeURIComponent(id) + '&token=' + encodeURIComponent(token);
     $('slip-dialog').showModal();
+    // ดึงเป็น blob พร้อม header · ไม่ใส่รหัสใน URL ของรูป จะได้ไม่ติดในประวัติ/ล็อก
+    fetch('/api/admin/slip?id=' + encodeURIComponent(id), { headers: { 'x-admin-token': token } })
+      .then(function (response) { return response.ok ? response.blob() : Promise.reject(new Error('โหลดสลิปไม่ได้')); })
+      .then(function (blob) {
+        if (slipUrl) URL.revokeObjectURL(slipUrl);
+        slipUrl = URL.createObjectURL(blob);
+        $('slip-img').src = slipUrl;
+      })
+      .catch(function () { $('slip-title').textContent = 'โหลดสลิปของ ' + id + ' ไม่ได้'; });
   });
 
   document.addEventListener('change', function (event) {

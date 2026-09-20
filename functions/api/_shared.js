@@ -4,6 +4,8 @@ export const PRICE = 350;            // ราคาต่อตัว (ทุ�
 export const SHIPPING = 50;          // ค่าส่งไปรษณีย์ต่อ 1 ออเดอร์
 export const SIZES = ['S', 'M', 'L', 'XL', '2XL', 'KID-S', 'KID-M', 'KID-L'];
 export const MAX_QTY_PER_LINE = 20;
+export const MAX_QTY_PER_ORDER = 50;          // สั่งเกินนี้ให้ทักทีมงานตรงๆ จะได้คุยเรื่องรอบผลิต
+export const MAX_BODY_BYTES = 900 * 1024;     // ตัดตั้งแต่ก่อน parse กัน payload ยักษ์กิน CPU
 export const MAX_SLIP_BYTES = 400 * 1024;   // สลิปหลังบีบอัดฝั่งเบราว์เซอร์
 
 export function json(data, status = 200, extra = {}) {
@@ -26,11 +28,18 @@ export function requireDb(env) {
   return env && env.DB ? env.DB : null;
 }
 
+// ไม่เก็บ IP ตรงๆ · เก็บแค่ลายนิ้วมือสั้นๆ ไว้นับว่ายิงรัวมาจากที่เดียวกันไหม
+export async function ipFingerprint(request) {
+  const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown';
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`kuapapoh:${ip}`));
+  return [...new Uint8Array(digest)].slice(0, 8).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
 export function adminOk(request, env) {
   const expected = env && env.ADMIN_TOKEN;
   if (!expected) return false;
-  const url = new URL(request.url);
-  const given = request.headers.get('x-admin-token') || url.searchParams.get('token') || '';
+  // รับทาง header อย่างเดียว · ?token= จะไปติดใน log และประวัติเบราว์เซอร์
+  const given = request.headers.get('x-admin-token') || '';
   if (given.length !== expected.length) return false;
   let diff = 0;
   for (let i = 0; i < given.length; i++) diff |= given.charCodeAt(i) ^ expected.charCodeAt(i);

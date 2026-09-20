@@ -90,6 +90,10 @@ textarea{min-height:88px;resize:vertical}
 .choice small{color:var(--muted);font-size:.82rem}
 
 /* ชำระเงิน */
+.due{background:var(--ink);color:#fff;border-radius:12px;padding:14px;margin-bottom:12px;text-align:center}
+.due-label{font-size:.84rem;opacity:.8}
+.due-amount{font-family:var(--display);font-size:2rem;color:var(--yellow);line-height:1.2;font-variant-numeric:tabular-nums}
+.due-break{font-size:.84rem;opacity:.85}
 .pay{background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:14px;margin-bottom:14px}
 .pay .bank{font-family:var(--display);font-size:1.05rem;margin:.25rem 0}
 .pay .num{font-size:1.22rem;font-weight:700;letter-spacing:.06em;font-variant-numeric:tabular-nums}
@@ -152,7 +156,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
       <h2><span class="n">1</span> เลือกไซส์และจำนวน</h2>
       <p class="hint">กดปุ่มบวกตามจำนวนที่ต้องการ สั่งหลายไซส์ในออเดอร์เดียวได้เลย</p>
       <div class="size-group" id="sizes-adult"><h3>ไซส์ผู้ใหญ่</h3></div>
-      <div class="size-group" id="sizes-kid"><h3>ไซส์เด็ก</h3></div>
+      <div class="size-group" id="sizes-kid"><h3>ไซส์เด็ก <span style="font-weight:400">(วัดรอบอกเสื้อตัวที่ลูกใส่อยู่แล้วเทียบตัวเลขด้านขวา)</span></h3></div>
       <details class="chart">
         <summary>ดูตารางไซส์ (นิ้ว)</summary>
         <div class="charts">
@@ -186,7 +190,12 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
 
     <section class="step">
       <h2><span class="n">3</span> โอนเงินและแนบสลิป</h2>
-      <p class="hint">โอนยอดตามที่แถบด้านล่างแจ้ง แล้วแนบสลิปไว้ในออเดอร์ได้เลย ทีมงานจะตรวจและยืนยันกลับ</p>
+      <p class="hint">โอนยอดตามตัวเลขด้านล่างนี้ แล้วแนบสลิปไว้ในออเดอร์ได้เลย ทีมงานจะตรวจและยืนยันกลับ</p>
+      <div class="due" id="due">
+        <div class="due-label">ยอดที่ต้องโอน</div>
+        <div class="due-amount" id="due-amount">฿0</div>
+        <div class="due-break" id="due-break">ยังไม่ได้เลือกไซส์</div>
+      </div>
       <div class="pay">
         <div style="font-size:.84rem;color:var(--muted)">โอนเข้าบัญชี</div>
         <div class="bank" id="pay-bank">—</div>
@@ -207,7 +216,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
   <section class="done" id="done" aria-live="polite">
     <div class="tick">🧧</div>
     <h2>รับออเดอร์เรียบร้อย</h2>
-    <p style="margin:.2rem 0;color:var(--muted);font-size:.92rem">เลขออเดอร์ของคุณ</p>
+    <p style="margin:.2rem 0;color:var(--muted);font-size:.92rem">เลขออเดอร์ของคุณ · <b style="color:var(--red)">แคปหน้าจอนี้เก็บไว้</b></p>
     <div class="code" id="done-code">—</div>
     <p style="font-size:.93rem;max-width:44ch;margin:0 auto">ทีมงานจะตรวจสลิปและทักกลับไปยืนยันรอบผลิต ถ้าอยากเช็คสถานะหรือส่งสลิปเพิ่ม ทักมาที่ LINE พร้อมเลขออเดอร์นี้ได้เลย</p>
     <div class="recap" id="done-recap"></div>
@@ -332,6 +341,12 @@ var PREORDER = {
       ? cartLines().join(' · ') + (t.shipping ? ' + ค่าส่ง ' + t.shipping : '')
       : 'ยังไม่ได้เลือกไซส์';
     $('submit-btn').disabled = !t.qty;
+
+    // ยอดต้องอยู่ตรงหน้าตอนโอนด้วย ไม่ใช่มีแต่ในแถบล่าง คนจะโอนขาดค่าส่ง
+    $('due-amount').textContent = baht(t.total);
+    $('due-break').textContent = t.qty
+      ? 'เสื้อ ' + t.qty + ' ตัว × ' + PREORDER.price + (t.shipping ? ' + ค่าส่ง ' + t.shipping : ' · ไม่มีค่าส่ง')
+      : 'ยังไม่ได้เลือกไซส์';
   }
 
   document.querySelectorAll('.choice').forEach(function (choice) {
@@ -373,14 +388,35 @@ var PREORDER = {
         canvas.width = Math.round(image.width * scale);
         canvas.height = Math.round(image.height * scale);
         canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
-        slipDataUrl = canvas.toDataURL('image/webp', 0.82);
-        if (slipDataUrl.indexOf('data:image/webp') !== 0) slipDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        try {
+          slipDataUrl = canvas.toDataURL('image/webp', 0.82);
+          if (slipDataUrl.indexOf('data:image/webp') !== 0) slipDataUrl = canvas.toDataURL('image/jpeg', 0.78);
+          // ยังใหญ่อยู่ก็บีบซ้ำอีกชั้น ดีกว่าปล่อยให้เซิร์ฟเวอร์ปัดตกตอนกดยืนยันแล้ว
+          if (slipDataUrl.length > 520000) slipDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+        } catch (error) {
+          slipDataUrl = '';
+        }
+        if (!slipDataUrl || slipDataUrl.length > 520000) {
+          slipDataUrl = '';
+          $('slip-preview').hidden = true;
+          $('slip-drop').classList.remove('on');
+          $('slip-label').textContent = '📎 รูปนี้ใหญ่เกินไป แตะเพื่อเลือกรูปใหม่ หรือส่งทาง LINE';
+          return;
+        }
         $('slip-preview').src = slipDataUrl;
         $('slip-preview').hidden = false;
         $('slip-label').textContent = '📎 แนบสลิปแล้ว · แตะเพื่อเปลี่ยนรูป';
         $('slip-drop').classList.add('on');
       };
+      image.onerror = function () {
+        slipDataUrl = '';
+        $('slip-label').textContent = '📎 เปิดไฟล์นี้ไม่ได้ แตะเพื่อเลือกรูปใหม่';
+      };
       image.src = reader.result;
+    };
+    reader.onerror = function () {
+      slipDataUrl = '';
+      $('slip-label').textContent = '📎 อ่านไฟล์ไม่สำเร็จ แตะเพื่อลองใหม่';
     };
     reader.readAsDataURL(file);
   });
@@ -409,7 +445,17 @@ var PREORDER = {
     };
 
     var problem = validate(payload, t);
-    if (problem) { fail(problem); return; }
+    if (problem) { fail(problem.message, null, problem.field); return; }
+
+    // ทวนอีกรอบก่อนส่ง · กลุ่มลูกค้าหลักอยากเช็คชื่อ ที่อยู่ และยอดก่อนกดจริง
+    var review = [
+      'ยืนยันพรีออเดอร์',
+      cartLines().join(' · '),
+      payload.name + ' · ' + payload.phone,
+      payload.delivery === 'ship' ? 'ส่งไปรษณีย์: ' + payload.address : 'รับเองที่บ้าน 78',
+      'ยอดที่ต้องโอน ' + t.total + ' บาท'
+    ].join('\n');
+    if (!window.confirm(review)) return;
 
     var button = $('submit-btn');
     button.disabled = true;
@@ -437,24 +483,45 @@ var PREORDER = {
     return 'r' + Date.now() + Math.random().toString(36).slice(2, 10);
   }
 
+  // คืนทั้งข้อความและช่องที่ผิด จะได้พาไปที่ช่องนั้นเลย ไม่ต้องให้ลูกค้าเลื่อนหาเอง
   function validate(payload, t) {
-    if (!t.qty) return 'กรุณาเลือกไซส์อย่างน้อย 1 ตัว';
-    if (payload.name.length < 2) return 'กรุณากรอกชื่อ-นามสกุล';
-    if (payload.phone.replace(/\D/g, '').length < 9) return 'เบอร์โทรไม่ถูกต้อง';
-    if (payload.delivery === 'ship' && payload.address.length < 15) return 'กรุณากรอกที่อยู่จัดส่งให้ครบ';
-    return '';
+    if (!t.qty) return { message: 'กรุณาเลือกไซส์อย่างน้อย 1 ตัว', field: 'sizes-adult' };
+    if (payload.name.length < 2) return { message: 'กรุณากรอกชื่อ-นามสกุล', field: 'f-name' };
+    if (payload.phone.replace(/\D/g, '').length < 9) return { message: 'เบอร์โทรไม่ถูกต้อง', field: 'f-phone' };
+    if (payload.delivery === 'ship' && payload.address.length < 15) {
+      return { message: 'กรุณากรอกที่อยู่จัดส่งให้ครบ', field: 'f-address' };
+    }
+    return null;
   }
 
-  function fail(message, extraNode) {
+  function markField(id) {
+    ['f-name', 'f-phone', 'f-address'].forEach(function (key) {
+      var field = $(key);
+      field.removeAttribute('aria-invalid');
+      field.style.borderColor = '';
+    });
+    var target = $(id);
+    if (!target) return;
+    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+      target.setAttribute('aria-invalid', 'true');
+      target.style.borderColor = 'var(--red)';
+      target.focus({ preventScroll: true });
+    }
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function fail(message, extraNode, field) {
     var box = $('form-msg');
     box.className = 'msg err';
     box.textContent = message;
     if (extraNode) box.appendChild(extraNode);
-    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (field) markField(field);
+    else box.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   /* ระบบล่มก็ยังสั่งต่อได้ ไม่ต้องพิมพ์ใหม่ */
   function lineFallback(payload, t) {
+    var wrapLater = [];
     var text = [
       'พรีออเดอร์เสื้อเทศกาลกินผัก',
       cartLines().join(' · '),
@@ -469,11 +536,18 @@ var PREORDER = {
     link.rel = 'noopener';
     link.textContent = 'คัดลอกรายการแล้วเปิด LINE';
     link.addEventListener('click', function () {
-      if (navigator.clipboard) navigator.clipboard.writeText(text);
+      // คัดลอกให้เสร็จก่อนเบราว์เซอร์สลับไปแอป LINE ไม่งั้นรายการจะหาย
+      try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch (error) { /* ปล่อยผ่าน */ }
       track('Lead', { value: t.total, content_ids: ['je-shirt'] });
     });
+    var backup = document.createElement('textarea');
+    backup.value = text;
+    backup.readOnly = true;
+    backup.style.cssText = 'width:100%;margin-top:8px;font-size:.82rem;min-height:92px';
+    wrapLater.push(backup);
     var wrap = document.createElement('div');
     wrap.appendChild(link);
+    wrapLater.forEach(function (node) { wrap.appendChild(node); });
     return wrap;
   }
 

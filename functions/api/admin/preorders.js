@@ -65,6 +65,11 @@ export async function onRequestPost({ request, env }) {
   return json({ ok: true, id, status });
 }
 
+const methodNotAllowed = () => bad('รองรับเฉพาะ GET และ POST', 405);
+export const onRequestPut = methodNotAllowed;
+export const onRequestPatch = methodNotAllowed;
+export const onRequestDelete = methodNotAllowed;
+
 function safeParse(value) {
   try {
     const parsed = JSON.parse(value);

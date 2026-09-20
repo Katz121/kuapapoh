@@ -1,4 +1,5 @@
-// GET /api/admin/slip?id=KP-XXXXX&token=... · คืนรูปสลิปของออเดอร์นั้น
+// GET /api/admin/slip?id=KP-XXXXX · คืนรูปสลิปของออเดอร์นั้น
+// รหัสผู้ดูแลส่งทาง header `x-admin-token` เท่านั้น (ใส่ใน URL จะไปติดใน log)
 import { bad, requireDb, adminOk, clean } from '../_shared.js';
 
 export async function onRequestGet({ request, env }) {
@@ -20,3 +21,9 @@ export async function onRequestGet({ request, env }) {
     headers: { 'content-type': row.mime, 'cache-control': 'private, no-store' },
   });
 }
+
+const methodNotAllowed = () => bad('ใช้ได้เฉพาะการอ่าน (GET)', 405);
+export const onRequestPost = methodNotAllowed;
+export const onRequestPut = methodNotAllowed;
+export const onRequestPatch = methodNotAllowed;
+export const onRequestDelete = methodNotAllowed;

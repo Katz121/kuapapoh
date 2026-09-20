@@ -50,11 +50,34 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 dialog{border:2px solid var(--ink);border-radius:14px;padding:0;max-width:min(92vw,520px)}
 dialog .box{padding:18px}
 dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid var(--rule);border-radius:10px}
+.check-drop{display:block;border:2px dashed var(--rule);border-radius:12px;padding:18px;text-align:center;cursor:pointer;background:var(--paper)}
+.check-drop.on{border-color:var(--ok);background:#f2fbf6}
+.check-drop input{display:none}
+#check-preview{max-width:170px;margin:10px auto 0;border:2px solid var(--rule);border-radius:8px}
+.check-result{margin-top:14px;border-radius:12px;padding:14px;border:2px solid var(--ink);background:var(--paper)}
+.check-result.pass{border-color:var(--ok);background:#f2fbf6}
+.check-result.fail{border-color:var(--red);background:#ffeceb}
+.check-result h4{font-family:var(--display);margin:0 0 8px;font-size:1.02rem}
+.check-result .line{display:flex;justify-content:space-between;gap:12px;padding:3px 0;font-size:.9rem}
+.check-result .line span{color:var(--muted);flex:none}
+.check-result .line b{text-align:right}
+.check-warn{margin-top:10px;background:#fff1c2;border:2px solid var(--ink);border-radius:10px;padding:10px;font-size:.88rem}
 .timeline{list-style:none;margin:0;padding:0}
 .timeline li{border-left:3px solid var(--rule);padding:0 0 12px 14px;position:relative}
 .timeline li::before{content:'';position:absolute;left:-7px;top:4px;width:11px;height:11px;border-radius:99px;background:var(--ink)}
 .timeline b{display:block;font-size:.9rem}
 .timeline small{color:var(--muted);font-size:.8rem}
+tr.row-short td:first-child,tr.row-bad td:first-child,tr.row-over td:first-child{box-shadow:inset 4px 0 0 var(--red)}
+tr.row-ok td:first-child{box-shadow:inset 4px 0 0 var(--ok)}
+tr.row-wait td:first-child{box-shadow:inset 4px 0 0 #e6b800}
+.pay{border-radius:99px;padding:.2rem .6rem;font-size:.8rem;font-weight:600;display:inline-block;white-space:nowrap}
+.pay-ok{background:#c8efd8;color:#0d5c39}
+.pay-short,.pay-bad{background:#ffc9c2;color:#8e1a0c}
+.pay-over{background:#ffe9b8}
+.pay-wait{background:#fff6d6}
+.pay-none{background:#f1f1f1;color:#777}
+button.danger{background:transparent;color:var(--red);border:2px solid var(--red)}
+button.danger:hover{background:var(--red);color:#fff}
 .pill-warn{background:#ffe0d9;border-radius:99px;padding:.15rem .5rem;font-size:.75rem;font-weight:600;white-space:nowrap}
 .pill-ok{background:#e4f7ec;border-radius:99px;padding:.15rem .5rem;font-size:.75rem;font-weight:600;color:#0d5c39;white-space:nowrap}
 @media(max-width:720px){.hide-sm{display:none}}
@@ -90,7 +113,9 @@ dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid va
         <option value="cancelled">ยกเลิก</option>
       </select>
       <button class="ghost" id="refresh">รีเฟรช</button>
+      <button id="open-check">ตรวจสลิป</button>
       <button class="ghost" id="csv">ดาวน์โหลด CSV</button>
+      <button class="ghost" id="resync-all" title="เขียนออเดอร์ทั้งหมดจากฐานข้อมูลลงชีตใหม่">ซ่อมชีต</button>
       <a class="ghost" id="sheet-link" href="https://docs.google.com/spreadsheets/d/1bzw2chFI7Xp8UQUmSvnpCca9O2Y8kJc6YCU06w_bEl0/edit" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block;padding:.6rem 1.1rem;border-radius:99px;border:2px solid var(--ink);color:var(--ink);font-weight:600">เปิด Google Sheet ↗</a>
       <span id="stamp" style="color:var(--muted);font-size:.84rem"></span>
     </div>
@@ -98,6 +123,8 @@ dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid va
       <button type="button" class="chip is-on" data-quick="">ทั้งหมด</button>
       <button type="button" class="chip" data-quick="noslip">ยังไม่แนบสลิป</button>
       <button type="button" class="chip" data-quick="noref">สลิปไม่มีเลขอ้างอิง</button>
+      <button type="button" class="chip" data-quick="paybad">การโอนมีปัญหา</button>
+      <button type="button" class="chip" data-quick="paywait">รอตรวจสลิป</button>
       <button type="button" class="chip" data-quick="ship">ต้องส่งไปรษณีย์</button>
     </div>
     <p id="list-msg" class="err" hidden></p>
@@ -105,13 +132,36 @@ dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid va
     <table>
       <thead><tr>
         <th>ออเดอร์</th><th>ลูกค้า</th><th>รายการ</th><th class="num">ยอด</th>
-        <th>รับของ</th><th>สลิป</th><th>สถานะ</th><th>ประวัติ</th>
+        <th>รับของ</th><th>การโอน</th><th>สลิป</th><th>สถานะ</th><th>จัดการ</th>
       </tr></thead>
       <tbody id="rows"></tbody>
     </table>
     </div>
   </section>
 </main>
+
+<dialog id="check-dialog"><div class="box">
+  <button class="ghost small" id="check-close" style="float:right">ปิด</button>
+  <h3 style="font-family:var(--display);margin:0 0 4px">ตรวจสลิปกับธนาคาร</h3>
+  <p style="color:var(--muted);font-size:.88rem;margin:0 0 14px">
+    ใช้กับสลิปที่ลูกค้าส่งมาทาง LINE หรือถ่ายที่หน้าร้าน · ระบบจะอ่านคิวอาร์ในสลิปแล้วถามธนาคารว่าโอนจริงไหม
+  </p>
+
+  <label class="check-drop" id="check-drop">
+    <input type="file" id="check-file" accept="image/*">
+    <b id="check-label">แตะเพื่อเลือกรูปสลิป</b>
+    <div style="font-size:.85rem;color:var(--muted);margin-top:4px">หรือวางรูปที่คัดลอกไว้ (Ctrl+V) ก็ได้</div>
+    <img id="check-preview" alt="สลิปที่เลือก" hidden>
+  </label>
+
+  <label class="f" style="margin-top:12px;display:block">
+    <span style="font-weight:600;font-size:.9rem;display:block;margin-bottom:5px">ยอดที่ควรจะเป็น (ไม่ใส่ก็ได้)</span>
+    <input id="check-amount" type="number" inputmode="decimal" placeholder="เช่น 350">
+  </label>
+
+  <button id="check-run" style="width:100%;margin-top:12px" disabled>ตรวจสลิปนี้</button>
+  <div id="check-result" class="check-result" hidden></div>
+</div></dialog>
 
 <dialog id="event-dialog"><div class="box">
   <button class="ghost small" id="event-close" style="float:right">ปิด</button>
@@ -172,6 +222,10 @@ dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid va
   function applyQuick(list) {
     if (quick === 'noslip') return list.filter(function (o) { return !o.has_slip; });
     if (quick === 'noref') return list.filter(function (o) { return o.has_slip && !o.slip_ref; });
+    if (quick === 'paybad') return list.filter(function (o) {
+      return o.pay && (o.pay.code === 'short' || o.pay.code === 'bad' || o.pay.code === 'over');
+    });
+    if (quick === 'paywait') return list.filter(function (o) { return o.pay && o.pay.code === 'wait'; });
     if (quick === 'ship') return list.filter(function (o) { return o.delivery === 'ship'; });
     return list;
   }
@@ -223,8 +277,17 @@ dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid va
       if (order.status === 'new') { pendingMoney += order.total; pendingCount += 1; }
       else confirmedMoney += order.total;
     });
+    var needCheck = 0;
+    var payProblem = 0;
+    orders.forEach(function (order) {
+      if (order.status === 'cancelled' || !order.pay) return;
+      if (order.pay.code === 'wait') needCheck += 1;
+      if (order.pay.code === 'short' || order.pay.code === 'bad' || order.pay.code === 'over') payProblem += 1;
+    });
     $('cards').innerHTML =
       card(summary.orders, 'ออเดอร์ทั้งหมด') +
+      (payProblem ? card(payProblem, '⚠️ การโอนมีปัญหา') : '') +
+      (needCheck ? card(needCheck, 'รอตรวจสลิป') : '') +
       card(summary.shirts, 'เสื้อที่ต้องสั่งผลิต') +
       card('฿' + confirmedMoney.toLocaleString('th-TH'), 'ยืนยันยอดแล้ว') +
       card('฿' + pendingMoney.toLocaleString('th-TH'), 'รอตรวจสลิป ' + pendingCount + ' ออเดอร์') +
@@ -243,7 +306,7 @@ dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid va
 
   function renderRows(list) {
     if (!list.length) {
-      $('rows').innerHTML = '<tr><td colspan="8" style="color:var(--muted)">ไม่พบออเดอร์ที่ตรงกับที่ค้น</td></tr>';
+      $('rows').innerHTML = '<tr><td colspan="9" style="color:var(--muted)">ไม่พบออเดอร์ที่ตรงกับที่ค้น</td></tr>';
       return;
     }
     $('rows').innerHTML = list.map(function (order) {
@@ -251,7 +314,8 @@ dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid va
         return (SIZE_TH[item.size] || item.size) + ' x' + item.qty;
       }).join(' · ');
       var when = new Date(order.created_at).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' });
-      return '<tr>' +
+      var payCode = order.pay ? order.pay.code : 'none';
+      return '<tr class="row-' + payCode + '">' +
         '<td><b>' + order.id + '</b><div class="rowline">' + when + '</div></td>' +
         '<td>' + escapeHtml(order.name) + '<div class="rowline">' + escapeHtml(order.phone) +
           (order.contact ? ' · ' + escapeHtml(order.contact) : '') + '</div></td>' +
@@ -260,6 +324,11 @@ dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid va
         '<td>' + (order.delivery === 'ship'
             ? 'ส่งไปรษณีย์<div class="rowline">' + escapeHtml(order.address || '') + '</div>'
             : 'รับเองที่บ้าน 78') + '</td>' +
+        '<td><span class="pay pay-' + (order.pay ? order.pay.code : 'none') + '">' +
+          escapeHtml(order.pay ? order.pay.label : '-') + '</span>' +
+          (order.pay && order.pay.detail ? '<div class="rowline">' + escapeHtml(order.pay.detail) + '</div>' : '') +
+          (order.slip_ref ? '<div style="margin-top:5px"><button class="ghost small" data-recheck="' + order.id + '">ตรวจสลิปใหม่</button></div>' : '') +
+        '</td>' +
         '<td>' + (order.has_slip
             ? '<button class="ghost small" data-slip="' + order.id + '">ดูสลิป</button>' +
               (order.slip_ref
@@ -275,9 +344,137 @@ dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid va
         '<td><button class="ghost small" data-events="' + order.id + '">ดูประวัติ</button>' +
           (sheetsOn && !order.sheet_ok
             ? '<div style="margin-top:6px"><button class="ghost small" data-resync="' + order.id + '">ซิงก์ขึ้นชีต</button></div>'
-            : '') + '</td>' +
+            : '') +
+          '<div style="margin-top:6px"><button class="danger small" data-del="' + order.id + '">ลบ</button></div></td>' +
       '</tr>';
     }).join('');
+  }
+
+  /* ── เครื่องตรวจสลิป ──
+     อ่านคิวอาร์ในรูปที่ฝั่งเบราว์เซอร์ แล้วส่งแค่ข้อความในคิวอาร์ไปถามธนาคารผ่าน API ของเราเอง
+     (คีย์ตรวจสลิปอยู่ฝั่งเซิร์ฟเวอร์เท่านั้น ไม่หลุดมาที่หน้าเว็บ) */
+  var checkPayload = '';
+  var jsQrState = '';
+
+  function loadJsQR(done) {
+    if (jsQrState === 'ready') return done(true);
+    if (jsQrState === 'failed') return done(false);
+    var script = document.createElement('script');
+    script.src = '/preorder/vendor/jsQR.js';
+    script.onload = function () { jsQrState = 'ready'; done(true); };
+    script.onerror = function () { jsQrState = 'failed'; done(false); };
+    document.head.appendChild(script);
+  }
+
+  $('open-check').addEventListener('click', function () {
+    $('check-result').hidden = true;
+    $('check-dialog').showModal();
+  });
+  $('check-close').addEventListener('click', function () { $('check-dialog').close(); });
+  $('check-file').addEventListener('change', function () { readSlipFile(this.files && this.files[0]); });
+
+  // วางรูปจากคลิปบอร์ดได้เลย · ทีมงานมักกด copy รูปจากแชท LINE
+  document.addEventListener('paste', function (event) {
+    if (!$('check-dialog').open) return;
+    var items = (event.clipboardData && event.clipboardData.items) || [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].type && items[i].type.indexOf('image') === 0) {
+        readSlipFile(items[i].getAsFile());
+        break;
+      }
+    }
+  });
+
+  function readSlipFile(file) {
+    if (!file) return;
+    checkPayload = '';
+    $('check-run').disabled = true;
+    $('check-result').hidden = true;
+    $('check-label').textContent = 'กำลังอ่านคิวอาร์ในสลิป...';
+    var reader = new FileReader();
+    reader.onload = function () {
+      var image = new Image();
+      image.onload = function () {
+        $('check-preview').src = reader.result;
+        $('check-preview').hidden = false;
+        loadJsQR(function (ok) {
+          if (!ok) { $('check-label').textContent = 'โหลดตัวอ่านคิวอาร์ไม่สำเร็จ'; return; }
+          try {
+            var side = Math.min(1400, Math.max(image.width, image.height));
+            var scale = side / Math.max(image.width, image.height);
+            var canvas = document.createElement('canvas');
+            canvas.width = Math.round(image.width * scale);
+            canvas.height = Math.round(image.height * scale);
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var found = window.jsQR(data.data, data.width, data.height, { inversionAttempts: 'attemptBoth' });
+            if (found && found.data) {
+              checkPayload = String(found.data).slice(0, 300);
+              $('check-label').textContent = '✓ อ่านคิวอาร์ได้แล้ว · กดปุ่มตรวจด้านล่าง';
+              $('check-drop').classList.add('on');
+              $('check-run').disabled = false;
+            } else {
+              $('check-label').textContent = 'อ่านคิวอาร์ไม่ได้ · ลองใช้รูปที่ชัดกว่านี้หรือรูปเต็มใบ';
+              $('check-drop').classList.remove('on');
+            }
+          } catch (error) {
+            $('check-label').textContent = 'อ่านรูปไม่สำเร็จ · ลองไฟล์อื่น';
+          }
+        });
+      };
+      image.onerror = function () { $('check-label').textContent = 'เปิดไฟล์นี้ไม่ได้ · ลองไฟล์อื่น'; };
+      image.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  $('check-run').addEventListener('click', function () {
+    if (!checkPayload) return;
+    var button = this;
+    button.disabled = true;
+    button.textContent = 'กำลังถามธนาคาร...';
+    api('/api/admin/check-slip', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ payload: checkPayload, amount: Number($('check-amount').value) || null })
+    }).then(function (data) {
+      button.disabled = false;
+      button.textContent = 'ตรวจสลิปนี้';
+      showCheckResult(data);
+    });
+  });
+
+  function showCheckResult(data) {
+    var box = $('check-result');
+    box.hidden = false;
+    if (!data.ok) {
+      box.className = 'check-result fail';
+      box.innerHTML = '<h4>ตรวจไม่สำเร็จ</h4><div>' + escapeHtml(data.error || '') + '</div>';
+      return;
+    }
+    var pass = data.verified === true;
+    box.className = 'check-result ' + (pass ? 'pass' : (data.verified === false ? 'fail' : ''));
+    var head = pass ? '✓ ธนาคารยืนยันว่าโอนจริง'
+      : data.verified === false ? '✗ ไม่ผ่าน' : 'ตรวจไม่ได้';
+    var rows =
+      line('สรุป', data.note || '-') +
+      (data.amount ? line('ยอดที่โอนจริง', '฿' + Number(data.amount).toLocaleString('th-TH') +
+        (data.amountMatch === true ? ' · ตรงกับที่ระบุ' : data.amountMatch === false ? ' · ไม่ตรงกับที่ระบุ' : '')) : '') +
+      (data.date ? line('วันที่โอน', data.date) : '') +
+      (data.sender ? line('ผู้โอน', data.sender) : '') +
+      (data.receiverAccount ? line('บัญชีปลายทาง', data.receiverAccount +
+        (data.receiverMatch === true ? ' · บัญชีของกลุ่ม' : data.receiverMatch === false ? ' · ไม่ใช่บัญชีของกลุ่ม' : '')) : '') +
+      (data.transRef ? line('เลขรายการธนาคาร', data.transRef) : '');
+    var warn = data.usedBy
+      ? '<div class="check-warn">⚠️ สลิปใบนี้ถูกใช้กับออเดอร์ <b>' + escapeHtml(data.usedBy.id) + '</b> (' +
+        escapeHtml(data.usedBy.name) + ' · ฿' + Number(data.usedBy.total).toLocaleString('th-TH') + ') ไปแล้ว</div>'
+      : '';
+    box.innerHTML = '<h4>' + head + '</h4>' + rows + warn;
+  }
+
+  function line(label, value) {
+    return '<div class="line"><span>' + label + '</span><b>' + escapeHtml(String(value)) + '</b></div>';
   }
 
   var EVENT_TH = {
@@ -322,6 +519,79 @@ dialog img{max-width:100%;max-height:68vh;object-fit:contain;border:2px solid va
         $('list-msg').textContent = 'ซิงก์ไม่สำเร็จ: ' + data.error;
         return;
       }
+      load(false);
+    });
+  });
+
+  /* ตรวจสลิปกับธนาคารอีกรอบ · ใช้กับออเดอร์ที่ตรวจตอนแรกแล้วอ่านยอดไม่ได้ */
+  document.addEventListener('click', function (event) {
+    var btn = event.target.closest('[data-recheck]');
+    if (!btn) return;
+    btn.disabled = true;
+    btn.textContent = 'กำลังตรวจ...';
+    api('/api/admin/preorders', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: btn.dataset.recheck, action: 'recheck' })
+    }).then(function (data) {
+      if (!data.ok) {
+        btn.disabled = false;
+        btn.textContent = 'ตรวจสลิปใหม่';
+        $('list-msg').hidden = false;
+        $('list-msg').textContent = 'ตรวจไม่สำเร็จ: ' + data.error;
+        return;
+      }
+      load(false);
+    });
+  });
+
+  /* ลบออเดอร์ · ลบที่นี่แล้วแถวในชีตหายตามไปด้วย */
+  document.addEventListener('click', function (event) {
+    var btn = event.target.closest('[data-del]');
+    if (!btn) return;
+    var id = btn.dataset.del;
+    var order = orders.filter(function (o) { return o.id === id; })[0];
+    var detail = order ? (order.name + ' · ฿' + order.total.toLocaleString('th-TH')) : '';
+    if (!window.confirm('ลบออเดอร์ ' + id + ' ทิ้งถาวร? ' + detail +
+        ' · จะหายทั้งในระบบและในชีต กู้คืนไม่ได้')) return;
+    btn.disabled = true;
+    btn.textContent = 'กำลังลบ...';
+    api('/api/admin/preorders', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: id, action: 'delete' })
+    }).then(function (data) {
+      if (!data.ok) {
+        btn.disabled = false;
+        btn.textContent = 'ลบ';
+        $('list-msg').hidden = false;
+        $('list-msg').textContent = 'ลบไม่สำเร็จ: ' + data.error;
+        return;
+      }
+      load(false);
+    });
+  });
+
+  /* ซ่อมชีต · เขียนออเดอร์ทั้งหมดจากฐานข้อมูลลงชีตใหม่ ใช้ตอนแถวในชีตหายหรือโดนแก้ */
+  $('resync-all').addEventListener('click', function () {
+    if (!window.confirm('เขียนออเดอร์ทั้งหมดจากระบบลงชีตใหม่? ' +
+        'แถวที่มีอยู่จะถูกทับด้วยข้อมูลจริง แถวที่หายไปจะถูกสร้างกลับมา')) return;
+    var button = this;
+    button.disabled = true;
+    button.textContent = 'กำลังซ่อม...';
+    api('/api/admin/resync-all', { method: 'POST' }).then(function (data) {
+      button.disabled = false;
+      button.textContent = 'ซ่อมชีต';
+      if (!data.ok) {
+        $('list-msg').hidden = false;
+        $('list-msg').textContent = 'ซ่อมไม่สำเร็จ: ' + data.error;
+        return;
+      }
+      $('list-msg').hidden = false;
+      $('list-msg').className = '';
+      $('list-msg').style.cssText = 'background:#e4f7ec;border:2px solid var(--ok);border-radius:10px;padding:10px 12px;margin-bottom:14px';
+      $('list-msg').textContent = 'ซ่อมชีตแล้ว ' + data.synced + ' จาก ' + data.total + ' ออเดอร์' +
+        (data.failed && data.failed.length ? ' · พลาด ' + data.failed.length : '');
       load(false);
     });
   });

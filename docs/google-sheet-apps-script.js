@@ -23,7 +23,7 @@ var HEADERS = [
   'เลขออเดอร์', 'วันเวลาที่สั่ง', 'ชื่อ-นามสกุล', 'เบอร์โทร', 'LINE/Facebook',
   'รายการไซส์', 'จำนวน (ตัว)', 'ค่าเสื้อ', 'ค่าส่ง', 'ยอดรวม',
   'วิธีรับของ', 'ที่อยู่จัดส่ง', 'หมายเหตุลูกค้า', 'สลิป', 'เลขอ้างอิงสลิป',
-  'สถานะ', 'อัปเดตล่าสุด', 'หมายเหตุทีมงาน'
+  'สถานะ', 'อัปเดตล่าสุด', 'หมายเหตุทีมงาน', 'การโอน', 'ยอดที่โอนจริง'
 ];
 
 function doPost(e) {
@@ -37,6 +37,7 @@ function doPost(e) {
 
     ensureHeaders(sheet);
 
+    if (body.action === 'delete') return reply(deleteRow(sheet, body));
     if (body.action === 'update') return reply(updateRow(sheet, body));
     return reply(appendRow(sheet, body));
   } catch (error) {
@@ -50,10 +51,31 @@ function appendRow(sheet, body) {
   var existing = findRow(sheet, order.id);
   if (existing) return updateRow(sheet, body);
 
-  sheet.appendRow(rowFrom(order));
-  var row = sheet.getLastRow();
+  // เขียนที่แถวว่างแถวแรก · ไม่ใช้ appendRow เพราะถ้ามีคนลบเนื้อหาแถวกลางทิ้ง
+  // appendRow จะไปต่อท้ายสุดจนเกิดช่องว่าง และแถวที่ถูกล้างจะโดนเขียนทับภายหลัง
+  var row = firstEmptyRow(sheet);
+  sheet.getRange(row, 1, 1, HEADERS.length).setValues([rowFrom(order)]);
   formatRow(sheet, row);
   return { ok: true, row: row };
+}
+
+/* ลบออเดอร์ออกจากชีต (สั่งจากหน้าแอดมิน) · ลบทั้งแถวเพื่อไม่ให้เหลือช่องว่าง */
+function deleteRow(sheet, body) {
+  var order = body.order || {};
+  var row = findRow(sheet, order.id);
+  if (!row || row === 1) return { ok: true, deleted: false };
+  sheet.deleteRow(row);
+  return { ok: true, deleted: true, row: row };
+}
+
+/* แถวว่างแถวแรกที่ยังไม่มีเลขออเดอร์ */
+function firstEmptyRow(sheet) {
+  var last = Math.max(sheet.getLastRow(), 1);
+  var ids = sheet.getRange(1, 1, last, 1).getValues();
+  for (var i = 1; i < ids.length; i++) {
+    if (String(ids[i][0]).trim() === '') return i + 1;
+  }
+  return last + 1;
 }
 
 function updateRow(sheet, body) {
@@ -89,7 +111,9 @@ function rowFrom(order) {
     order.slipRef || '',
     order.status || '',
     order.updatedAt || new Date().toISOString(),
-    order.adminNote || ''
+    order.adminNote || '',
+    order.payStatus || '',
+    order.paidAmount || ''
   ];
 }
 
@@ -103,9 +127,15 @@ function findRow(sheet, orderId) {
 }
 
 function ensureHeaders(sheet) {
-  if (sheet.getLastRow() > 0) return;
-  sheet.appendRow(HEADERS);
-  sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold').setBackground('#FFE81C');
+  // เขียนหัวตารางให้ครบเสมอ · เผื่อมีการเพิ่มคอลัมน์ใหม่ทีหลัง หัวเดิมจะได้ไม่ค้างของเก่า
+  var current = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];
+  var same = current.length === HEADERS.length;
+  for (var i = 0; same && i < HEADERS.length; i++) {
+    if (String(current[i]).trim() !== HEADERS[i]) same = false;
+  }
+  if (same) return;
+  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS])
+    .setFontWeight('bold').setBackground('#FFE81C');
   sheet.setFrozenRows(1);
 }
 
@@ -117,6 +147,15 @@ function formatRow(sheet, row) {
     : status === 'ยืนยันยอด' ? '#E4F7EC'
     : '#FFFFFF';
   sheet.getRange(row, 1, 1, HEADERS.length).setBackground(color);
+
+  // ช่อง "การโอน" ระบายแยกอีกชั้น เพราะเป็นสิ่งที่ทีมงานต้องดูก่อนอย่างอื่น
+  var pay = String(sheet.getRange(row, 19).getValue());
+  var payColor = pay.indexOf('โอนครบ') === 0 ? '#C8EFD8'
+    : (pay.indexOf('โอนไม่ครบ') === 0 || pay.indexOf('ไม่ผ่าน') >= 0) ? '#FFC9C2'
+    : pay.indexOf('โอนเกิน') === 0 ? '#FFE9B8'
+    : pay.indexOf('ยังไม่โอน') === 0 ? '#F1F1F1'
+    : '#FFF6D6';
+  sheet.getRange(row, 19).setBackground(payColor).setFontWeight('bold');
 }
 
 function reply(data) {
@@ -270,7 +309,11 @@ function countFromManual(ss) {
 function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('พรีออเดอร์')
+    .addItem('ดึงข้อมูลจากระบบ (ซิงก์ใหม่)', 'pullFromSystem')
     .addItem('อัปเดตสรุปไซส์', 'buildSummary')
+    .addSeparator()
+    .addItem('ตั้งรหัสผู้ดูแล', 'setAdminToken')
+    .addItem('ให้ดึงข้อมูลเองทุก 15 นาที', 'enableAutoPull')
     .addItem('สร้าง/ล้างแท็บกรอกมือใหม่', 'setupManualTab')
     .addToUi();
 }
@@ -288,4 +331,115 @@ function columnLetter(index) {
     index = Math.floor((index - mod) / 26);
   }
   return letter;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ดึงข้อมูลจากระบบมาลงชีต · ทำให้ชีตตรงกับหน้าแอดมินเสมอ
+   ฐานข้อมูลของเว็บคือของจริง ชีตเป็นแค่กระจกสะท้อน
+   ตั้งรหัสครั้งเดียว: เมนู พรีออเดอร์ → ตั้งรหัสผู้ดูแล
+   ═══════════════════════════════════════════════════════════ */
+
+var API_BASE = 'https://kuapapoh.com';
+var TOKEN_KEY = 'KUAPAPOH_ADMIN_TOKEN';
+
+function setAdminToken() {
+  var ui = SpreadsheetApp.getUi();
+  var answer = ui.prompt('ตั้งรหัสผู้ดูแล',
+    'วางรหัสเดียวกับที่ใช้เข้าหน้า kuapapoh.com/preorder-admin', ui.ButtonSet.OK_CANCEL);
+  if (answer.getSelectedButton() !== ui.Button.OK) return;
+  var token = String(answer.getResponseText() || '').trim();
+  if (!token) return;
+  PropertiesService.getScriptProperties().setProperty(TOKEN_KEY, token);
+  ui.alert('เก็บรหัสแล้ว · ต่อไปกด "ดึงข้อมูลจากระบบ" ได้เลย');
+}
+
+function pullFromSystem() {
+  var token = PropertiesService.getScriptProperties().getProperty(TOKEN_KEY);
+  if (!token) {
+    SpreadsheetApp.getUi().alert('ยังไม่ได้ตั้งรหัสผู้ดูแล · กดเมนู พรีออเดอร์ → ตั้งรหัสผู้ดูแล ก่อน');
+    return;
+  }
+
+  var response = UrlFetchApp.fetch(API_BASE + '/api/admin/preorders?limit=500', {
+    headers: { 'x-admin-token': token },
+    muteHttpExceptions: true
+  });
+  var data = JSON.parse(response.getContentText());
+  if (!data.ok) throw new Error('ดึงข้อมูลไม่สำเร็จ: ' + (data.error || response.getResponseCode()));
+
+  var sheet = SpreadsheetApp.getActive().getSheets()[0];
+  ensureHeaders(sheet);
+
+  // เรียงจากเก่าไปใหม่ให้ตรงกับลำดับที่ลูกค้าสั่งจริง
+  var orders = (data.orders || []).slice().reverse();
+  var rows = orders.map(function (order) { return rowFrom(fromApi(order)); });
+
+  // ล้างเฉพาะส่วนข้อมูล แล้วเขียนใหม่ทั้งชุด · ชีตจะตรงกับระบบเป๊ะทุกครั้ง
+  var last = sheet.getLastRow();
+  if (last > 1) sheet.getRange(2, 1, last - 1, HEADERS.length).clearContent().setBackground(null);
+  if (rows.length) {
+    sheet.getRange(2, 1, rows.length, HEADERS.length).setValues(rows);
+    for (var i = 0; i < rows.length; i++) formatRow(sheet, i + 2);
+  }
+
+  SpreadsheetApp.getActive().toast('ดึงข้อมูลจากระบบแล้ว ' + rows.length + ' ออเดอร์');
+  return rows.length;
+}
+
+/* แปลงข้อมูลจาก API (ชื่อช่องแบบฐานข้อมูล) ให้เป็นรูปแบบที่ rowFrom ใช้ */
+function fromApi(order) {
+  var items = (order.items || []).map(function (item) {
+    return (SIZE_TH[item.size] || item.size) + ' x' + item.qty;
+  }).join(' · ');
+  return {
+    id: order.id,
+    createdAt: thaiTime(order.created_at),
+    name: order.name,
+    phone: order.phone,
+    contact: order.contact,
+    items: items,
+    qty: order.qty,
+    subtotal: order.subtotal,
+    shipping: order.shipping,
+    total: order.total,
+    delivery: order.delivery === 'ship' ? 'ส่งไปรษณีย์' : 'รับเองที่บ้าน 78',
+    address: order.address,
+    note: order.note,
+    hasSlip: !!order.has_slip,
+    slipRef: order.slip_ref,
+    status: STATUS_TH_MAP[order.status] || order.status,
+    updatedAt: thaiTime(new Date().toISOString()),
+    adminNote: order.admin_note,
+    payStatus: order.pay ? order.pay.label : '',
+    paidAmount: order.slip_amount || ''
+  };
+}
+
+var STATUS_TH_MAP = {
+  'new': 'ใหม่', 'paid': 'ยืนยันยอด', 'producing': 'กำลังผลิต',
+  'ready': 'ของพร้อม', 'done': 'ปิดแล้ว', 'cancelled': 'ยกเลิก'
+};
+var SIZE_TH = {
+  'S': 'S', 'M': 'M', 'L': 'L', 'XL': 'XL', '2XL': '2XL',
+  'KID-S': 'เด็ก S', 'KID-M': 'เด็ก M', 'KID-L': 'เด็ก L'
+};
+
+function thaiTime(iso) {
+  if (!iso) return '';
+  var date = new Date(iso);
+  if (isNaN(date.getTime())) return String(iso);
+  return Utilities.formatDate(date, 'Asia/Bangkok', 'dd/MM/yyyy HH:mm');
+}
+
+/* ตั้งให้ดึงเองทุก 15 นาที · กดครั้งเดียวพอ กดซ้ำไม่สร้างซ้ำ */
+function enableAutoPull() {
+  var existing = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < existing.length; i++) {
+    if (existing[i].getHandlerFunction() === 'pullFromSystem') {
+      SpreadsheetApp.getUi().alert('ตั้งไว้อยู่แล้ว · ชีตจะดึงข้อมูลเองทุก 15 นาที');
+      return;
+    }
+  }
+  ScriptApp.newTrigger('pullFromSystem').timeBased().everyMinutes(15).create();
+  SpreadsheetApp.getUi().alert('เรียบร้อย · ชีตจะดึงข้อมูลจากระบบเองทุก 15 นาที');
 }

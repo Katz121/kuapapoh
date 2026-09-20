@@ -57,43 +57,111 @@
   // (old placeholder products in saved CMS data stay hidden).
   const SHOP_PRODUCT_IDS = ['je-shirt', 'shirt', 'poh'];
 
-  // สินค้าที่มากับโค้ด · ถ้าข้อมูลที่บันทึกไว้ (localStorage / cloud) ยังไม่มีสินค้านี้
-  // ให้เติมลงไปเอง ไม่งั้นเครื่องที่เคยเปิดหน้า admin จะไม่เห็นสินค้าใหม่เลย
-  const PRODUCT_FALLBACKS = {
+  // ═══ รายการสินค้าอยู่ในโค้ด ไม่ใช่ในข้อมูลที่บันทึกไว้ ═══
+  // เพราะเครื่องที่เคยเปิดหน้า admin จะอ่านจาก localStorage ก่อนเสมอ
+  // ถ้าปล่อยให้ข้อมูลเก่ากำหนดรายการสินค้า สินค้าใหม่จะไม่ขึ้น และบางเครื่องกริดจะว่างเปล่า
+  // ข้อมูลที่บันทึกไว้จะถูกใช้แค่ "ทับข้อความ" ของสินค้าที่มีอยู่ในรายการนี้เท่านั้น
+  const PRODUCT_CATALOGUE = {
     'je-shirt': {
-      id: 'je-shirt',
-      category: 'เสื้อผ้า & แฟชั่น',
-      tag: 'พรีออเดอร์ · เทศกาลกินผัก',
-      name: 'เสื้อเทศกาลกินผัก กั่วป่าโพ้',
-      price: 350,
-      priceLabel: '฿350',
-      desc: 'เสื้อยืดสีขาว อกซ้ายเป็นตราผ้ากันเปื้อนกั่วป่าโพ้สีแดง ด้านหลังรวมสัญลักษณ์เทศกาลกินผักของตะกั่วป่า ศาลเจ้า มังกร เสือ และเตาไฟ',
-      meta: 'ผ้าฝ้าย 100% เกรด 32 คอมบ์ · ไซส์ผู้ใหญ่ S-2XL และไซส์เด็ก S-L',
-      image: 'images/je-shirt.webp',
-      imageWidth: 1400,
-      imageHeight: 935,
-      imageAlt: 'ลายหลังเสื้อเทศกาลกินผักกั่วป่าโพ้ ศาลเจ้า มังกร เสือ และเตาไฟ',
-      hasModal: true,
-      modalId: 'modal-je',
-      modalCta: '🧧 ดูลายเสื้อ & ตารางไซส์ →',
-      shotOverlay: '🧧 ดูลายเสื้อ',
-      status: 'preorder',
-      buyUrl: 'preorder/',
-      buyLabel: 'สั่งพรีออเดอร์'
-    }
+      "id": "je-shirt",
+      "category": "เสื้อผ้า & แฟชั่น",
+      "tag": "พรีออเดอร์ · เทศกาลกินผัก",
+      "name": "เสื้อเทศกาลกินผัก กั่วป่าโพ้",
+      "price": 350,
+      "priceLabel": "฿350",
+      "desc": "เสื้อยืดสีขาว อกซ้ายเป็นตราผ้ากันเปื้อนกั่วป่าโพ้สีแดง ด้านหลังรวมสัญลักษณ์เทศกาลกินผักของตะกั่วป่า ศาลเจ้า มังกร เสือ และเตาไฟ",
+      "meta": "ผ้าฝ้าย 100% เกรด 32 คอมบ์ · ไซส์ผู้ใหญ่ S-2XL และไซส์เด็ก S-L",
+      "image": "images/je-shirt.webp",
+      "imageWidth": 1400,
+      "imageHeight": 935,
+      "imageAlt": "ลายหลังเสื้อเทศกาลกินผักกั่วป่าโพ้ ศาลเจ้า มังกร เสือ และเตาไฟ",
+      "hasModal": true,
+      "modalId": "modal-je",
+      "modalCta": "🧧 ดูลายเสื้อ & ตารางไซส์ →",
+      "shotOverlay": "🧧 ดูลายเสื้อ",
+      "status": "preorder",
+      "buyUrl": "preorder/",
+      "buyLabel": "สั่งพรีออเดอร์"
+    },
+    'shirt': {
+      "id": "shirt",
+      "tag": "Official Merch",
+      "name": "เสื้อยืดกั่วป่าโพ้ KUAPAPOH",
+      "price": 350,
+      "priceLabel": "฿350",
+      "desc": "เสื้อยืดสีดำพรีเมียม สกรีนตรากั่วป่าโพ้ที่อกซ้าย ด้านหลังจัดเต็มกราฟิกลายรวมอัตลักษณ์ตะกั่วป่า 6 อ.",
+      "meta": "ผ้าฝ้าย Comb 100% · ไซส์ M · L · XL · 2XL",
+      "image": "images/shirt-poh.webp",
+      "hasModal": true,
+      "modalTag": "Official Heritage Merch",
+      "modalLead": "เสื้อยืดสีดำพรีเมียม ถ่ายทอดเรื่องราวและสถาปัตยกรรมมีชีวิตของย่านเมืองเก่าตะกั่วป่า จังหวัดพังงา ออกแบบร่วมกับศิลปินและคนในชุมชน",
+      "modalDelivery": "จัดส่งทั่วประเทศ",
+      "modalNote": "* มีจำหน่ายเฉพาะไซส์ M · L · XL · 2XL | ผ้าฝ้าย Cotton 100% เกรด Comb ผ้านุ่ม ใส่สบาย ระบายอากาศดี | คลิกแท็บ \"ภาพ 2D\" ที่แกลเลอรีเพื่อดูลวดลายกราฟิกแบบเต็มตา",
+      "gallery": [
+        {
+          "label": "แบบ 1",
+          "src": "images/model-shirt-1.webp"
+        },
+        {
+          "label": "แบบ 2",
+          "src": "images/model-shirt-2.webp"
+        },
+        {
+          "label": "แบบ 3",
+          "src": "images/model-shirt-3.webp"
+        },
+        {
+          "label": "ภาพ 2D",
+          "src": "images/shirt-poh.webp"
+        }
+      ],
+      "category": "เสื้อผ้า & แฟชั่น",
+      "status": "available"
+    },
+    'poh': {
+      "id": "poh",
+      "category": "เครื่องดื่ม",
+      "tag": "เครื่องดื่มของเมือง",
+      "name": "Poh Sparkling Tea · ชาซ่ากั่วป่าโพ้",
+      "price": 159,
+      "priceLabel": "฿159",
+      "desc": "ชาสปาร์กลิงจากวัตถุดิบพังงา ดาหลา ส้มแขก ลูกจันทน์ มิ้นท์ และกระเจี๊ยบ ออกแบบรสชาติโดยกลุ่มกั่วป่าโพ้ ดื่มหนึ่งขวด เมืองเก่าได้ผลิบาน",
+      "meta": "0% แอลกอฮอล์ · 275 ml. · ขวดแก้ว",
+      "image": "images/poh-bottle.webp",
+      "imageWidth": 960,
+      "imageHeight": 720,
+      "imageAlt": "ขวด Poh Sparkling Tea คู่แก้วน้ำแข็ง วางบนขอบหน้าต่างตึกเก่า",
+      "shotStyle": "photo",
+      "hasModal": true,
+      "modalId": "modal-poh",
+      "modalCta": "🌸 อ่านเรื่องราวในขวด →",
+      "shotOverlay": "🌸 อ่านเรื่องราว"
+    },
   };
 
+  function mergeProduct(base, saved) {
+    if (!saved || typeof saved !== 'object') return Object.assign({}, base);
+    const merged = Object.assign({}, base);
+    // รับเฉพาะช่องที่ทีมงานแก้ได้จากหน้า admin · ช่องโครงสร้าง (id, ลิงก์, ขนาดภาพ) ยึดตามโค้ด
+    ['tag', 'name', 'price', 'priceLabel', 'desc', 'meta', 'image', 'imageAlt', 'category',
+     'modalCta', 'modalLead', 'modalNote', 'modalDelivery', 'shotOverlay'].forEach((key) => {
+      if (saved[key] !== undefined && saved[key] !== null && saved[key] !== '') merged[key] = saved[key];
+    });
+    if (Array.isArray(saved.gallery) && saved.gallery.length) merged.gallery = saved.gallery;
+    return merged;
+  }
+
   function limitShopProducts(data) {
-    if (data?.shop && Array.isArray(data.shop.products)) {
-      const pick = (id) => data.shop.products.find(product => product.id === id)
-        || PRODUCT_FALLBACKS[id]
-        || (id === 'shirt'
-              ? data.shop.products.find(product => !SHOP_PRODUCT_IDS.includes(product.id) && String(product.name || '').includes('เสื้อ'))
-              : null);
-      data.shop.products = SHOP_PRODUCT_IDS.map(pick).filter(Boolean);
-      if (data.shop.heading === 'ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ' || data.shop.heading === 'เสื้อยืดจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ') {
-        data.shop.heading = 'เสื้อยืดจากย่าน<br>ถ่ายทอดด้วยใจ';
-      }
+    if (!data) return data;
+    if (!data.shop || typeof data.shop !== 'object') data.shop = {};
+    const saved = Array.isArray(data.shop.products) ? data.shop.products : [];
+    data.shop.products = SHOP_PRODUCT_IDS.map((id) => {
+      const base = PRODUCT_CATALOGUE[id];
+      if (!base) return null;
+      return mergeProduct(base, saved.find((item) => item && item.id === id));
+    }).filter(Boolean);
+    if (data.shop.heading === 'ของที่ระลึกจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ' || data.shop.heading === 'เสื้อยืดจากย่าน<br>ทำด้วยมือ ถ่ายทอดด้วยใจ') {
+      data.shop.heading = 'เสื้อยืดจากย่าน<br>ถ่ายทอดด้วยใจ';
     }
     return data;
   }

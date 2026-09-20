@@ -35,6 +35,31 @@ export async function ipFingerprint(request) {
   return [...new Uint8Array(digest)].slice(0, 8).map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+// สถานะการโอนแบบอ่านปราดเดียวรู้เรื่อง · ใช้ทั้งหน้าแอดมินและ Google Sheet
+// อ่านจากผลตรวจสลิปกับธนาคาร ไม่ใช่จากสถานะที่ทีมงานกดเอง
+export function payStatus(order) {
+  const hasSlip = !!(order.has_slip || order.hasSlip);
+  const verified = order.slip_verified;
+  const paid = Number(order.slip_amount || 0);
+  const total = Number(order.total || 0);
+  const detail = paid ? `โอนมา ${paid} / ต้องได้ ${total} บาท` : '';
+
+  if (!hasSlip) return { code: 'none', label: 'ยังไม่โอน', detail: `ต้องได้ ${total} บาท`, paid: 0, total };
+  if (verified === 1) {
+    return { code: 'ok', label: 'โอนครบ', detail: detail || `ครบ ${total} บาท`, paid, total };
+  }
+  if (verified === 0) {
+    if (paid && total && paid < total) {
+      return { code: 'short', label: `โอนไม่ครบ ขาด ${total - paid} บาท`, detail, paid, total };
+    }
+    if (paid && total && paid > total) {
+      return { code: 'over', label: `โอนเกิน ${paid - total} บาท`, detail, paid, total };
+    }
+    return { code: 'bad', label: 'สลิปไม่ผ่าน ต้องตรวจเอง', detail: order.slip_note || '', paid, total };
+  }
+  return { code: 'wait', label: 'รอตรวจสลิป', detail: `ต้องได้ ${total} บาท`, paid, total };
+}
+
 // บันทึกเหตุการณ์ของออเดอร์ · ใช้ตรวจย้อนหลังว่าใครทำอะไรตอนไหน
 export async function logEvent(db, orderId, kind, detail, actor = 'system') {
   if (!db || !orderId) return;

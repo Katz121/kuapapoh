@@ -59,15 +59,21 @@ export async function verifySlip(env, { payload, amount }) {
   }
 
   const info = (data && data.data) || {};
-  const amountInfo = info.amount || {};
-  const paid = typeof amountInfo.amount === 'number' ? amountInfo.amount : Number(amountInfo.amount || 0);
+  // ยอดเงินมาได้หลายรูปแบบแล้วแต่ธนาคาร: เป็นตัวเลขตรงๆ, {amount}, หรือ {local:{amount}}
+  const amountInfo = info.amount;
+  const paid = readAmount(amountInfo) || readAmount(info.transAmount) || readAmount(info.value) || 0;
   const receiverMatch = info.receiver && info.receiver.account ? info.receiver.account.match : undefined;
-  const amountMatch = typeof amountInfo.match === 'boolean'
+  const amountMatch = (amountInfo && typeof amountInfo.match === 'boolean')
     ? amountInfo.match
-    : (amount ? Math.abs(paid - Number(amount)) < 0.01 : undefined);
+    : (amount && paid ? Math.abs(paid - Number(amount)) < 0.01 : undefined);
 
   const problems = [];
-  if (amountMatch === false) problems.push(`ยอดไม่ตรง (โอนมา ${paid} บาท)`);
+  // อ่านยอดไม่ได้ ไม่เท่ากับยอดผิด · ถ้าไม่รู้ยอดต้องบอกตามจริง ไม่ใช่ฟันธงว่าโอนไม่ครบ
+  if (amountMatch === false) {
+    problems.push(paid ? `ยอดไม่ตรง (โอนมา ${paid} บาท)` : 'ยอดไม่ตรงกับที่สั่ง');
+  } else if (amount && !paid) {
+    problems.push('ธนาคารไม่ได้ส่งยอดเงินกลับมา · ตรวจยอดด้วยตาอีกครั้ง');
+  }
   if (receiverMatch === false) problems.push('โอนเข้าบัญชีอื่น ไม่ใช่บัญชีของกลุ่ม');
 
   return {
@@ -76,6 +82,11 @@ export async function verifySlip(env, { payload, amount }) {
     note: problems.length ? problems.join(' · ') : 'ธนาคารยืนยันว่าโอนจริง ยอดและบัญชีปลายทางตรง',
     amount: paid || null,
     sender: (info.sender && (info.sender.displayName || info.sender.name)) || '',
+    receiver: (info.receiver && (info.receiver.displayName || info.receiver.name)) || '',
+    receiverAccount: (info.receiver && info.receiver.account && info.receiver.account.value) || '',
+    receiverMatch: receiverMatch,
+    amountMatch: amountMatch,
+    date: info.date || '',
     transRef: info.transRef || '',
   };
 }

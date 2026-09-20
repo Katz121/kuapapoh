@@ -1,8 +1,9 @@
 // GET  /api/admin/preorders?q=&status=      · รายการออเดอร์ + สรุปยอด (ค้นหาได้)
 // POST /api/admin/preorders {id, status, adminNote}  · อัปเดตสถานะ (+ ดันขึ้นชีต)
 // POST /api/admin/preorders {id, action:'resync'}    · ซิงก์แถวที่ตกหล่นขึ้นชีตใหม่
-import { json, bad, requireDb, adminOk, clean, logEvent } from '../_shared.js';
+import { json, bad, requireDb, adminOk, clean, logEvent, payStatus } from '../_shared.js';
 import { pushToSheet, sheetsReady } from '../_sheets.js';
+import { verifySlip, slipCheckReady } from '../_slipcheck.js';
 
 const STATUSES = ['new', 'paid', 'producing', 'ready', 'done', 'cancelled'];
 const STATUS_TH = {
@@ -41,6 +42,7 @@ export async function onRequestGet({ request, env }) {
     items: safeParse(row.items),
     has_slip: !!row.has_slip,
     sheet_ok: !!row.sheet_row,
+    pay: payStatus(row),
   }));
 
   // สรุปไซส์ไว้สั่งโรงงานรอบเดียว (ไม่นับที่ยกเลิก)
@@ -94,6 +96,47 @@ export async function onRequestPost(context) {
     await db.prepare('UPDATE preorders SET sheet_row = ?, sheet_error = NULL WHERE id = ?').bind(result.row, id).run();
     await logEvent(db, id, 'sheet_synced', `แถวที่ ${result.row}`, 'admin');
     return json({ ok: true, id, row: result.row });
+  }
+
+  // ตรวจสลิปกับธนาคารอีกรอบ · ใช้กับออเดอร์ที่ตรวจพลาดหรือยังไม่ได้ตรวจ
+  if (body.action === 'recheck') {
+    if (!slipCheckReady(env)) return bad('ยังไม่ได้ตั้งค่าคีย์ตรวจสลิป', 503);
+    if (!current.slip_ref) return bad('ออเดอร์นี้ไม่มีเลขอ้างอิงในสลิป ตรวจอัตโนมัติไม่ได้', 400);
+
+    const verdict = await verifySlip(env, { payload: current.slip_ref, amount: current.total });
+    const now = new Date().toISOString();
+    await db.prepare(
+      `UPDATE preorders SET slip_checked = ?, slip_verified = ?, slip_note = ?,
+              slip_amount = ?, slip_sender = ?, slip_trans_ref = ? WHERE id = ?`
+    ).bind(
+      now,
+      verdict.verified === true ? 1 : verdict.verified === false ? 0 : null,
+      verdict.note || '', verdict.amount || null, verdict.sender || '', verdict.transRef || '', id
+    ).run();
+    await logEvent(db, id, verdict.verified ? 'slip_verified' : 'slip_rejected', verdict.note, 'admin');
+
+    // ตรวจผ่านแล้วยังอยู่สถานะ "ใหม่" ให้ขยับเป็นยืนยันยอดให้เลย
+    if (verdict.verified === true && current.status === 'new') {
+      await db.prepare("UPDATE preorders SET status = 'paid' WHERE id = ?").bind(id).run();
+    }
+    const fresh = await db.prepare('SELECT * FROM preorders WHERE id = ?').bind(id).first();
+    if (sheetsReady(env)) {
+      await pushToSheet(env, { ...fresh, items: safeParse(fresh.items) }, 'update');
+    }
+    return json({ ok: true, id, verified: verdict.verified, note: verdict.note, amount: verdict.amount || null });
+  }
+
+  // ลบออเดอร์ · ลบจากฐานข้อมูลก่อน แล้วค่อยลบแถวในชีตตาม
+  if (body.action === 'delete') {
+    await db.batch([
+      db.prepare('DELETE FROM preorder_slips WHERE order_id = ?').bind(id),
+      db.prepare('DELETE FROM preorder_events WHERE order_id = ?').bind(id),
+      db.prepare('DELETE FROM preorders WHERE id = ?').bind(id),
+    ]);
+    if (sheetsReady(env)) {
+      await pushToSheet(env, { ...current, items: safeParse(current.items) }, 'delete');
+    }
+    return json({ ok: true, id, deleted: true });
   }
 
   const status = clean(body.status, 20);

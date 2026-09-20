@@ -7,6 +7,8 @@ const SIZE_TH = {
   'KID-S': 'เด็ก S', 'KID-M': 'เด็ก M', 'KID-L': 'เด็ก L',
 };
 
+import { payStatus } from './_shared.js';
+
 const STATUS_TH = {
   new: 'ใหม่', paid: 'ยืนยันยอด', producing: 'กำลังผลิต',
   ready: 'ของพร้อม', done: 'ปิดแล้ว', cancelled: 'ยกเลิก',
@@ -37,6 +39,9 @@ export function toSheetRow(order) {
     status: STATUS_TH[order.status] || order.status || 'ใหม่',
     updatedAt: bangkokTime(new Date().toISOString()),
     adminNote: order.admin_note || order.adminNote || '',
+    // สองช่องนี้มาจากผลตรวจสลิปกับธนาคาร ทีมงานจะได้ไม่ต้องไล่เปิดสลิปทีละใบ
+    payStatus: payStatus(order).label,
+    paidAmount: order.slip_amount || '',
   };
 }
 

@@ -771,7 +771,7 @@
       .catch(err => console.log('Cloud sync fetch fallback to local.'));
   } else if (!localRaw) {
     // 3. Fallback to content.json
-    fetch('content.json')
+    fetch('content.json?v=' + Date.now())
       .then(r => r.json())
       .then(data => { applyContent(data); })
       .catch(() => {});

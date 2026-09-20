@@ -362,7 +362,29 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
   aspect-ratio:4/3;min-height:280px;display:flex;align-items:center;justify-content:center;
   overflow:hidden;padding:8px;position:relative;box-shadow:inset 0 0 20px rgba(0,0,0,.4)}
 .dialog-main-img img{max-width:100%;max-height:100%;width:auto;height:auto;
-  object-fit:contain;transition:opacity .2s ease-in-out;border-radius:3px}
+  object-fit:contain;transition:opacity .2s ease-in-out;border-radius:3px;cursor:zoom-in}
+/* ป้ายบอกว่ากดที่รูปแล้วขยายได้ · ไม่งั้นไม่มีใครรู้ว่ากดได้ */
+.zoom-hint{position:absolute;left:8px;bottom:8px;z-index:3;pointer-events:none;
+  background:rgba(16,21,56,.82);color:#fff;font-size:.74rem;font-weight:600;
+  padding:.25rem .6rem;border-radius:99px;letter-spacing:.01em}
+
+/* ── หน้าต่างดูภาพขยาย ── */
+.zoom-dialog{border:0;padding:0;background:transparent;max-width:100vw;max-height:100vh;
+  width:100vw;height:100vh;overflow:hidden}
+.zoom-dialog::backdrop{background:rgba(6,9,26,.94)}
+.zoom-scroll{width:100%;height:100%;overflow:auto;display:flex;align-items:center;
+  justify-content:center;-webkit-overflow-scrolling:touch}
+.zoom-scroll img{max-width:100%;max-height:100vh;width:auto;height:auto;cursor:zoom-in;
+  object-fit:contain;display:block}
+.zoom-scroll.is-full{align-items:flex-start;justify-content:flex-start}
+.zoom-scroll.is-full img{max-width:none;max-height:none;cursor:zoom-out}
+.zoom-close{position:fixed;top:14px;right:14px;z-index:10;width:46px;height:46px;
+  border-radius:50%;border:2px solid #fff;background:rgba(16,21,56,.85);color:#fff;
+  font-size:1.2rem;line-height:1;cursor:pointer}
+.zoom-close:hover{background:#fff;color:var(--ink)}
+.zoom-tip{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:10;
+  background:rgba(16,21,56,.85);color:#fff;font-size:.82rem;padding:.35rem .9rem;
+  border-radius:99px;pointer-events:none}
 
 .dialog-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
 .dialog-thumb{background:#fff;border:2px solid var(--rule);padding:2px;aspect-ratio:1;
@@ -916,7 +938,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
 
     <div class="dialog-grid">
       <div class="dialog-gallery">
-        <div class="dialog-main-img">
+        <div class="dialog-main-img"><span class="zoom-hint">แตะที่รูปเพื่อขยาย</span>
           <img id="je-gallery-main" src="images/je-shirt-front.webp" width="1400" height="934" loading="lazy" decoding="async" alt="เสื้อเทศกาลกินผักกั่วป่าโพ้ ด้านหน้า">
         </div>
         <div class="dialog-thumbs" role="tablist" aria-label="เลือกรูปภาพ">
@@ -1006,7 +1028,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
     <div class="dialog-grid">
       <!-- แกลเลอรีภาพถ่ายแบบ + ภาพ 2D + ตารางไซส์ (แสดงเต็มภาพ ไม่ถูกตัด) -->
       <div class="dialog-gallery">
-        <div class="dialog-main-img">
+        <div class="dialog-main-img"><span class="zoom-hint">แตะที่รูปเพื่อขยาย</span>
           <img id="shirt-gallery-main" src="images/model-shirt-1.webp" width="799" height="1200" loading="lazy" decoding="async" alt="ภาพถ่ายแบบเสื้อยืดกั่วป่าโพ้">
         </div>
         <div class="dialog-thumbs" role="tablist" aria-label="เลือกรูปภาพ">
@@ -1550,6 +1572,52 @@ document.querySelectorAll('.shop-dialog').forEach(dlg => {
   });
 });
 
+/* ═══════════ กดที่รูปเพื่อดูขยาย ═══════════
+   ใช้ dialog อีกชั้น เพราะ dialog ที่เปิดแบบ modal อยู่บนสุดของหน้าเสมอ
+   ถ้าใช้ div ธรรมดาจะโดนหน้าต่างรายละเอียดบังไว้ */
+document.addEventListener('DOMContentLoaded', function () {
+  const zoomDlg = document.getElementById('zoom-dialog');
+  const zoomImg = document.getElementById('zoom-img');
+  const zoomBox = document.getElementById('zoom-scroll');
+  const zoomTip = document.getElementById('zoom-tip');
+  if (!zoomDlg) return;
+
+  function openZoom(src, alt) {
+    if (!src) return;
+    zoomImg.src = src;
+    zoomImg.alt = alt || 'ภาพขยาย';
+    zoomBox.classList.remove('is-full');
+    zoomTip.textContent = 'แตะที่รูปอีกครั้งเพื่อดูขนาดเต็ม';
+    zoomDlg.showModal();
+  }
+
+  // กดรูปหลักในหน้าต่างรายละเอียดสินค้าทุกตัว
+  document.addEventListener('click', (e) => {
+    const img = e.target.closest('.dialog-main-img img');
+    if (!img) return;
+    openZoom(img.currentSrc || img.src, img.alt);
+  });
+
+  // แตะซ้ำ = สลับระหว่างพอดีจอกับขนาดเต็มที่เลื่อนดูรายละเอียดได้
+  zoomImg.addEventListener('click', () => {
+    const full = zoomBox.classList.toggle('is-full');
+    zoomTip.textContent = full ? 'เลื่อนดูรายละเอียดได้ · แตะอีกครั้งเพื่อย่อ' : 'แตะที่รูปอีกครั้งเพื่อดูขนาดเต็ม';
+    if (full) {
+      zoomBox.scrollLeft = (zoomImg.naturalWidth - zoomBox.clientWidth) / 2;
+      zoomBox.scrollTop = (zoomImg.naturalHeight - zoomBox.clientHeight) / 2;
+    }
+  });
+
+  document.getElementById('zoom-close').addEventListener('click', () => zoomDlg.close());
+  // กดพื้นที่ว่างรอบรูปก็ปิด
+  zoomBox.addEventListener('click', (e) => { if (e.target === zoomBox) zoomDlg.close(); });
+  // ปิดภาพขยายแล้วหน้าต่างรายละเอียดยังเปิดอยู่ ห้ามปลดล็อกการเลื่อนหน้า
+  zoomDlg.addEventListener('close', () => {
+    if (document.querySelector('.shop-dialog[open]')) document.body.style.overflow = 'hidden';
+    zoomImg.removeAttribute('src');
+  });
+});
+
 /* สลับภาพในแกลเลอรี */
 document.querySelectorAll('.dialog-thumb').forEach(thumb => {
   thumb.addEventListener('click', () => {
@@ -1565,6 +1633,12 @@ document.querySelectorAll('.dialog-thumb').forEach(thumb => {
 });
 
 </script>
+<dialog id="zoom-dialog" class="zoom-dialog" aria-label="ดูภาพขยาย">
+  <button type="button" class="zoom-close" id="zoom-close" aria-label="ปิดภาพขยาย">✕</button>
+  <div class="zoom-scroll" id="zoom-scroll"><img id="zoom-img" alt=""></div>
+  <span class="zoom-tip" id="zoom-tip">แตะที่รูปอีกครั้งเพื่อดูขนาดเต็ม</span>
+</dialog>
+
 <script src="cms-loader.js"></script>
 
 <!-- ═══════════ Sticky Floating Merch Card (การ์ดลอยติดตามหน้าจอ) ═══════════ -->

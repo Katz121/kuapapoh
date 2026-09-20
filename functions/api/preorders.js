@@ -4,6 +4,7 @@ import {
   json, bad, requireDb, makeOrderId, clean, normalisePhone, ipFingerprint, logEvent,
 } from './_shared.js';
 import { pushToSheet, sheetsReady } from './_sheets.js';
+import { verifySlip, slipCheckReady } from './_slipcheck.js';
 
 const RATE_WINDOW_MINUTES = 10;
 const RATE_MAX_ORDERS = 8;          // คนเดียวสั่งถี่กว่านี้ใน 10 นาที = ไม่ใช่ลูกค้าแล้ว
@@ -187,12 +188,55 @@ export async function onRequestPost(context) {
     if (slip) {
       await logEvent(db, id, 'slip_attached', slipRef ? 'อ่านเลขอ้างอิงจากสลิปได้' : 'ไม่มีเลขอ้างอิงในสลิป', 'customer');
     }
+    if (slipRef && slipCheckReady(env)) {
+      const verdict = await checkSlipWithBank(db, env, id, slipRef, total);
+      if (verdict.verified) {
+        order.status = 'paid';
+        order.admin_note = verdict.note;
+      }
+    }
     await notifyTelegram(env, { id, name, phone, items, qty, total, delivery, hasSlip: !!slip });
     await syncSheet(db, env, order);
   })();
   if (context.waitUntil) context.waitUntil(background); else await background;
 
   return json({ ok: true, id, qty, subtotal, shipping, total, hasSlip: !!slip });
+}
+
+// ตรวจสลิปกับธนาคาร · ผ่านครบทุกเงื่อนไขค่อยเปลี่ยนสถานะเป็นยืนยันยอดให้อัตโนมัติ
+async function checkSlipWithBank(db, env, id, payload, amount) {
+  const verdict = await verifySlip(env, { payload, amount });
+  const now = new Date().toISOString();
+  try {
+    await db.prepare(
+      `UPDATE preorders
+          SET slip_checked = ?, slip_verified = ?, slip_note = ?,
+              slip_amount = ?, slip_sender = ?, slip_trans_ref = ?
+        WHERE id = ?`
+    ).bind(
+      now,
+      verdict.verified === true ? 1 : verdict.verified === false ? 0 : null,
+      verdict.note || '',
+      verdict.amount || null,
+      verdict.sender || '',
+      verdict.transRef || '',
+      id
+    ).run();
+
+    if (verdict.verified === true) {
+      await db.prepare("UPDATE preorders SET status = 'paid', admin_note = ? WHERE id = ? AND status = 'new'")
+        .bind(verdict.note, id).run();
+      await logEvent(db, id, 'slip_verified', verdict.note, 'system');
+      await logEvent(db, id, 'status', 'ใหม่ → ยืนยันยอด (ระบบตรวจสลิปแล้ว)', 'system');
+    } else if (verdict.verified === false) {
+      await logEvent(db, id, 'slip_rejected', verdict.note, 'system');
+    } else if (verdict.note) {
+      await logEvent(db, id, 'slip_check_failed', verdict.note, 'system');
+    }
+  } catch {
+    /* จดผลไม่ได้ก็ไม่ควรล้มทั้งงานเบื้องหลัง */
+  }
+  return verdict;
 }
 
 // ขึ้นชีตสำเร็จก็จดแถวไว้ · พลาดก็จดเหตุผลไว้ ทีมงานกดซิงก์ซ้ำจากหน้าหลังบ้านได้

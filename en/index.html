@@ -87,6 +87,15 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
       padding:.7rem 1.2rem;text-decoration:none}
 .skip:focus{left:0}
 
+.announce{display:flex;align-items:center;justify-content:center;gap:.6rem 1rem;flex-wrap:wrap;
+  background:var(--red);color:#fff;text-decoration:none;padding:.6rem clamp(14px,4vw,28px);
+  font-size:.95rem;font-weight:600;line-height:1.5;text-align:center}
+.announce:hover{background:#d92a1a}
+.announce-tag{background:var(--yellow);color:var(--ink);border-radius:99px;padding:.12rem .7rem;
+  font-family:var(--display);font-size:.86rem;white-space:nowrap}
+.announce-go{text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+@media(max-width:560px){.announce-text{flex:1 1 100%;font-size:.9rem}}
+.nav-hot{color:var(--yellow)!important;opacity:1!important;font-weight:700}
 .topbar{position:sticky;top:0;z-index:50;background:var(--ink);color:var(--paper)}
 .topbar .wrap{display:flex;align-items:center;gap:1rem;min-height:var(--bar)}
 .topbar b{font-family:var(--display);font-weight:700;font-size:1rem;flex:none}
@@ -359,6 +368,11 @@ footer p{max-width:72ch}
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
+<a class="announce" href="/preorder/">
+  <span class="announce-tag">Pre-order open</span>
+  <span class="announce-text">Vegetarian Festival tee · ฿350 · adult and kids sizes</span>
+  <span class="announce-go">Order now →</span>
+</a>
 <div class="topbar">
   <div class="wrap">
     <b>Kuapapoh</b>
@@ -368,6 +382,7 @@ footer p{max-width:72ch}
       <a href="#origin">The name</a>
       <a href="#six">6 O</a>
       <a href="#events">Exhibition</a>
+      <a href="/preorder/" class="nav-hot">Pre-order tee</a>
       <a href="#shop">Shop</a>
       <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>

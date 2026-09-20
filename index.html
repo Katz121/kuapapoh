@@ -101,6 +101,18 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .skip:focus{left:0}
 
 /* ── แถบบนสุด ── */
+/* แถบประกาศพรีออเดอร์ · อยู่บนสุด เห็นก่อนอย่างอื่น */
+.announce{display:flex;align-items:center;justify-content:center;gap:.6rem 1rem;flex-wrap:wrap;
+  background:var(--red);color:#fff;text-decoration:none;padding:.6rem clamp(14px,4vw,28px);
+  font-size:.95rem;font-weight:600;line-height:1.5;text-align:center}
+.announce:hover{background:#d92a1a}
+.announce-tag{background:var(--yellow);color:var(--ink);border-radius:99px;padding:.12rem .7rem;
+  font-family:var(--display);font-size:.86rem;white-space:nowrap}
+.announce-go{text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+@media(max-width:560px){.announce-text{flex:1 1 100%;font-size:.9rem}}
+.nav-hot{color:var(--yellow)!important;opacity:1!important;font-weight:700}
+.btn-hot{background:var(--red)!important;color:#fff!important;border-color:var(--red)!important}
+.btn-hot:hover{background:transparent!important;color:var(--red)!important}
 .topbar{position:sticky;top:0;z-index:50;background:var(--ink);color:var(--paper)}
 .topbar .wrap{display:flex;align-items:center;gap:1rem;min-height:var(--bar)}
 .topbar b{font-family:var(--display);font-weight:700;font-size:1rem;flex:none}
@@ -569,6 +581,11 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
 <body>
 <a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
 
+<a class="announce" href="preorder/">
+  <span class="announce-tag">เปิดพรีออเดอร์</span>
+  <span class="announce-text">เสื้อเทศกาลกินผัก กั่วป่าโพ้ ตัวละ 350 บาท ไซส์ผู้ใหญ่และไซส์เด็ก</span>
+  <span class="announce-go">สั่งเลย →</span>
+</a>
 <div class="topbar">
   <div class="wrap">
     <b>กั่วป่าโพ้</b>
@@ -577,6 +594,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
       <a href="#houses">สามพื้นที่</a>
       <a href="#origin">ที่มาของชื่อ</a>
       <a href="#six">6 อ.</a>
+      <a href="preorder/" class="nav-hot">พรีออเดอร์เสื้อเจ</a>
       <a href="#shop">โพ้ช็อป</a>
       <a href="#faq">คำถามพบบ่อย</a>
       <a href="#contact">ติดต่อ</a>
@@ -597,6 +615,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
       <span class="chip">บ้านเลขที่ 78 · 109 · 305</span>
     </div>
     <div class="hero-cta">
+      <a class="btn btn-hot" href="preorder/">🧧 พรีออเดอร์เสื้อเทศกาลกินผัก</a>
       <a class="btn" data-cta="explore" href="#events">ดูนิทรรศการที่กำลังจัดแสดง</a>
       <a class="btn" href="https://www.google.com/maps/search/?api=1&query=%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%95%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%9B%E0%B9%88%E0%B8%B2"
          target="_blank" rel="noopener">เปิดแผนที่ย่านเมืองเก่า</a>

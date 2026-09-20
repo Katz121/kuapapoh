@@ -24,3 +24,6 @@ prompts/
 # ห้ามหลุดขึ้น production: Pages จะอ่านไฟล์นี้แทนค่าที่ผูกไว้ในแดชบอร์ด
 # ใช้ตอนเทสในเครื่องเท่านั้น (cp wrangler.dev.toml wrangler.toml)
 wrangler.toml
+
+# ค่าลับสำหรับ wrangler pages dev ในเครื่อง
+.dev.vars

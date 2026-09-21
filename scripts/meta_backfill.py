@@ -213,7 +213,7 @@ def main():
             sent += received
         time.sleep(1)
 
-    print(f"\nเสร็จ · ส่งเข้า Meta ทั้งหมด {sent} รายการ · ปั๊ม sent_meta แล้ว")
+    print(f"\nเสร็จ · ส่งเข้า Meta ทั้งหมด {sent} รายการ" + ("" if args.resend else " · ปั๊ม sent_meta แล้ว"))
 
 
 if __name__ == "__main__":

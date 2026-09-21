@@ -88,7 +88,7 @@ export async function verifySlip(env, { payload, amount, checkDuplicate = true }
     problems.push(`ยอดไม่ตรง · โอนมา ${paid} บาท ต้องได้ ${amount} บาท`);
   }
   if (receiverMatch === false) {
-    problems.push(`โอนเข้าบัญชีอื่น (${receiver || receiverAccount || 'ไม่ทราบบัญชี'})`);
+    problems.push(`โอนเข้าบัญชีอื่น (${[receiver, receiverAccount].filter(Boolean).join(' ') || 'ไม่ทราบบัญชี'})`);
   }
 
   // อ่านยอดไม่ได้ ไม่เท่ากับยอดผิด · และห้ามตัดสินว่า "ผ่าน" ทั้งที่ไม่เคยเทียบยอด
@@ -161,11 +161,7 @@ function matchReceiver(env, receiverAccount, receiverName) {
   const expectedAccount = String(env.SLIP_RECEIVER_ACCOUNT || '').replace(/\D/g, '');
   const expectedName = String(env.SLIP_RECEIVER_NAME || '').trim();
 
-  let accountVerdict;
-  const visible = String(receiverAccount || '').replace(/\D/g, '');
-  if (expectedAccount && visible.length >= 4) {
-    accountVerdict = expectedAccount.includes(visible);
-  }
+  const accountVerdict = matchMaskedAccount(expectedAccount, receiverAccount);
 
   let nameVerdict;
   if (expectedName && receiverName) {
@@ -175,6 +171,35 @@ function matchReceiver(env, receiverAccount, receiverName) {
   if (accountVerdict === false || nameVerdict === false) return false;
   if (accountVerdict === true || nameVerdict === true) return true;
   return undefined;
+}
+
+/**
+ * เทียบเลขบัญชีที่ถูกปิดบัง · แต่ละธนาคารปิดคนละแบบ
+ *   "XXXXX6423XXX"   ตัวปิดบังนับครบทุกหลัก → เทียบทีละตำแหน่ง
+ *   "xxx-x-x5642-x"  รูปแบบของธนาคารผู้โอน จำนวนหลักไม่เท่าบัญชีจริง
+ * ห้ามรวมเลขที่เห็นเป็นก้อนเดียว (เคยทำแล้ว "020-x-xxxx3-42" กลายเป็น "020342" ไม่ตรง ทั้งที่เป็นบัญชีเรา)
+ * แบบหลังจึงดูว่าเลขแต่ละช่วงที่โผล่มา อยู่ในเลขบัญชีเราตามลำดับไหม
+ */
+function matchMaskedAccount(expected, masked) {
+  const pattern = String(masked || '').replace(/[\s-]/g, '');
+  const visible = pattern.replace(/\D/g, '');
+  if (!expected || visible.length < 4) return undefined;
+
+  if (pattern.length === expected.length) {
+    for (let i = 0; i < pattern.length; i++) {
+      if (/\d/.test(pattern[i]) && pattern[i] !== expected[i]) return false;
+    }
+    return true;
+  }
+
+  const groups = pattern.match(/\d+/g) || [];
+  let from = 0;
+  for (const group of groups) {
+    const at = expected.indexOf(group, from);
+    if (at < 0) return false;
+    from = at + group.length;
+  }
+  return true;
 }
 
 // ยอดเงินมาได้หลายแบบ: ตัวเลขตรงๆ, "1,050.00", {amount: 350}, {local:{amount: 350}}

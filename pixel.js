@@ -12,7 +12,10 @@
    ผ่าน Conversions API จะไม่ถูกนับซ้ำกับที่ Pixel ยิงสดๆ
    ═══════════════════════════════════════════════════════════ */
 (function () {
-  var PIXEL_ID = '1560330288622338';   // Kuapapoh Web · ธุรกิจของ Siwatid Singhakarn
+  // ยิงเข้าหลาย Pixel พร้อมกันได้ · ตัวแรกเป็นของธุรกิจ Siwatid (เก็บข้อมูลเดิม)
+  // ตัวที่สองสร้างในบัญชีแอด punkam เพราะแคมเปญ Sales ต้องใช้ Pixel ที่บัญชีแอดเข้าถึงได้
+  var PIXEL_IDS = ['1560330288622338', '1621493986432899'];
+  var PIXEL_ID = PIXEL_IDS[0] || '';
 
   var ENDPOINT = '/api/track';
   var storage = {
@@ -99,7 +102,7 @@
     t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
     (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
     /* eslint-enable */
-    fbq('init', PIXEL_ID);
+    PIXEL_IDS.forEach(function (id) { fbq('init', id); });
   }
 
   /**

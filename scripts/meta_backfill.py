@@ -93,8 +93,12 @@ def build_event(row, orders, test_code=None):
             if len(name) > 1:
                 user_data["ln"] = sha(name[-1])
 
-    if not user_data:
-        return None          # ไม่มีอะไรให้ Meta จับคู่เลย ส่งไปก็ถูกทิ้ง
+    # ประเทศอย่างเดียวกว้างเกิน Meta ตีกลับทั้งชุด (subcode 2804050) · ต้องมี fbc หรือเบอร์ถึงจะส่ง
+    # ไอพีเราเก็บแบบแฮช ส่งเป็น client_ip_address ไม่ได้ · user agent อย่างเดียวก็ไม่พอให้จับคู่
+    if not (user_data.get("fbc") or user_data.get("ph")):
+        return None
+    if row.get("ua"):
+        user_data["client_user_agent"] = row["ua"]
 
     event = {
         "event_name": row["event"],
@@ -151,7 +155,7 @@ def main():
     quoted = ",".join("'" + e.replace("'", "") + "'" for e in wanted)
 
     rows = d1(
-        "SELECT id, at, event, event_id, path, fbclid, value, currency, order_id, country "
+        "SELECT id, at, event, event_id, path, fbclid, value, currency, order_id, country, ua "
         f"FROM visits WHERE sent_meta = 0 AND day >= '{since}' AND event IN ({quoted}) "
         "ORDER BY id ASC LIMIT 5000"
     )

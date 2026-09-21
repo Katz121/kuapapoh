@@ -122,12 +122,21 @@ def build_event(row, orders, test_code=None):
     return event
 
 
+def _proof(token):
+    """token ของแอปที่เปิด Require App Secret (เช่น punkam-ads) ต้องแนบ appsecret_proof"""
+    secret = os.environ.get("META_APP_SECRET")
+    if not secret:
+        return ""
+    import hmac
+    return "&appsecret_proof=" + hmac.new(secret.encode(), token.encode(), hashlib.sha256).hexdigest()
+
+
 def send(pixel_id, token, events, test_code=None):
     payload = {"data": events}
     if test_code:
         payload["test_event_code"] = test_code
     request = urllib.request.Request(
-        f"{GRAPH}/{pixel_id}/events?access_token={token}",
+        f"{GRAPH}/{pixel_id}/events?access_token={token}" + _proof(token),
         data=json.dumps(payload).encode("utf-8"),
         headers={"content-type": "application/json", "user-agent": "kuapapoh-backfill/1.0"},
         method="POST",
@@ -141,6 +150,8 @@ def main():
     parser.add_argument("--days", type=int, default=7, help="ย้อนหลังกี่วัน (ค่าเริ่มต้น 7 = ช่วงที่ Meta นับเป็นคอนเวอร์ชัน)")
     parser.add_argument("--send", action="store_true", help="ส่งจริง · ไม่ใส่ = แค่แสดงให้ดู")
     parser.add_argument("--test-code", help="test_event_code จาก Events Manager")
+    parser.add_argument("--resend", action="store_true",
+                        help="ส่งซ้ำทุกรายการ (ไม่ดู/ไม่แก้ sent_meta) · ใช้ตอนเพิ่ม Pixel ตัวใหม่")
     parser.add_argument("--events", default="Purchase,InitiateCheckout,AddToCart,ViewContent",
                         help="ส่งเฉพาะ event เหล่านี้ (คั่นด้วยจุลภาค)")
     args = parser.parse_args()
@@ -156,7 +167,7 @@ def main():
 
     rows = d1(
         "SELECT id, at, event, event_id, path, fbclid, value, currency, order_id, country, ua "
-        f"FROM visits WHERE sent_meta = 0 AND day >= '{since}' AND event IN ({quoted}) "
+        f"FROM visits WHERE {'1=1' if args.resend else 'sent_meta = 0'} AND day >= '{since}' AND event IN ({quoted}) "
         "ORDER BY id ASC LIMIT 5000"
     )
     if not rows:
@@ -197,7 +208,8 @@ def main():
         print(f"ส่งไป {len(chunk)} · Meta รับ {received} · fbtrace {answer.get('fbtrace_id', '-')}")
         if received:
             # ปั๊มทีละก้อนทันที · เน็ตหลุดกลางทางแล้วรันใหม่จะไม่ส่งของเดิมซ้ำ
-            d1(f"UPDATE visits SET sent_meta = 1 WHERE id IN ({','.join(str(i) for i in chunk_ids)})")
+            if not args.resend:
+                d1(f"UPDATE visits SET sent_meta = 1 WHERE id IN ({','.join(str(i) for i in chunk_ids)})")
             sent += received
         time.sleep(1)
 

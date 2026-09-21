@@ -12,7 +12,7 @@
    ผ่าน Conversions API จะไม่ถูกนับซ้ำกับที่ Pixel ยิงสดๆ
    ═══════════════════════════════════════════════════════════ */
 (function () {
-  var PIXEL_ID = '';   // ← ใส่ตัวเลข Pixel ID ตรงนี้ เช่น '1234567890123456'
+  var PIXEL_ID = '1560330288622338';   // Kuapapoh Web · ธุรกิจของ Siwatid Singhakarn
 
   var ENDPOINT = '/api/track';
   var storage = {

@@ -123,7 +123,7 @@
 
 ## 📈 6. สถิติคนเข้าเว็บ + Meta Pixel (เริ่ม 2026-09-20)
 
-**ตอนนี้ยังไม่มี Pixel ID · เว็บเก็บสถิติเองไว้ก่อน ไม่ได้รออะไร**
+**Pixel ID `1560330288622338` (Kuapapoh Web · ธุรกิจของ Siwatid Singhakarn) · ใส่แล้ว 2026-09-21** · สร้างผ่าน API ไม่ได้ (MCP ไม่มีคำสั่ง · token ไม่มี ads_management) ต้องกดใน Business Settings → ชุดข้อมูล
 
 * `pixel.js` ยิงทุก event เข้า `POST /api/track` → ตาราง `visits` ใน D1 เสมอ · ถ้าใส่ Pixel ID แล้วจะยิงเข้า Meta เพิ่มอีกทางพร้อมกัน
 * ทุก event มี `event_id` ของตัวเอง · วันที่มี Pixel แล้วเอาของเก่าส่งย้อนเข้า Conversions API ได้โดย Meta ไม่นับซ้ำ (คอลัมน์ `sent_meta` ไว้กันส่งซ้ำรอบสอง)

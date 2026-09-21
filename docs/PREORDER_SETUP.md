@@ -4,7 +4,7 @@
 
 ตั้งค่าบน Cloudflare เรียบร้อยแล้วทั้งหมด: ฐานข้อมูล D1 `kuapapoh` (id `4b844d28-5fb4-4ba1-a1ad-cfde6f7ed541`) ผูกกับตัวแปร `DB` ทั้ง production และ preview · รัน migration ครบ 3 ไฟล์ · ตั้ง Secret ครบ (`ADMIN_TOKEN`, `SHEETS_WEBHOOK_URL`, `SHEETS_SECRET`, `SLIP_VERIFY_KEY`, `SLIP_RECEIVER_ACCOUNT`)
 
-**เหลืออย่างเดียว: Meta Pixel ID** (ข้อ 4 ด้านล่าง)
+**ครบแล้ว** · Meta Pixel `1560330288622338` ใส่เมื่อ 2026-09-21
 
 | ส่วน | ไฟล์ | สถานะ |
 |---|---|---|
@@ -13,7 +13,7 @@
 | API หลังบ้าน | `functions/api/admin/preorders.js` · `functions/api/admin/slip.js` | เสร็จ |
 | หน้าจัดการออเดอร์ | `preorder-admin.html` | เสร็จ |
 | ตารางฐานข้อมูล | `migrations/0001_preorders.sql` | รอรันบน D1 จริง |
-| Meta Pixel | `pixel.js` | รอใส่ Pixel ID |
+| Meta Pixel | `pixel.js` | `1560330288622338` (Kuapapoh Web) |
 | คิวอาร์พร้อมเพย์ฝังยอด | `preorder/promptpay.js` | รอใส่เบอร์พร้อมเพย์ |
 | ตรวจสลิปย้อนหลัง | `migrations/0002_slip_audit.sql` | รอรันบน D1 จริง |
 | ท่อข้อมูลเข้า Google Sheet | `docs/google-sheet-apps-script.js` | ✅ deploy แล้ว ใช้งานจริง |

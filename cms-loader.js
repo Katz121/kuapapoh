@@ -52,6 +52,16 @@
     }
   }
 
+  // เขียนทับข้อความเฉพาะเมื่อค่าต่างจากของเดิม · กัน LCP/เลย์เอาต์ขยับ
+  // เพราะการเซ็ต textContent/innerHTML ซ้ำค่าจะทำให้เบราว์เซอร์จัดเลย์เอาต์ใหม่
+  // (เรียกใช้โดยคง guard เดิมของแต่ละจุดไว้ พฤติกรรมอื่นไม่เปลี่ยน)
+  function setText(el, v) {
+    if (el.textContent !== v) el.textContent = v;
+  }
+  function setHTML(el, v) {
+    if (el.innerHTML !== v) el.innerHTML = v;
+  }
+
   // Current shop mode: the vegetarian-festival shirt (pre-order round) leads,
   // then the heritage shirt + Poh Sparkling Tea.
   // (old placeholder products in saved CMS data stay hidden).
@@ -223,48 +233,48 @@
           const sImg = document.getElementById('stickyBadgeImg');
           const sCta = document.getElementById('stickyBadgeCta');
           
-          if (sTag && data.floatingBadge.tag) sTag.textContent = data.floatingBadge.tag;
-          if (sTitle && data.floatingBadge.title) sTitle.textContent = data.floatingBadge.title;
-          if (sPrice) sPrice.textContent = data.floatingBadge.priceLabel || `฿${data.floatingBadge.price || 350}`;
+          if (sTag && data.floatingBadge.tag) setText(sTag, data.floatingBadge.tag);
+          if (sTitle && data.floatingBadge.title) setText(sTitle, data.floatingBadge.title);
+          if (sPrice) setText(sPrice, data.floatingBadge.priceLabel || `฿${data.floatingBadge.price || 350}`);
           if (sImg && data.floatingBadge.image) sImg.src = data.floatingBadge.image;
-          if (sCta && data.floatingBadge.ctaText) sCta.textContent = data.floatingBadge.ctaText;
+          if (sCta && data.floatingBadge.ctaText) setText(sCta, data.floatingBadge.ctaText);
         }
       }
 
       // 1. Site Title & Meta
       if (data.site) {
-        if (data.site.title) document.title = data.site.title;
+        if (data.site.title && document.title !== data.site.title) document.title = data.site.title;
         const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc && data.site.description) metaDesc.content = data.site.description;
+        if (metaDesc && data.site.description && metaDesc.content !== data.site.description) metaDesc.content = data.site.description;
       }
 
-      // 2. Hero Section
+      // 2. Hero Section (LCP: header.hero p.sub · เขียนทับเฉพาะค่าที่ต่าง กัน render delay)
       if (data.hero) {
         const kicker = document.querySelector('.hero .kicker');
-        if (kicker && data.hero.kicker) kicker.textContent = data.hero.kicker;
+        if (kicker && data.hero.kicker) setText(kicker, data.hero.kicker);
 
         const h1 = document.querySelector('.hero h1');
         if (h1 && data.hero.title) {
-          h1.innerHTML = `${data.hero.title}<em>${data.hero.titleEm || ''}</em>`;
+          setHTML(h1, `${data.hero.title}<em>${data.hero.titleEm || ''}</em>`);
         }
 
         const sub = document.querySelector('.hero .sub, .hero .lede');
-        if (sub && data.hero.subtitle) sub.textContent = data.hero.subtitle;
+        if (sub && data.hero.subtitle) setText(sub, data.hero.subtitle);
 
         const chips = document.querySelectorAll('.hero .hero-meta .chip');
         if (chips.length && data.hero.chips) {
-          data.hero.chips.forEach((c, i) => { if (chips[i]) chips[i].textContent = c; });
+          data.hero.chips.forEach((c, i) => { if (chips[i]) setText(chips[i], c); });
         }
 
         const btnExplore = document.querySelector('.hero-cta a[data-cta="explore"]');
         if (btnExplore) {
-          if (data.hero.btnExplore) btnExplore.textContent = data.hero.btnExplore;
+          if (data.hero.btnExplore) setText(btnExplore, data.hero.btnExplore);
           if (data.hero.btnExploreUrl) btnExplore.href = data.hero.btnExploreUrl;
         }
 
         const btnMap = document.querySelector('.hero-cta a[target="_blank"]');
         if (btnMap) {
-          if (data.hero.btnMap) btnMap.textContent = data.hero.btnMap;
+          if (data.hero.btnMap) setText(btnMap, data.hero.btnMap);
           if (data.hero.mapUrl) btnMap.href = data.hero.mapUrl;
         }
 
@@ -359,7 +369,7 @@
             evSec.style.display = '';
             const set = (sel, val, html) => {
               const el = evSec.querySelector(sel);
-              if (el && val) { if (html) el.innerHTML = val; else el.textContent = val; }
+              if (el && val) { if (html) setHTML(el, val); else setText(el, val); }
             };
             set('.tag', data.events.tag, true);
             set('h2', data.events.heading, true);
@@ -394,7 +404,7 @@
               set('.ev-hash', ev.hashtag);
               const cta = evSec.querySelector('.ev-body .btn');
               if (cta) {
-                if (ev.ctaText) cta.textContent = ev.ctaText;
+                if (ev.ctaText) setText(cta, ev.ctaText);
                 if (ev.link) cta.href = ev.link;
               }
             }
@@ -607,7 +617,7 @@
               if (prod.status === 'soldout') {
                 buyBtnHtml = `<span class="shop-buy" style="background:#888;color:#fff;cursor:not-allowed;border-color:#666">สินค้าหมด</span>`;
               } else if (prod.status === 'preorder') {
-                buyBtnHtml = `<a class="shop-buy" href="${buyHref}"${buyTargetAttr} style="background:var(--red);color:#fff;border-color:var(--ink)">${prod.buyLabel || 'สั่งจอง (Pre-Order)'}</a>`;
+                buyBtnHtml = `<a class="shop-buy" href="${buyHref}"${buyTargetAttr} style="background:var(--red-deep,var(--red));color:#fff;border-color:var(--ink)">${prod.buyLabel || 'สั่งจอง (Pre-Order)'}</a>`;
               } else if (prod.status === 'coming_soon') {
                 buyBtnHtml = `<span class="shop-buy" style="background:var(--rule);color:var(--muted);cursor:default">รอเปิดขาย</span>`;
               }

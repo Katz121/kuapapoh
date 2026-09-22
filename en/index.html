@@ -31,6 +31,7 @@
 <meta name="twitter:image" content="https://kuapapoh.com/images/og-image.jpg">
 <meta name="theme-color" content="#FFE81C">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%233B3E7E'/><g fill='none' stroke='%23F7F0C4' stroke-width='3.4' stroke-linejoin='round'><path d='M24 11h16a2 2 0 0 1 2 2v9c0 3 2 4 5 5a6 6 0 0 1 4 6v14a3 3 0 0 1-3 3H16a3 3 0 0 1-3-3V33a6 6 0 0 1 4-6c3-1 5-2 5-5v-9a2 2 0 0 1 2-2z'/><rect x='27' y='15' width='10' height='12' rx='1'/><rect x='18' y='37' width='11' height='12' rx='1'/><rect x='35' y='37' width='11' height='12' rx='1'/></g></svg>">
+<link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/images/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,6 +44,7 @@
   --magenta-text:#C4005D;
   --cobalt:#1E3FA8;
   --red:#F4331F;
+  --red-deep:#D42614; /* white text on red · 5.14:1 passes AA */
   --paper:#FBF7EC;
   --ink:#101538;
   --muted:#4d5474;
@@ -88,9 +90,9 @@ p{margin:0 0 1.05rem;max-width:var(--measure)}
 .skip:focus{left:0}
 
 .announce{display:flex;align-items:center;justify-content:center;gap:.6rem 1rem;flex-wrap:wrap;
-  background:var(--red);color:#fff;text-decoration:none;padding:.6rem clamp(14px,4vw,28px);
+  background:var(--red-deep);color:#fff;text-decoration:none;padding:.6rem clamp(14px,4vw,28px);
   font-size:.95rem;font-weight:600;line-height:1.5;text-align:center}
-.announce:hover{background:#d92a1a}
+.announce:hover{background:#B81F0F}
 .announce-tag{background:var(--yellow);color:var(--ink);border-radius:99px;padding:.12rem .7rem;
   font-family:var(--display);font-size:.86rem;white-space:nowrap}
 .announce-go{text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
@@ -456,7 +458,7 @@ footer p{max-width:72ch}
         <figcaption>Peranakan Charm</figcaption>
       </figure>
       <figure>
-        <img src="/images/event/artwork-2.webp" width="900" height="1142" decoding="async" alt="Peranakan Charm painting No.2 by Tinnapop Ngansathin">
+        <img src="/images/event/artwork-2.webp" width="900" height="1142" loading="lazy" decoding="async" alt="Peranakan Charm painting No.2 by Tinnapop Ngansathin">
         <figcaption>Peranakan Charm</figcaption>
       </figure>
       <figure>

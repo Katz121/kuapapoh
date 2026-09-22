@@ -20,17 +20,17 @@
 <meta property="og:image:alt" content="เสื้อเทศกาลกินผัก กั่วป่าโพ้ ตัวละ 350 บาท เปิดพรีออเดอร์">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://kuapapoh.com/images/og-preorder.jpg">
-<link rel="apple-touch-icon" href="../images/icon-180.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/images/icon-180.png">
 <meta name="theme-color" content="#F4331F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&amp;family=IBM+Plex+Sans+Thai:wght@400;500;600&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&amp;family=IBM+Plex+Sans+Thai:wght@400;500;600&amp;display=swap"></noscript>
 <script src="../pixel.js?v=202609210003" defer></script>
-<script src="vendor/qrcode.js"></script>
-<script src="promptpay.js"></script>
 <style>
 :root{
-  --yellow:#FFE81C; --red:#F4331F; --cobalt:#1E3FA8;
+  --yellow:#FFE81C; --red:#F4331F; --red-deep:#D42614; --cobalt:#1E3FA8;
   --paper:#FBF7EC; --ink:#101538; --muted:#3c4569; --rule:rgba(16,21,56,.16);
   --ok:#0d7a4a;
   --display:'Bai Jamjuree','IBM Plex Sans Thai',sans-serif;
@@ -47,7 +47,7 @@ a{color:var(--cobalt)}
 .top{background:var(--yellow);border-bottom:3px solid var(--ink)}
 .top-in{max-width:760px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .top a.home{font-family:var(--display);font-weight:700;color:var(--ink);text-decoration:none;font-size:1.02rem}
-.top .pill{background:var(--red);color:#fff;font-weight:600;font-size:.78rem;padding:.25rem .7rem;border-radius:99px}
+.top .pill{background:var(--red-deep);color:#fff;font-weight:600;font-size:.78rem;padding:.25rem .7rem;border-radius:99px}
 
 .hero{background:var(--yellow);padding:22px 0 26px;border-bottom:3px solid var(--ink)}
 .hero h1{font-family:var(--display);font-size:clamp(1.55rem,6vw,2.3rem);line-height:1.32;margin:.2rem 0 .5rem}
@@ -63,7 +63,7 @@ a{color:var(--cobalt)}
 main{padding:26px 0 140px}
 .step{background:#fff;border:2px solid var(--ink);border-radius:16px;padding:18px;margin:0 0 18px;box-shadow:4px 4px 0 rgba(16,21,56,.1)}
 .step > h2{font-family:var(--display);font-size:1.12rem;margin:0 0 4px;display:flex;align-items:center;gap:.55rem}
-.step > h2 .n{background:var(--red);color:#fff;width:28px;height:28px;border-radius:99px;display:grid;place-items:center;font-size:.92rem;flex:none}
+.step > h2 .n{background:var(--red-deep);color:#fff;width:28px;height:28px;border-radius:99px;display:grid;place-items:center;font-size:.92rem;flex:none}
 .step .hint{margin:.1rem 0 14px;color:var(--muted);font-size:.92rem}
 
 .notice{background:#fff8dd;border:2px solid var(--ink);border-radius:10px;padding:10px 12px;font-size:.9rem;margin:0 0 14px;line-height:1.6}
@@ -142,7 +142,7 @@ textarea{min-height:88px;resize:vertical}
 .bar-in{max-width:760px;margin:0 auto;padding:10px 18px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px}
 .bar .sum{flex:1;min-width:0;font-size:.86rem;line-height:1.5}
 .bar .sum b{display:block;font-family:var(--display);font-size:1.3rem;color:var(--yellow);font-variant-numeric:tabular-nums}
-.bar button{flex:none;background:var(--red);color:#fff;border:0;border-radius:99px;padding:.85rem 1.5rem;font:inherit;font-family:var(--display);font-weight:700;font-size:1rem;cursor:pointer}
+.bar button{flex:none;background:var(--red-deep);color:#fff;border:0;border-radius:99px;padding:.85rem 1.5rem;font:inherit;font-family:var(--display);font-weight:700;font-size:1rem;cursor:pointer}
 .bar button:disabled{opacity:.5;cursor:not-allowed}
 
 .msg{margin:0 0 14px;padding:12px 14px;border-radius:10px;font-size:.92rem;display:none}
@@ -158,7 +158,7 @@ textarea{min-height:88px;resize:vertical}
 .review-list b{text-align:right}
 .review-actions{display:flex;gap:10px;margin-top:14px}
 .review-back{flex:none;background:transparent;border:2px solid var(--ink);color:var(--ink);border-radius:99px;padding:.7rem 1.1rem;font:inherit;font-weight:600;cursor:pointer}
-.review-go{flex:1;background:var(--red);color:#fff;border:0;border-radius:99px;padding:.8rem 1rem;font:inherit;font-family:var(--display);font-weight:700;font-size:1.02rem;cursor:pointer}
+.review-go{flex:1;background:var(--red-deep);color:#fff;border:0;border-radius:99px;padding:.8rem 1rem;font:inherit;font-family:var(--display);font-weight:700;font-size:1.02rem;cursor:pointer}
 
 /* หน้าจอสำเร็จ */
 .done{display:none;text-align:center;background:#fff;border:2px solid var(--ink);border-radius:16px;padding:26px 18px;box-shadow:4px 4px 0 rgba(16,21,56,.1)}
@@ -182,10 +182,10 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
   <div class="wrap">
     <h1>เสื้อเทศกาลกินผัก<br>กั่วป่าโพ้ · รอบพรีออเดอร์</h1>
     <p class="lede">เสื้อยืดสีขาว ผ้าฝ้าย 100% เกรด 32 คอมบ์ อกซ้ายเป็นตราผ้ากันเปื้อนกั่วป่าโพ้สีแดง ด้านหลังรวมสัญลักษณ์เทศกาลกินผักของตะกั่วป่า ทั้งศาลเจ้า มังกร เสือ และเตาไฟ</p>
-    <div class="shot"><img class="zoomable" src="../images/je-shirt.webp" width="1400" height="935" alt="ลายหลังเสื้อเทศกาลกินผักกั่วป่าโพ้ ศาลเจ้า มังกร เสือ และเตาไฟ"></div>
+    <div class="shot"><img class="zoomable" src="../images/je-shirt.webp" width="1400" height="935" fetchpriority="high" decoding="async" alt="ลายหลังเสื้อเทศกาลกินผักกั่วป่าโพ้ ศาลเจ้า มังกร เสือ และเตาไฟ"></div>
     <div class="looks">
-      <img class="zoomable" src="../images/je-look-goldenhour.webp" width="1080" height="1350" loading="lazy" alt="สองเพื่อนใส่เสื้อเทศกาลกินผักกั่วป่าโพ้ หันหลังโชว์ลายในบันไดแสงเย็น">
-      <img class="zoomable" src="../images/je-look-mural.webp" width="1080" height="1350" loading="lazy" alt="หญิงสาวใส่เสื้อเทศกาลกินผักกั่วป่าโพ้ หันหลังยิ้มหน้ากำแพงภาพวาดดอกไม้">
+      <img class="zoomable" src="../images/je-look-goldenhour.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="สองเพื่อนใส่เสื้อเทศกาลกินผักกั่วป่าโพ้ หันหลังโชว์ลายในบันไดแสงเย็น">
+      <img class="zoomable" src="../images/je-look-mural.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="หญิงสาวใส่เสื้อเทศกาลกินผักกั่วป่าโพ้ หันหลังยิ้มหน้ากำแพงภาพวาดดอกไม้">
     </div>
     <ul class="facts">
       <li>ตัวละ 350 บาท</li>
@@ -314,6 +314,9 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
   สอบถาม <a href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">LINE @kuapapoh</a>
 </div></footer>
 
+<!-- ตัวสร้างคิวอาร์พร้อมเพย์ · ย้ายจาก <head> มาไว้ท้ายหน้า ไม่ให้บล็อกการแสดงผล (ใช้ตอนกดจ่ายเท่านั้น) -->
+<script src="vendor/qrcode.js"></script>
+<script src="promptpay.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════════
    ตั้งค่ารอบพรีออเดอร์ · แก้ได้ในบล็อกนี้บล็อกเดียว

@@ -4,6 +4,8 @@
 # Only files tracked by git are shipped, so the working folders that .gitignore
 # keeps out of the repo (รวมรูป/, _scrape/) never reach the web. README.md and
 # .gitignore are repo furniture, not site content, so they are dropped too.
+# PROJECT_MEMORY.md, docs/, migrations/ and wrangler.dev.toml are internal notes
+# (admin passcode, D1 ids, SQL) and must never be served publicly.
 #
 #   ./scripts/deploy.sh          deploy whatever is committed right now
 #
@@ -18,7 +20,7 @@ trap 'rm -rf "$STAGE"' EXIT
 cd "$ROOT"
 
 git ls-files -z \
-  | grep -zEv '^(README\.md|\.gitignore|scripts/.*|functions/.*)$' \
+  | grep -zEv '^(README\.md|\.gitignore|PROJECT_MEMORY\.md|wrangler\.dev\.toml|scripts/.*|functions/.*|docs/.*|migrations/.*)$' \
   | while IFS= read -r -d '' f; do
       mkdir -p "$STAGE/$(dirname "$f")"
       cp "$f" "$STAGE/$f"

@@ -4,8 +4,28 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
+# ภาพเปลี่ยนน้อย · แคช 30 วัน (ถ้าเปลี่ยนภาพเดิมให้ตั้งชื่อไฟล์ใหม่ หรือต่อท้าย ?v=)
 /images/*
-  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=604800
+
+/favicon.ico
+  Cache-Control: public, max-age=2592000
+
+# หน้าร่างงานออกแบบ/โปสเตอร์ภายใน ไม่ใช่หน้าเว็บจริง · ห้าม index
+/poh-brand/*
+  X-Robots-Tag: noindex, nofollow
+
+/richmenu/*
+  X-Robots-Tag: noindex, nofollow
+
+/stats.html
+  X-Robots-Tag: noindex, nofollow
+
+/stats
+  X-Robots-Tag: noindex, nofollow
+
+/404.html
+  X-Robots-Tag: noindex
 
 /content.json
   Cache-Control: public, max-age=0, must-revalidate

@@ -116,6 +116,14 @@ export async function onRequestPost(context) {
     meta_status: null,
   };
 
+  // ลิงก์เปล่าในข้อความโพสต์แอดไม่มี utm แต่ fbclid บอกว่าเป็นแอด → ติดป้าย paid ให้ · มี utm อยู่แล้วห้ามทับ
+  if (!row.medium && isAdClick(fbclid)) {
+    row.source = 'facebook';
+    row.medium = 'paid';
+    if (!row.campaign) row.campaign = '(ad-no-utm)';
+    if (!row.content) row.content = 'ไม่ทราบภาพ';
+  }
+
   // กำหนด meta_status ก่อน insert
   if (is_bot) {
     row.meta_status = 'skip:bot';
@@ -236,6 +244,13 @@ export const onRequestDelete = methodNotAllowed;
 /* วันตามเวลาไทย · ถ้าใช้ UTC ยอดหลังหกโมงเย็นจะไปโผล่วันถัดไป อ่านแล้วงง */
 function thaiDay(date) {
   return new Date(date.getTime() + 7 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+/* fbclid เป็น base64 หลายท่อนต่อกัน · คำว่า adid โผล่ได้ 3 แบบตามตำแหน่ง · ก่อนเปิดแอดเจอ 0 session เลยใช้เป็นสัญญาณแอด */
+/* หัว IwcGRvZg (pdof) เจอก่อนเปิดแอด 17 session · ไม่ใช่สัญญาณแอด ห้ามใช้ */
+function isAdClick(fbclid) {
+  if (!fbclid || typeof fbclid !== 'string') return false;
+  return fbclid.includes('YWRpZA') || fbclid.includes('FkaWQ') || fbclid.includes('hZGlk');
 }
 
 /* เก็บแค่โดเมนที่พามา ไม่เก็บ URL เต็ม · รู้ว่ามาจากเฟซบุ๊กก็พอแล้ว */

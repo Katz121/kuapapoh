@@ -36,4 +36,11 @@
     <priority>0.9</priority>
     <image:image><image:loc>https://kuapapoh.com/images/je-shirt.webp</image:loc></image:image>
   </url>
+  <url>
+    <loc>https://kuapapoh.com/je-shirt/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://kuapapoh.com/images/je-shirt.webp</image:loc></image:image>
+  </url>
 </urlset>

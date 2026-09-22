@@ -82,6 +82,12 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
 
     <div class="note" id="metanote"></div>
 
+    <p id="botline" style="color:var(--muted);margin:0 0 8px"></p>
+    <p id="capiline" style="color:var(--muted);margin:0 0 14px"></p>
+
+    <h2>ภาพแอดไหนพาคนซื้อ</h2>
+    <div class="table-wrap"><table id="adcreatives"></table></div>
+
     <h2>ยอดขายมาจากทางไหน</h2>
     <div class="table-wrap"><table id="revenue"></table></div>
 
@@ -154,6 +160,14 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
       '<small>วันที่สร้าง Pixel แล้ว ข้อมูลชุดนี้ส่งย้อนเข้า Meta ผ่าน Conversions API ได้ ' +
       'โดยไม่ถูกนับซ้ำ เพราะทุกรายการมีเลขกำกับของตัวเอง<br>' +
       'สั่งส่งด้วย <code>python scripts/meta_backfill.py --days 7</code> (ดูก่อน) แล้วเติม <code>--send</code> เมื่อพร้อม</small>';
+
+    $('botline').textContent = 'ตัดบอทออกแล้ว ' + num(meta.bots || 0) + ' แถว';
+    $('capiline').textContent = 'ส่งเข้า Meta สด: ok ' + num(meta.capiOk || 0) + ' / err ' + num(meta.capiErr || 0);
+
+    $('adcreatives').innerHTML = table(['ภาพแอด (utm_content)', 'ดูเสื้อ (คน)', 'เริ่มกรอก (คน)', 'ออเดอร์', 'ยอดเงิน'],
+      (data.adCreatives || []).map(function (row) {
+        return [esc(row.content || '-'), num(row.people_vc), num(row.people_ic), num(row.orders), num(row.revenue) + ' บาท'];
+      }));
 
     $('revenue').innerHTML = table(['มาจาก', 'ออเดอร์', 'ยอดเงิน', 'มาจากแอด'],
       (data.revenueBySource || []).map(function (row) {

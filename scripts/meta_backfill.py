@@ -77,8 +77,13 @@ def build_event(row, orders, test_code=None):
     user_data = {}
 
     # fbc = รหัสที่ผูกคลิกจากแอดเข้ากับการซื้อ · รูปแบบนี้ Meta กำหนดไว้ตายตัว
-    if row.get("fbclid"):
+    # cookie _fbc มีเวลาคลิกจริงอยู่แล้ว ใช้ก่อน · ไม่มีค่อยประกอบจาก fbclid
+    if row.get("fbc"):
+        user_data["fbc"] = row["fbc"]
+    elif row.get("fbclid"):
         user_data["fbc"] = f"fb.1.{int(at.timestamp() * 1000)}.{row['fbclid']}"
+    if row.get("fbp"):
+        user_data["fbp"] = row["fbp"]
     if row.get("country"):
         user_data["country"] = sha(row["country"])
 
@@ -152,9 +157,14 @@ def main():
     parser.add_argument("--test-code", help="test_event_code จาก Events Manager")
     parser.add_argument("--resend", action="store_true",
                         help="ส่งซ้ำทุกรายการ (ไม่ดู/ไม่แก้ sent_meta) · ใช้ตอนเพิ่ม Pixel ตัวใหม่")
+    parser.add_argument("--since", help="ใช้คู่กับ --resend · จำกัดช่วงเวลาที่ส่งซ้ำ เช่น 2026-09-20T14:00")
     parser.add_argument("--events", default="Purchase,InitiateCheckout,AddToCart,ViewContent",
                         help="ส่งเฉพาะ event เหล่านี้ (คั่นด้วยจุลภาค)")
     args = parser.parse_args()
+
+    # --resend ต้องมี --since คู่กันเสมอ กัน Meta ส่งประวัติซ้ำทั้งก้อน (Meta ไม่ dedup server+server)
+    if args.resend and not args.since:
+        sys.exit("--resend ต้องใส่ --since YYYY-MM-DDTHH:MM คู่กันเสมอ เพื่อจำกัดช่วงที่ส่งซ้ำ")
 
     pixel_id = os.environ.get("META_PIXEL_ID")
     token = os.environ.get("META_CAPI_TOKEN")
@@ -165,9 +175,10 @@ def main():
     since = (datetime.now(timezone.utc) + timedelta(hours=7) - timedelta(days=args.days - 1)).strftime("%Y-%m-%d")
     quoted = ",".join("'" + e.replace("'", "") + "'" for e in wanted)
 
+    resend_cond = f"at >= '{args.since}'" if args.resend else "sent_meta = 0"
     rows = d1(
-        "SELECT id, at, event, event_id, path, fbclid, value, currency, order_id, country, ua "
-        f"FROM visits WHERE {'1=1' if args.resend else 'sent_meta = 0'} AND day >= '{since}' AND event IN ({quoted}) "
+        "SELECT id, at, event, event_id, path, fbclid, fbp, fbc, value, currency, order_id, country, ua "
+        f"FROM visits WHERE {resend_cond} AND is_bot = 0 AND day >= '{since}' AND event IN ({quoted}) "
         "ORDER BY id ASC LIMIT 5000"
     )
     if not rows:
@@ -208,12 +219,12 @@ def main():
         print(f"ส่งไป {len(chunk)} · Meta รับ {received} · fbtrace {answer.get('fbtrace_id', '-')}")
         if received:
             # ปั๊มทีละก้อนทันที · เน็ตหลุดกลางทางแล้วรันใหม่จะไม่ส่งของเดิมซ้ำ
-            if not args.resend:
-                d1(f"UPDATE visits SET sent_meta = 1 WHERE id IN ({','.join(str(i) for i in chunk_ids)})")
+            # resend ก็ต้องปั๊มด้วย · ไม่งั้นรอบ --send ปกติทีหลังจะส่งแถวเดิมซ้ำ (Meta ไม่ dedup server+server)
+            d1(f"UPDATE visits SET sent_meta = 1 WHERE id IN ({','.join(str(i) for i in chunk_ids)})")
             sent += received
         time.sleep(1)
 
-    print(f"\nเสร็จ · ส่งเข้า Meta ทั้งหมด {sent} รายการ" + ("" if args.resend else " · ปั๊ม sent_meta แล้ว"))
+    print(f"\nเสร็จ · ส่งเข้า Meta ทั้งหมด {sent} รายการ" + " · ปั๊ม sent_meta แล้ว")
 
 
 if __name__ == "__main__":

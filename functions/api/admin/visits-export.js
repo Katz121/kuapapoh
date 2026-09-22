@@ -14,13 +14,20 @@ const COLUMNS = [
   ['source', 'utm_source'],
   ['medium', 'utm_medium'],
   ['campaign', 'utm_campaign'],
+  ['content', 'utm_content'],
   ['fbclid', 'fbclid'],
+  ['fbp', 'fbp'],
+  ['fbc', 'fbc'],
   ['value', 'ยอดเงิน'],
   ['currency', 'สกุลเงิน'],
   ['order_id', 'เลขออเดอร์'],
   ['country', 'ประเทศ'],
   ['ua', 'แอป/เบราว์เซอร์'],
+  ['is_bot', 'บอท'],
+  ['bot_reason', 'เหตุผลบอท'],
+  ['asn', 'ASN'],
   ['sent_meta', 'ส่งเข้า Meta แล้ว'],
+  ['meta_status', 'สถานะ CAPI'],
 ];
 
 export async function onRequestGet({ request, env }) {
@@ -51,7 +58,7 @@ export async function onRequestGet({ request, env }) {
   }
 
   const today = new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
-  return new Response('﻿' + lines.join('\r\n'), {   // BOM · ไม่ใส่แล้วภาษาไทยเพี้ยนใน Excel
+  return new Response('\ufeff' + lines.join('\r\n'), {   // BOM · ไม่ใส่แล้วภาษาไทยเพี้ยนใน Excel
     headers: {
       'content-type': 'text/csv; charset=utf-8',
       'content-disposition': `attachment; filename="kuapapoh-stats-${today}.csv"`,

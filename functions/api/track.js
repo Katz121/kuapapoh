@@ -1,9 +1,10 @@
 // POST /api/track · รับสถิติการใช้เว็บจากเบราว์เซอร์มาเก็บไว้เอง
-// ไม่ต้องมี Meta Pixel ก็นับได้ · พอมี Pixel ID แล้วค่อยส่งย้อนเข้า Conversions API
+// ไม่ต้องมี Meta Pixel ก็นับได้ · มี Pixel แล้วส่ง Conversions API สดทันที
 //
 // กฎของด่านนี้: เป็นปลายทางเปิด ใครยิงก็ได้ จึงต้องถือว่าทุกค่าที่ส่งมาเป็นของปลอมไว้ก่อน
 // ตัดขนาด ตัดความยาว รับเฉพาะชื่อ event ที่รู้จัก และจำกัดจำนวนครั้งต่อไอพี
 import { requireDb, clean, ipFingerprint } from './_shared.js';
+import { sendCapi, sha256Hex, phoneForMeta } from './_meta.js';
 
 const MAX_BODY = 4 * 1024;
 const RATE_WINDOW_MINUTES = 10;
@@ -12,7 +13,13 @@ const EVENTS = new Set([
   'PageView', 'ViewContent', 'AddToCart', 'InitiateCheckout', 'Purchase', 'Lead',
 ]);
 
-export async function onRequestPost({ request, env }) {
+// UA ที่เป็นบอท · รวม bot ของ Meta ที่ยิงรีวิวแอด
+const BOT_UA_RE = /facebookexternalhit|facebookcatalog|Facebot|meta-externalagent|meta-externalfetcher|(?<!cu)bot\b|crawler|spider|HeadlessChrome|Lighthouse|PTST|python-requests|curl\//i;
+// ASN ของ Meta · บอทรีวิวแอดยิงมาจากกลุ่มนี้
+const META_ASNS = new Set([32934, 63293, 54115]);
+
+export async function onRequestPost(context) {
+  const { request, env } = context;
   // เก็บสถิติไม่ได้ ห้ามทำให้หน้าเว็บรู้สึกพัง · ตอบ 204 เงียบๆ เสมอ
   const ok = () => new Response(null, { status: 204 });
 
@@ -48,41 +55,173 @@ export async function onRequestPost({ request, env }) {
 
   const now = new Date();
   const cf = request.cf || {};
+  const fullUa = request.headers.get('user-agent') || '';
+  // อ่านไอพีก่อนตอบกลับ · ใช้ส่ง Meta อย่างเดียว ไม่เก็บลง DB
+  const clientIp = request.headers.get('cf-connecting-ip') || '';
+  const asn = cf.asn ? Number(cf.asn) : null;
+
+  // ตรวจบอท
+  let is_bot = 0;
+  let bot_reason = null;
+  if (!fullUa) {
+    is_bot = 1; bot_reason = 'no-ua';
+  } else if (BOT_UA_RE.test(fullUa)) {
+    is_bot = 1; bot_reason = 'ua';
+  }
+  if (!is_bot && asn && META_ASNS.has(asn)) {
+    is_bot = 1; bot_reason = 'asn-meta';
+  }
+  if (!is_bot && body.wd === true) {
+    is_bot = 1; bot_reason = 'webdriver';
+  }
+
+  const eventId = clean(body.eventId, 60) || null;
+  const visitorId = clean(body.visitor, 60) || null;
+  const sessionId = clean(body.session, 60) || null;
+  const path = clean(body.path, 200) || null;
+  const fbclid = clean(body.fbclid, 255) || null;
+  const content = clean(body.content, 80) || null;
+  const fbp = clean(body.fbp, 120) || null;
+  const fbc = clean(body.fbc, 300) || null;
+  const value = money(body.value);
+  const currency = clean(body.currency, 8) || (body.value ? 'THB' : null);
+  const orderId = clean(body.orderId, 40) || null;
+  const country = clean(cf.country, 4) || null;
+
   const row = {
     at: now.toISOString(),
     day: thaiDay(now),
     event,
-    event_id: clean(body.eventId, 60) || null,
-    visitor: clean(body.visitor, 60) || null,
-    session: clean(body.session, 60) || null,
-    path: clean(body.path, 200) || null,
+    event_id: eventId,
+    visitor: visitorId,
+    session: sessionId,
+    path,
     referrer: hostOnly(body.referrer),
     source: clean(body.source, 80) || null,
     medium: clean(body.medium, 80) || null,
     campaign: clean(body.campaign, 120) || null,
-    fbclid: clean(body.fbclid, 255) || null,
-    value: money(body.value),
-    currency: clean(body.currency, 8) || (body.value ? 'THB' : null),
-    order_id: clean(body.orderId, 40) || null,
-    country: clean(cf.country, 4) || null,
-    ua: browserName(request.headers.get('user-agent')),
+    fbclid,
+    value,
+    currency,
+    order_id: orderId,
+    country,
+    ua: browserName(fullUa),
     ip_hash: ipHash,
+    is_bot,
+    bot_reason,
+    asn,
+    content,
+    fbp,
+    fbc,
+    meta_status: null,
   };
 
+  // กำหนด meta_status ก่อน insert
+  if (is_bot) {
+    row.meta_status = 'skip:bot';
+  } else if (!env.META_PIXEL_ID || !env.META_CAPI_TOKEN) {
+    row.meta_status = 'skip:nocfg';
+  }
+
+  let inserted = false;
   try {
     // OR IGNORE = ยิงซ้ำด้วย event_id เดิม (รีเฟรช เน็ตกระตุก) ไม่กลายเป็นสองแถว
-    await db.prepare(
+    const result = await db.prepare(
       `INSERT OR IGNORE INTO visits
         (at, day, event, event_id, visitor, session, path, referrer,
-         source, medium, campaign, fbclid, value, currency, order_id, country, ua, ip_hash)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
+         source, medium, campaign, fbclid, value, currency, order_id, country, ua, ip_hash,
+         is_bot, bot_reason, asn, content, fbp, fbc, meta_status)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
     ).bind(
       row.at, row.day, row.event, row.event_id, row.visitor, row.session, row.path, row.referrer,
       row.source, row.medium, row.campaign, row.fbclid, row.value, row.currency,
-      row.order_id, row.country, row.ua, row.ip_hash
+      row.order_id, row.country, row.ua, row.ip_hash,
+      row.is_bot, row.bot_reason, row.asn, row.content, row.fbp, row.fbc, row.meta_status
     ).run();
+    // changes = 0 คือ event_id ซ้ำ (รีเฟรช/ยิงซ้ำ) · ห้ามส่งเข้า Meta ซ้ำ เพราะ server+server ไม่ถูก dedup
+    inserted = !!(result && result.meta && result.meta.changes > 0);
   } catch {
     // เก็บสถิติพลาด ไม่ใช่เรื่องที่ผู้ใช้ต้องรับรู้
+  }
+
+  // CAPI สด: ส่งเมื่อไม่ใช่บอท มี config ครบ และ insert สำเร็จ
+  if (inserted && eventId && !is_bot && env.META_PIXEL_ID && env.META_CAPI_TOKEN && EVENTS.has(event)) {
+    const background = (async () => {
+      try {
+        const userData = {
+          client_ip_address: clientIp,    // ส่งอย่างเดียว ไม่เก็บลง DB
+          client_user_agent: fullUa,      // ส่งอย่างเดียว ไม่เก็บลง DB
+        };
+        if (fbp) userData.fbp = fbp;
+        // fbc: ใช้ cookie _fbc ถ้ามี ไม่งั้นสร้างจาก fbclid
+        if (fbc) {
+          userData.fbc = fbc;
+        } else if (fbclid) {
+          userData.fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+        }
+        // ค่าว่างแฮชแล้วได้ null · ห้ามหลุดเข้า user_data ไม่งั้น Meta ตีกลับทั้ง event
+        const externalId = await sha256Hex(visitorId);
+        if (externalId) userData.external_id = externalId;
+        const countryHash = await sha256Hex(country);
+        if (countryHash) userData.country = countryHash;
+
+        // Purchase ที่มี order_id ดึงชื่อเบอร์จาก preorders ใส่ให้ match quality สูงขึ้น
+        if (event === 'Purchase' && orderId) {
+          try {
+            const order = await db
+              .prepare('SELECT name, phone FROM preorders WHERE id = ?')
+              .bind(orderId)
+              .first();
+            if (order) {
+              if (order.phone) {
+                const ph = phoneForMeta(order.phone);
+                const phHash = ph && await sha256Hex(ph);
+                if (phHash) userData.ph = phHash;
+              }
+              // ชื่อที่มีช่องว่างนำหน้าต้องไม่ทำให้ fn หาย
+              const nameParts = String(order.name || '').trim().split(/\s+/).filter(Boolean);
+              if (nameParts.length) {
+                userData.fn = await sha256Hex(nameParts[0]);
+                if (nameParts.length > 1) userData.ln = await sha256Hex(nameParts[nameParts.length - 1]);
+              }
+            }
+          } catch { /* ดึงออเดอร์ไม่ได้ก็ส่งโดยไม่มีชื่อเบอร์ */ }
+        }
+
+        const capiEvent = {
+          event_name: event,
+          event_time: Math.floor(now.getTime() / 1000),
+          event_id: eventId,
+          action_source: 'website',
+          event_source_url: 'https://kuapapoh.com' + (path || '/'),
+          user_data: userData,
+        };
+
+        if (value) {
+          capiEvent.custom_data = {
+            currency: currency || 'THB',
+            value,
+            content_ids: ['je-shirt'],
+            content_type: 'product',
+          };
+          if (orderId) capiEvent.custom_data.order_id = orderId;
+        }
+
+        const result = await sendCapi(env, capiEvent);
+        const metaStatus = result.ok ? 'ok' : 'err:' + (result.code || result.status);
+
+        // ส่งไม่สำเร็จให้ sent_meta คง 0 · backfill จะเก็บตกให้ทีหลัง
+        await db.prepare('UPDATE visits SET sent_meta = ?, meta_status = ? WHERE event_id = ?')
+          .bind(result.ok ? 1 : 0, metaStatus, eventId).run();
+      } catch {
+        // CAPI พลาดไม่ควรทำให้อะไรพัง
+        try {
+          await db.prepare("UPDATE visits SET meta_status = 'err:exception' WHERE event_id = ?")
+            .bind(eventId).run();
+        } catch { /* จดไม่ได้ก็ปล่อย */ }
+      }
+    })();
+    if (context.waitUntil) context.waitUntil(background); else await background;
   }
 
   return ok();

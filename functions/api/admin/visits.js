@@ -1,5 +1,6 @@
 // GET /api/admin/visits?days=30 · สรุปสถิติคนเข้าเว็บที่เราเก็บเอง
 // ใช้กับหน้า stats.html · ต้องมี x-admin-token เหมือนหน้าออเดอร์
+// v2: ตัดบอทออกจากตัวเลขทั้งหมด + เพิ่มตารางภาพแอดไหนขายได้ + สถานะ CAPI สด
 import { json, bad, requireDb, adminOk } from '../_shared.js';
 
 export async function onRequestGet({ request, env }) {
@@ -14,34 +15,34 @@ export async function onRequestGet({ request, env }) {
   let rows;
   try {
     rows = await db.batch([
-      // ยอดรวมแยกตามชนิดเหตุการณ์ · uniq = นับคนไม่นับครั้ง
+      // ยอดรวมแยกตามชนิดเหตุการณ์ · uniq = นับคนไม่นับครั้ง · ตัดบอทออก
       db.prepare(
         `SELECT event, COUNT(*) AS hits, COUNT(DISTINCT visitor) AS people, COALESCE(SUM(value),0) AS value
-           FROM visits WHERE day >= ? GROUP BY event`
+           FROM visits WHERE day >= ? AND is_bot = 0 GROUP BY event`
       ).bind(since),
       db.prepare(
         `SELECT day, event, COUNT(*) AS hits, COUNT(DISTINCT visitor) AS people
-           FROM visits WHERE day >= ? GROUP BY day, event ORDER BY day ASC`
+           FROM visits WHERE day >= ? AND is_bot = 0 GROUP BY day, event ORDER BY day ASC`
       ).bind(since),
       db.prepare(
         `SELECT path, COUNT(*) AS hits, COUNT(DISTINCT visitor) AS people
-           FROM visits WHERE day >= ? AND event = 'PageView'
+           FROM visits WHERE day >= ? AND is_bot = 0 AND event = 'PageView'
           GROUP BY path ORDER BY hits DESC LIMIT 12`
       ).bind(since),
       // มาจากไหน · ใส่ utm_source มาก็ใช้อันนั้น ไม่มีก็ดูโดเมนที่พามา
       db.prepare(
         `SELECT COALESCE(NULLIF(source,''), NULLIF(referrer,''), 'เข้าตรง') AS src,
                 COUNT(*) AS hits, COUNT(DISTINCT visitor) AS people
-           FROM visits WHERE day >= ? GROUP BY src ORDER BY hits DESC LIMIT 12`
+           FROM visits WHERE day >= ? AND is_bot = 0 GROUP BY src ORDER BY hits DESC LIMIT 12`
       ).bind(since),
       db.prepare(
         `SELECT COALESCE(ua,'ไม่ทราบ') AS ua, COUNT(DISTINCT visitor) AS people
-           FROM visits WHERE day >= ? GROUP BY ua ORDER BY people DESC LIMIT 8`
+           FROM visits WHERE day >= ? AND is_bot = 0 GROUP BY ua ORDER BY people DESC LIMIT 8`
       ).bind(since),
       // แถวที่ยังไม่ได้ส่งเข้า Meta · วันมี Pixel แล้วค่อยยิงย้อนได้เท่านี้
       db.prepare(
         `SELECT COUNT(*) AS pending, SUM(CASE WHEN fbclid IS NOT NULL THEN 1 ELSE 0 END) AS with_fbclid
-           FROM visits WHERE sent_meta = 0`
+           FROM visits WHERE sent_meta = 0 AND is_bot = 0`
       ),
       db.prepare('SELECT MIN(at) AS first_at, COUNT(*) AS all_rows FROM visits'),
       // ยอดขายแยกตามที่มา · คำถามที่ต้องตอบให้ได้คือ "เงินเข้ามาจากทางไหน"
@@ -49,8 +50,35 @@ export async function onRequestGet({ request, env }) {
         `SELECT COALESCE(NULLIF(source,''), NULLIF(referrer,''), 'เข้าตรง') AS src,
                 COUNT(*) AS orders, COALESCE(SUM(value),0) AS revenue,
                 SUM(CASE WHEN fbclid IS NOT NULL THEN 1 ELSE 0 END) AS from_ads
-           FROM visits WHERE day >= ? AND event = 'Purchase'
+           FROM visits WHERE day >= ? AND event = 'Purchase' AND is_bot = 0
           GROUP BY src ORDER BY revenue DESC LIMIT 12`
+      ).bind(since),
+      // จำนวนบอทในช่วง
+      db.prepare(
+        'SELECT COUNT(*) AS bots FROM visits WHERE day >= ? AND is_bot = 1'
+      ).bind(since),
+      // ภาพแอดไหนขายได้ · ผูก content ระดับ session เพราะ utm_content ติดแค่ pageview แรก
+      db.prepare(
+        `WITH s AS (
+           SELECT session, MAX(content) AS content
+             FROM visits
+            WHERE day >= ? AND is_bot = 0 AND content IS NOT NULL
+            GROUP BY session
+         )
+         SELECT s.content,
+                COUNT(DISTINCT CASE WHEN v.event = 'ViewContent' THEN v.visitor END) AS people_vc,
+                COUNT(DISTINCT CASE WHEN v.event = 'InitiateCheckout' THEN v.visitor END) AS people_ic,
+                SUM(CASE WHEN v.event = 'Purchase' THEN 1 ELSE 0 END) AS orders,
+                COALESCE(SUM(CASE WHEN v.event = 'Purchase' THEN v.value ELSE 0 END), 0) AS revenue
+           FROM s JOIN visits v ON v.session = s.session AND v.day >= ? AND v.is_bot = 0
+          GROUP BY s.content
+          ORDER BY revenue DESC, orders DESC`
+      ).bind(since, since),
+      // สถานะ CAPI สด
+      db.prepare(
+        `SELECT meta_status, COUNT(*) AS cnt
+           FROM visits WHERE day >= ? AND meta_status IS NOT NULL
+          GROUP BY meta_status`
       ).bind(since),
     ]);
   } catch (error) {
@@ -67,6 +95,15 @@ export async function onRequestGet({ request, env }) {
   }
   const pending = (rows[5].results || [])[0] || {};
   const overall = (rows[6].results || [])[0] || {};
+  const botsRow = (rows[8].results || [])[0] || {};
+
+  // สถานะ CAPI สด: นับ ok กับ err
+  let capiOk = 0;
+  let capiErr = 0;
+  for (const r of rows[10].results || []) {
+    if (r.meta_status === 'ok') capiOk += r.cnt;
+    else if (r.meta_status && r.meta_status.startsWith('err:')) capiErr += r.cnt;
+  }
 
   return json({
     ok: true,
@@ -79,11 +116,15 @@ export async function onRequestGet({ request, env }) {
     topSources: rows[3].results || [],
     browsers: rows[4].results || [],
     revenueBySource: rows[7].results || [],
+    adCreatives: rows[9].results || [],
     meta: {
       pending: pending.pending || 0,
       withFbclid: pending.with_fbclid || 0,
       firstAt: overall.first_at || null,
       allRows: overall.all_rows || 0,
+      bots: botsRow.bots || 0,
+      capiOk,
+      capiErr,
     },
   });
 }

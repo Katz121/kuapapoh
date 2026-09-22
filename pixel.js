@@ -12,9 +12,9 @@
    ผ่าน Conversions API จะไม่ถูกนับซ้ำกับที่ Pixel ยิงสดๆ
    ═══════════════════════════════════════════════════════════ */
 (function () {
-  // ยิงเข้าหลาย Pixel พร้อมกันได้ · ตัวแรกเป็นของธุรกิจ Siwatid (เก็บข้อมูลเดิม)
-  // ตัวที่สองสร้างในบัญชีแอด punkam เพราะแคมเปญ Sales ต้องใช้ Pixel ที่บัญชีแอดเข้าถึงได้
-  var PIXEL_IDS = ['1560330288622338', '1621493986432899'];
+  // ใช้แค่ Pixel B (1621493986432899) ในบัญชีแอด punkam
+  // ตัด A (1560330288622338) ออกแล้ว เพราะไม่มีแคมเปญไหนใช้ ข้อมูลที่ส่งเข้าไปจึงเสียเปล่า
+  var PIXEL_IDS = ['1621493986432899'];
   var PIXEL_ID = PIXEL_IDS[0] || '';
 
   var ENDPOINT = '/api/track';
@@ -41,6 +41,14 @@
     return value;
   }
 
+  // อ่าน cookie ตามชื่อ · ใช้กับ _fbp, _fbc ที่ Meta Pixel ตั้งไว้
+  function getCookie(name) {
+    try {
+      var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+      return match ? decodeURIComponent(match[1]) : '';
+    } catch (error) { return ''; }
+  }
+
   var visitor = keep('localStorage', 'kp_vid');    // คนเดิมกลับมาอีกวันก็ยังเป็นไอดีเดิม
   var session = keep('sessionStorage', 'kp_sid');  // ปิดแท็บแล้วเริ่มรอบใหม่
 
@@ -52,13 +60,22 @@
   var campaign = {
     source: params.get('utm_source') || storage.get('sessionStorage', 'kp_src') || '',
     medium: params.get('utm_medium') || storage.get('sessionStorage', 'kp_med') || '',
-    campaign: params.get('utm_campaign') || storage.get('sessionStorage', 'kp_cmp') || ''
+    campaign: params.get('utm_campaign') || storage.get('sessionStorage', 'kp_cmp') || '',
+    // เก็บ utm_content เพื่อรู้ว่าภาพแอดไหนพาคนเข้ามา
+    content: params.get('utm_content') || storage.get('sessionStorage', 'kp_cnt') || ''
   };
   if (params.get('utm_source')) {
     storage.set('sessionStorage', 'kp_src', campaign.source);
     storage.set('sessionStorage', 'kp_med', campaign.medium);
     storage.set('sessionStorage', 'kp_cmp', campaign.campaign);
   }
+  // utm_content อาจมาโดยไม่มี utm_source (เช่น ลิงก์ที่ใส่แค่ content เพื่อแยกภาพ)
+  if (params.get('utm_content')) {
+    storage.set('sessionStorage', 'kp_cnt', campaign.content);
+  }
+
+  // ตรวจว่าเป็นบอท (navigator.webdriver = true ใน Headless Chrome, Puppeteer ฯลฯ)
+  var isWebdriver = navigator.webdriver === true;
 
   function sendOurs(eventName, options) {
     var payload = {
@@ -71,7 +88,11 @@
       source: campaign.source,
       medium: campaign.medium,
       campaign: campaign.campaign,
+      content: campaign.content,
       fbclid: fbclid,
+      fbp: getCookie('_fbp'),
+      fbc: getCookie('_fbc'),
+      wd: isWebdriver,
       value: options.value,
       currency: options.value ? 'THB' : '',
       orderId: options.orderId || ''
@@ -120,6 +141,8 @@
       });
     } catch (error) { /* ไม่ให้ tracking ทำให้หน้าเว็บสะดุด */ }
     if (!PIXEL_ID) return;
+    // บอท (webdriver) ไม่ต้องยิง fbq · ยังส่งเข้า /api/track เพื่อให้ server ติดธงบอทได้
+    if (isWebdriver) return;
     try {
       var forMeta = {};
       for (var key in options) {

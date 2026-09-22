@@ -362,6 +362,50 @@ footer p{max-width:72ch}
   body,.hero,.six,.contact,.shop{background:#fff!important;color:#000!important}
   .six h2,.six .tag,.six-item b,.contact .tag,.shop h2,.shop .tag{color:#000!important}
 }
+.shop-grid.four-products{grid-template-columns:minmax(0,1fr)}
+@media(min-width:600px){.shop-grid.four-products{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1020px){.shop-grid.four-products{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.shop-shot-overlay{position:absolute;bottom:8px;right:8px;z-index:2;background:rgba(16,21,56,.85);
+  color:#fff;font-size:.72rem;font-weight:600;padding:.25em .7em;border-radius:99px}
+.shop-shot:hover .shop-shot-overlay{background:var(--magenta-text);color:#fff}
+.shop-more-btn{display:inline-flex;align-items:center;gap:.3rem;font-size:.82rem;font-weight:600;
+  color:var(--cobalt);background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.shop-more-btn:hover{color:var(--ink)}
+.shop-dialog{border:3px solid var(--ink);padding:0;background:var(--paper);color:var(--ink);
+  width:min(980px,95vw);max-height:90vh;max-height:90dvh;box-shadow:12px 12px 0 var(--ink);
+  overflow:hidden;outline:none;margin:auto}
+.shop-dialog::backdrop{background:rgba(16,21,56,.85);backdrop-filter:blur(3px)}
+.shop-dialog[open]{display:grid;grid-template-rows:auto}
+.dialog-box{position:relative;overflow-y:auto;padding:clamp(1.2rem,3vw,2.2rem);max-height:calc(90vh - 6px)}
+.dialog-close{position:absolute;top:14px;right:14px;z-index:10;width:42px;height:42px;
+  background:var(--paper);border:2px solid var(--ink);font-size:1.2rem;font-weight:700;
+  cursor:pointer;display:grid;place-items:center;transition:background .2s,color .2s}
+.dialog-close:hover{background:var(--ink);color:var(--yellow)}
+.dialog-grid{display:grid;gap:clamp(1.4rem,3vw,2.4rem)}
+@media(min-width:760px){.dialog-grid{grid-template-columns:400px 1fr;align-items:start}}
+.dialog-gallery{display:flex;flex-direction:column;gap:.8rem}
+.dialog-main-img{background:#0e132c;border:2px solid var(--ink);border-radius:6px;
+  aspect-ratio:4/3;min-height:280px;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;padding:8px;position:relative}
+.dialog-main-img.tall{aspect-ratio:3/4}
+.dialog-main-img img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:3px}
+.dialog-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.dialog-thumb{background:#fff;border:2px solid var(--rule);padding:2px;aspect-ratio:1;
+  cursor:pointer;border-radius:3px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
+.dialog-thumb img{width:100%;height:100%;object-fit:cover}
+.dialog-thumb:hover{transform:translateY(-2px);border-color:var(--ink)}
+.dialog-thumb.is-active{border-color:var(--magenta-text);border-width:2.5px;box-shadow:2px 2px 0 var(--ink)}
+.dialog-thumb-badge{position:absolute;bottom:0;left:0;right:0;background:rgba(16,21,56,.85);
+  color:#fff;font-size:.62rem;font-weight:600;text-align:center;padding:1px 0;line-height:1.2}
+.dialog-content{display:flex;flex-direction:column;gap:.9rem}
+.dialog-content h3{font-size:clamp(1.35rem,2.5vw,1.75rem);margin:0;color:var(--ink);line-height:1.25}
+.dialog-price{font-size:1.15rem;font-weight:700;color:var(--magenta-text);margin:0}
+.dialog-price small{font-size:.85rem;color:var(--muted);font-weight:400;margin-left:.6rem}
+.dialog-lead{font-size:.95rem;line-height:1.6;margin:0;color:var(--ink)}
+.dialog-section{border-top:1.5px dashed var(--rule);padding-top:.85rem}
+.dialog-section h4{font-size:.92rem;font-weight:700;margin:0 0 .4rem;color:var(--cobalt)}
+.dialog-actions{margin-top:.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:.8rem}
+.dialog-subnote{font-size:.8rem;color:var(--muted)}
 </style>
 <script src="/pixel.js?v=202609210003" defer></script>
 </head>
@@ -642,9 +686,9 @@ footer p{max-width:72ch}
   <div class="wrap">
     <p class="tag rise">POH SHOP · <span lang="th">โพ้ช็อป</span></p>
     <h2 class="rise">From the district, made with care</h2>
-    <p class="lede rise">The Kuapapoh tees and drink are designed from the identity of Takua Pa Old Town, with artists and people in the community. The Vegetarian Festival tee is open for pre-order this round. All proceeds go to the Kuapapoh group fund, to restore, run activities, and keep building the creative town.</p>
+    <p class="lede rise">The Kuapapoh tees, tote bags and drink are designed from the identity of Takua Pa Old Town, with artists and people in the community. The Vegetarian Festival tee is open for pre-order this round, and the Vegetarian Festival tote is coming soon. All proceeds go to the Kuapapoh group fund, to restore, run activities, and keep building the creative town.</p>
 
-    <div class="shop-grid three-products rise">
+    <div class="shop-grid four-products rise">
       <article class="shop-card">
         <div class="shop-shot">
           <span class="shop-tag">Pre-order · Vegetarian Festival</span>
@@ -683,6 +727,26 @@ footer p{max-width:72ch}
           <div class="shop-foot">
             <span class="shop-price">฿350</span>
             <a class="shop-buy" href="/preorder/">Pre-order</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="shop-card">
+        <div class="shop-shot photo" style="cursor:pointer" data-open-modal="modal-bag" title="See the tote in 2 colours and Jampoon's story">
+          <span class="shop-tag">Coming soon · Vegetarian Festival</span>
+          <img src="/images/je-bag-red-friends.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Red Vegetarian Festival tote with three Jampoon characters on the handles">
+          <span class="shop-shot-overlay">👜 See the collection</span>
+        </div>
+        <div class="shop-body">
+          <h3>Vegetarian Festival tote (<span lang="th">กระเป๋าผ้าเทศกาลกินผัก</span>)</h3>
+          <p class="shop-desc">A tote with the same print as the Vegetarian Festival tee: shrines, a dragon, tigers, the fire pot, firecrackers and KUAPAPOH lettering. Look for little Jampoon hiding in the print.</p>
+          <button type="button" class="shop-more-btn" data-open-modal="modal-bag">
+            👜 See the 2 colours &amp; Jampoon's story →
+          </button>
+          <p class="shop-meta">2 colours: yellow · red · presented by Jampoon</p>
+          <div class="shop-foot">
+            <span class="shop-price">Coming soon</span>
+            <span class="shop-buy" style="background:var(--rule);color:var(--muted);cursor:default">Not yet</span>
           </div>
         </div>
       </article>
@@ -759,6 +823,86 @@ footer p{max-width:72ch}
     </div>
   </div>
 </section>
+
+<dialog id="modal-bag" class="shop-dialog" aria-labelledby="modal-bag-title">
+  <div class="dialog-box">
+    <button type="button" class="dialog-close" data-close-modal aria-label="Close details">✕</button>
+    <div class="dialog-grid">
+      <div class="dialog-gallery">
+        <div class="dialog-main-img tall">
+          <img src="/images/je-bag-red-friends.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Red Vegetarian Festival tote with three Jampoon characters on the handles">
+        </div>
+        <div class="dialog-thumbs" role="tablist" aria-label="Choose a photo">
+          <button type="button" class="dialog-thumb is-active" data-src="/images/je-bag-red-friends.webp" title="Red, 3 Jampoons" aria-label="Red, 3 Jampoons">
+            <img src="/images/je-bag-red-friends.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Red tote, 3 Jampoons">
+            <span class="dialog-thumb-badge">Red · crew</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="/images/je-bag-yellow-friends.webp" title="Yellow, 3 Jampoons" aria-label="Yellow, 3 Jampoons">
+            <img src="/images/je-bag-yellow-friends.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Yellow tote, 3 Jampoons">
+            <span class="dialog-thumb-badge">Yellow · crew</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="/images/je-bag-red-jampoon.webp" title="Red, climbing up" aria-label="Red, climbing up">
+            <img src="/images/je-bag-red-jampoon.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Jampoon climbing the handle of the red tote">
+            <span class="dialog-thumb-badge">Red · climbing</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="/images/je-bag-yellow-jampoon.webp" title="Yellow, found it" aria-label="Yellow, found it">
+            <img src="/images/je-bag-yellow-jampoon.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Excited Jampoon beside the yellow tote">
+            <span class="dialog-thumb-badge">Yellow · found it</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="/images/je-bag-red.webp" title="Red" aria-label="Red">
+            <img src="/images/je-bag-red.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Red Kuapapoh Vegetarian Festival tote">
+            <span class="dialog-thumb-badge">Red</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="/images/je-bag-yellow.webp" title="Yellow" aria-label="Yellow">
+            <img src="/images/je-bag-yellow.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Yellow Kuapapoh Vegetarian Festival tote">
+            <span class="dialog-thumb-badge">Yellow</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="/images/jampoon-poses.webp" title="Jampoon poses" aria-label="Jampoon poses">
+            <img src="/images/jampoon-poses.webp" width="1057" height="1080" loading="lazy" decoding="async" alt="Jampoon in different poses">
+            <span class="dialog-thumb-badge">Jampoon poses</span>
+          </button>
+          <button type="button" class="dialog-thumb" data-src="/images/jampoon-concept.webp" title="First sketch" aria-label="First sketch">
+            <img src="/images/jampoon-concept.webp" width="1200" height="977" loading="lazy" decoding="async" alt="First sketch and design concept of Jampoon">
+            <span class="dialog-thumb-badge">First sketch</span>
+          </button>
+        </div>
+      </div>
+      <div class="dialog-content">
+        <div>
+          <span class="shop-tag" style="position:static;display:inline-block;margin-bottom:.5rem">Coming soon · Vegetarian Festival</span>
+          <h3 id="modal-bag-title">Vegetarian Festival tote (<span lang="th">กระเป๋าผ้าเทศกาลกินผัก</span>)</h3>
+          <p class="dialog-price">Coming soon <small>Message us on LINE and we will tell you at launch</small></p>
+        </div>
+        <p class="dialog-lead">This tote comes with a little presenter called Jampoon. It comes in 2 colours, yellow and red, with the same print as the Vegetarian Festival tee: shrines, a dragon, tigers, the fire pot, firecrackers and KUAPAPOH lettering. Little Jampoon hides in the print too.</p>
+        <ul class="dialog-specs" style="margin:0;padding-left:1.2rem;display:grid;gap:.15rem">
+          <li>Colour: yellow · red</li>
+          <li>Fabric, size and price: Coming soon</li>
+        </ul>
+        <div class="dialog-section">
+          <h4>🌱 Who is Jampoon</h4>
+          <p class="dialog-lead">Jampoon takes after the champoon flower (<span lang="th">ดอกจำปูน</span>), the flower of Phang Nga province named in the provincial motto. The champoon is a native plant of the South with firm 3-petalled blooms, strongly fragrant in the daytime.</p>
+        </div>
+        <div class="dialog-section">
+          <h4>💛 Why green and yellow</h4>
+          <p class="dialog-lead">The young bloom is green and the full bloom turns yellow, with scent drifting out to people who pass by. The designer keeps both stages in one character, a story of beginning and growth. So Jampoon wears a green petal head and a yellow petal body.</p>
+        </div>
+        <div class="dialog-section">
+          <h4>🎨 From a design contest</h4>
+          <p class="dialog-lead">Jampoon was drawn for the PHANGNGA MASCOT DESIGN CONTEST, held by the Phang Nga Tourism Business Association with the Phang Nga Provincial Administration, Phang Nga province and the TCAP Association. The brief asked for the province's public relations and happiness officer, and Jampoon's mission is to go out and bring everyone fun and friendship. Jampoon won 3rd place in this contest.</p>
+          <p class="dialog-subnote">Character designed by P' Bird</p>
+        </div>
+        <div class="dialog-section">
+          <h4>👜 Our little presenter this year</h4>
+          <p class="dialog-lead">This year Jampoon changes into the white outfit of festival-goers and helps launch the tote for the coming Takua Pa Vegetarian Festival. One bag carries shrine visit goods, market finds, or a souvenir to take home. Proceeds support the Kuapapoh group fund, like everything else in the shop.</p>
+        </div>
+        <div class="dialog-actions">
+          <a class="btn on-paper" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">Message LINE for a note at launch</a>
+          <span class="dialog-subnote">The tote is not on sale yet. Message us and we will tell you as soon as it launches.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
 
 <section id="faq" class="shift">
   <div class="wrap">
@@ -963,6 +1107,38 @@ if (topnav) {
   topnav.addEventListener('scroll', syncFade, {passive:true});
   addEventListener('resize', syncFade);
 }
+
+/* Product detail dialogs & gallery thumbs (generic: works for every .shop-dialog) */
+document.querySelectorAll('[data-open-modal]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const dlg = document.getElementById(btn.getAttribute('data-open-modal'));
+    if (dlg) { dlg.showModal(); document.body.style.overflow = 'hidden'; }
+  });
+});
+document.querySelectorAll('[data-close-modal]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const dlg = btn.closest('dialog');
+    if (dlg) { dlg.close(); document.body.style.overflow = ''; }
+  });
+});
+document.querySelectorAll('.shop-dialog').forEach(dlg => {
+  dlg.addEventListener('click', (e) => {
+    if (e.target === dlg) { dlg.close(); document.body.style.overflow = ''; }
+  });
+  dlg.addEventListener('close', () => { document.body.style.overflow = ''; });
+});
+document.querySelectorAll('.dialog-thumb').forEach(thumb => {
+  thumb.addEventListener('click', () => {
+    const gallery = thumb.closest('.dialog-gallery');
+    const mainImg = gallery.querySelector('.dialog-main-img img');
+    const src = thumb.getAttribute('data-src');
+    if (mainImg && src) {
+      mainImg.src = src;
+      gallery.querySelectorAll('.dialog-thumb').forEach(t => t.classList.remove('is-active'));
+      thumb.classList.add('is-active');
+    }
+  });
+});
 </script>
 </body>
 </html>

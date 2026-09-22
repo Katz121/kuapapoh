@@ -55,7 +55,7 @@
   // Current shop mode: the vegetarian-festival shirt (pre-order round) leads,
   // then the heritage shirt + Poh Sparkling Tea.
   // (old placeholder products in saved CMS data stay hidden).
-  const SHOP_PRODUCT_IDS = ['je-shirt', 'shirt', 'poh'];
+  const SHOP_PRODUCT_IDS = ['je-shirt', 'je-bag', 'shirt', 'poh'];
 
   // ═══ รายการสินค้าอยู่ในโค้ด ไม่ใช่ในข้อมูลที่บันทึกไว้ ═══
   // เพราะเครื่องที่เคยเปิดหน้า admin จะอ่านจาก localStorage ก่อนเสมอ
@@ -82,6 +82,25 @@
       "status": "preorder",
       "buyUrl": "preorder/",
       "buyLabel": "สั่งพรีออเดอร์"
+    },
+    'je-bag': {
+      "id": "je-bag",
+      "category": "กระเป๋า & ของใช้",
+      "tag": "เตรียมเปิดขาย · เทศกาลกินผัก",
+      "name": "กระเป๋าผ้าเทศกาลกินผัก กั่วป่าโพ้",
+      "priceLabel": "เร็ว ๆ นี้",
+      "desc": "กระเป๋าผ้าลายเดียวกับเสื้อเทศกาลกินผัก รวมศาลเจ้า มังกร เสือ เตาไฟ ประทัด และตัวหนังสือ KUAPAPOH ลองหาน้องจำปูนที่แอบอยู่ในลายด้วย",
+      "meta": "2 สี เหลือง · แดง · พรีเซนเตอร์ น้องจำปูน",
+      "image": "images/je-bag-red-friends.webp",
+      "imageWidth": 1080,
+      "imageHeight": 1350,
+      "imageAlt": "กระเป๋าผ้าสีแดงลายเทศกาลกินผัก มีน้องจำปูนสามตัวเกาะหูกระเป๋า",
+      "shotStyle": "photo",
+      "hasModal": true,
+      "modalId": "modal-bag",
+      "modalCta": "👜 ดูกระเป๋า 2 สี & เรื่องน้องจำปูน →",
+      "shotOverlay": "👜 ดูทั้งคอลเลกชัน",
+      "status": "coming_soon"
     },
     'shirt': {
       "id": "shirt",
@@ -590,7 +609,7 @@
               } else if (prod.status === 'preorder') {
                 buyBtnHtml = `<a class="shop-buy" href="${buyHref}"${buyTargetAttr} style="background:var(--red);color:#fff;border-color:var(--ink)">${prod.buyLabel || 'สั่งจอง (Pre-Order)'}</a>`;
               } else if (prod.status === 'coming_soon') {
-                buyBtnHtml = `<span class="shop-buy" style="background:var(--rule);color:var(--muted);cursor:default">เร็ว ๆ นี้</span>`;
+                buyBtnHtml = `<span class="shop-buy" style="background:var(--rule);color:var(--muted);cursor:default">รอเปิดขาย</span>`;
               }
 
               art.innerHTML = `

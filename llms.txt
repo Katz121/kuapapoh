@@ -54,3 +54,7 @@
 ## Pages
 - [กั่วป่าโพ้ (ภาษาไทย)](https://kuapapoh.com/): หน้าหลัก · นิทรรศการ สามบ้าน ที่มาชื่อ 6 อ. ร้านค้า คำถามพบบ่อย
 - [Kuapapoh (English)](https://kuapapoh.com/en/): English guide · the three houses, the name, the six heritage themes, the shop and FAQ
+- [ย่านเมืองเก่าตะกั่วป่า](https://kuapapoh.com/takuapa-old-town/): คู่มือย่าน · สามบ้าน 78 109 305 ที่มาชื่อกั่วป่าโพ้ แนวคิด 6 อ. และการเดินทาง
+- [ของฝากตะกั่วป่า](https://kuapapoh.com/souvenir-takuapa/): รวมของที่ระลึกจากกลุ่มกั่วป่าโพ้ · เสื้องานเจ กระเป๋าผ้า เสื้อยืด และ Poh Sparkling Tea
+- [งานเจ 2569 ตะกั่วป่า](https://kuapapoh.com/je-shirt/): เรื่องเทศกาลกินผักตะกั่วป่าและเสื้องานเจ
+- [พรีออเดอร์เสื้องานเจ](https://kuapapoh.com/preorder/): สั่งเสื้อเทศกาลกินผักออนไลน์

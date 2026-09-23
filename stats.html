@@ -18,6 +18,8 @@ header{background:var(--ink);color:#fff;padding:14px 0}
 header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 header h1{font-family:var(--display);font-size:1.1rem;margin:0}
 header a{color:var(--yellow)}
+header .hlinks{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+header .hbtn{background:transparent;color:#fff;border:2px solid #fff;border-radius:99px;padding:.25rem .8rem;font-size:.82rem;font-weight:600;cursor:pointer;width:auto}
 main{padding:20px 0 60px}
 .gate{max-width:380px;margin:60px auto;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:20px}
 input,select{font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--rule);border-radius:10px;background:#fff;color:var(--ink);width:100%}
@@ -28,10 +30,19 @@ button:disabled{opacity:.5}
 h2{font-family:var(--display);font-size:1.05rem;margin:26px 0 10px}
 h2 .sub{font-family:var(--body);font-weight:400;font-size:.82rem;color:var(--muted)}
 .rangebar{position:sticky;top:0;z-index:5;background:var(--paper);padding:10px 0;border-bottom:2px solid var(--ink);margin-bottom:6px}
-.rangebar .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.rangebar .col{display:flex;flex-direction:column;gap:8px}
+.rangebar .toolsrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .seg{display:flex;gap:6px;flex-wrap:wrap}
 .seg button{background:#fff;color:var(--ink);border:2px solid var(--ink)}
 .seg button.on{background:var(--ink);color:#fff}
+.seg button.loading{opacity:.55}
+.seg button.loading::after{content:' ...'}
+#panel.loading #content{opacity:.5;transition:opacity .15s}
+#panel.loading{cursor:wait}
+.skel{background:#e8e6da;border-radius:10px;min-height:64px;animation:skpulse 1.1s ease-in-out infinite}
+.skel.tall{min-height:120px}
+@keyframes skpulse{0%,100%{opacity:.55}50%{opacity:1}}
+.metaload{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:14px;margin-bottom:18px;min-height:118px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.9rem}
 .checks{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:.9rem}
 .checks label{display:flex;gap:6px;align-items:center;white-space:nowrap}
 .checks input{width:auto}
@@ -92,6 +103,11 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
   .step{grid-template-columns:110px 1fr 110px}
   .mform{grid-template-columns:1fr}
   .card b.big{font-size:1.4rem}
+  .seg{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+  .seg button{flex:none}
+  .checks{font-size:.82rem;gap:8px}
+  button.small{padding:.25rem .6rem;font-size:.78rem}
+  .rangenote{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
@@ -99,7 +115,7 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
 <body>
 <header><div class="wrap">
   <h1>สถิติร้าน · กั่วป่าโพ้</h1>
-  <a href="/preorder-admin.html">ไปหน้าจัดการพรีออเดอร์</a>
+  <div class="hlinks"><a href="/preorder-admin.html">ไปหน้าจัดการพรีออเดอร์</a><button type="button" id="kp-logout-top" class="hbtn">ออกจากระบบ</button></div>
 </div></header>
 
 <main class="wrap">
@@ -111,7 +127,7 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
   </section>
 
   <section id="panel" hidden>
-    <div class="rangebar"><div class="row">
+    <div class="rangebar"><div class="col">
       <div class="seg" id="seg">
         <button data-days="1">วันนี้</button>
         <button data-days="7">7 วัน</button>
@@ -119,16 +135,19 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
         <button data-days="30" class="on">30 วัน</button>
         <button data-days="all">ทั้งหมด</button>
       </div>
-      <div class="checks">
-        <label><input type="checkbox" id="compare" checked> เทียบกับช่วงก่อน</label>
-        <label><input type="checkbox" id="incToday"> รวมวันนี้ (ยังไม่จบวัน)</label>
+      <div class="toolsrow">
+        <div class="checks">
+          <label><input type="checkbox" id="compare" checked> เทียบกับช่วงก่อน</label>
+          <label><input type="checkbox" id="incToday"> รวมวันนี้ (ยังไม่จบวัน)</label>
+        </div>
+        <button id="reload" class="ghost small">โหลดใหม่</button>
+        <button id="csv" class="ghost small">ดาวน์โหลด CSV</button>
       </div>
-      <button id="reload" class="ghost small">โหลดใหม่</button>
-      <button id="csv" class="ghost small">ดาวน์โหลด CSV</button>
     </div>
     <p class="rangenote" id="rangenote"></p></div>
 
     <p class="err" id="msg" hidden></p>
+    <div id="content">
 
     <div class="todaycard" id="todaycard"></div>
 
@@ -204,6 +223,7 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
       <li>ยอดสั่งคือกดฟอร์มสำเร็จ ส่วนเงินจริงดูที่ยอดโอนผ่านแล้วเท่านั้น ส่วนต่างคือยอดที่ต้องตามทวงสลิป</li>
       <li>เปิดหน้าเดียวแล้วไปเป็นค่าประมาณ คนอ่านจบในหน้าเดียวแล้วทัก LINE มาสั่งก็โดนนับด้วย</li>
     </ul>
+    </div>
   </section>
 </main>
 
@@ -233,7 +253,10 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
       headers: headers,
       body: opts && opts.json ? JSON.stringify(opts.json) : undefined
     }).then(function (r) {
-      return r.json().catch(function () { return { ok: false, error: 'ระบบตอบกลับผิดพลาด' }; });
+      return r.json().catch(function () { return { ok: false, error: 'ระบบตอบกลับผิดพลาด' }; }).then(function (j) {
+        if (j && typeof j === 'object') j._status = r.status;
+        return j;
+      });
     });
   }
 
@@ -244,17 +267,112 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
       '&compare=' + (c ? '1' : '0') + '&include_today=' + inc;
   }
 
-  function load(fromGate) {
-    api(query()).then(function (data) {
+  // จำคำตอบส่วนหลักต่อช่วง 2 นาที สลับกลับมาช่วงเดิมไม่ต้องยิงใหม่
+  var memCache = {};
+  var mainCtrl = null;
+  var metaCtrl = null;
+
+  function rememberToken() {
+    try { localStorage.setItem('kp_admin_token', token); } catch (e) { try { sessionStorage.setItem('kp_admin_token', token); } catch (e2) {} }
+  }
+  function forgetToken() {
+    try { localStorage.removeItem('kp_admin_token'); } catch (e) {}
+    try { sessionStorage.removeItem('kp_admin_token'); } catch (e) {}
+  }
+
+  // มีรหัสจำไว้แล้วไม่โชว์กล่องรหัส โชว์โครงจางๆ ทันที
+  function showSkeleton() {
+    $('todaycard').innerHTML = '<div class="skel"></div>';
+    $('north').innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div>';
+    $('traffic').innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>';
+    setMetaLoading();
+  }
+  function setMetaLoading() {
+    $('adblock').innerHTML = '<div class="metaload">กำลังดึงข้อมูลจาก Meta...</div>';
+    $('metablock').innerHTML = '<div class="metaload">กำลังดึงข้อมูลจาก Meta...</div>';
+  }
+
+  // กดเปลี่ยนช่วงแล้วเห็นว่ากำลังโหลด ปุ่มขึ้นสถานะ เนื้อหาเดิมจางลง
+  function setLoading(on) {
+    $('panel').classList.toggle('loading', !!on);
+    $('panel').setAttribute('aria-busy', on ? 'true' : 'false');
+    var btns = $('seg').querySelectorAll('button');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle('loading', !!on && btns[i].classList.contains('on'));
+    }
+    $('reload').disabled = !!on;
+  }
+
+  function load(fromGate, fresh) {
+    if (mainCtrl) { try { mainCtrl.abort(); } catch (e) {} }
+    if (metaCtrl) { try { metaCtrl.abort(); } catch (e) {} }
+    var q = query();
+    if (!fresh && memCache[q] && (Date.now() - memCache[q].t) < 120000) {
+      $('gate').hidden = true; $('panel').hidden = false; $('msg').hidden = true;
+      state.data = memCache[q].data;
+      render(state.data);
+      loadMeta(q, false);
+      return;
+    }
+    if (!fromGate) setLoading(true);
+    mainCtrl = new AbortController();
+    fetch(q + (fresh ? '&fresh=1' : ''), {
+      headers: { 'x-admin-token': token },
+      signal: mainCtrl.signal
+    }).then(function (r) {
+      var status = r.status;
+      return r.json().catch(function () { return { ok: false, error: 'ระบบตอบกลับผิดพลาด' }; }).then(function (j) {
+        if (j && typeof j === 'object') j._status = status;
+        return j;
+      });
+    }).then(function (data) {
+      setLoading(false);
       if (!data.ok) {
+        if (data._status === 401) {
+          forgetToken(); token = '';
+          $('panel').hidden = true; $('gate').hidden = false;
+          $('gate-msg').hidden = false; $('gate-msg').textContent = data.error || 'รหัสผ่านไม่ถูกต้อง';
+          return;
+        }
         var box = fromGate ? $('gate-msg') : $('msg');
         box.hidden = false; box.textContent = data.error || 'โหลดไม่สำเร็จ';
         return;
       }
-      try { localStorage.setItem('kp_admin_token', token); } catch (e) { sessionStorage.setItem('kp_admin_token', token); }
+      rememberToken();
       $('gate').hidden = true; $('panel').hidden = false; $('msg').hidden = true;
+      memCache[q] = { t: Date.now(), data: data };
       state.data = data;
       render(data);
+      loadMeta(q, fresh);
+    }).catch(function (err) {
+      if (err && err.name === 'AbortError') return;
+      setLoading(false);
+      var box2 = fromGate ? $('gate-msg') : $('msg');
+      box2.hidden = false; box2.textContent = 'โหลดไม่สำเร็จ ลองกดโหลดใหม่อีกครั้ง';
+    });
+  }
+
+  // ส่วน Meta เติมทีหลัง ไม่ขวางส่วนหลัก
+  function loadMeta(q, fresh) {
+    if (metaCtrl) { try { metaCtrl.abort(); } catch (e) {} }
+    metaCtrl = new AbortController();
+    fetch(q + '&part=meta' + (fresh ? '&fresh=1' : ''), {
+      headers: { 'x-admin-token': token },
+      signal: metaCtrl.signal
+    }).then(function (r) {
+      return r.json().catch(function () { return { ok: false }; });
+    }).then(function (md) {
+      if (!state.data) return;
+      if (md && md.ok) {
+        state.data.adSpend = md.adSpend;
+        state.data.metaCompare = md.metaCompare;
+        if (md.ordersByUtm) state.data.ordersByUtm = md.ordersByUtm;
+      }
+      renderAds(state.data);
+      renderMeta(state.data);
+    }).catch(function (err) {
+      if (err && err.name === 'AbortError') return;
+      if (state.data) { renderAds(state.data); renderMeta(state.data); }
     });
   }
 
@@ -283,10 +401,14 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
   function render(d) {
     var k = d.kpis || {};
     var rng = d.range || {};
-    var note = esc(d.compareNote || '');
-    if (rng.excluded_today) note += ' ข้อมูลถึงเมื่อวาน';
+    var raw = String(d.compareNote || '');
+    if (rng.excluded_today) raw += ' ข้อมูลถึงเมื่อวาน';
+    // บนมือถือข้อความเทียบช่วงสั้นลง เหลือแค่ช่วงหลัก
+    if (window.matchMedia && window.matchMedia('(max-width: 520px)').matches) {
+      raw = raw.split(' ·')[0].replace(' ข้อมูลถึงเมื่อวาน', ' ถึงเมื่อวาน');
+    }
     $('rangenote').textContent = '';
-    $('rangenote').innerHTML = note;
+    $('rangenote').innerHTML = esc(raw);
 
     // การ์ดวันนี้ใบเดียว
     var t = d.today || {};
@@ -340,9 +462,8 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
     });
     $('tbl-creative').innerHTML = table(['ภาพแอด', 'ครั้งที่เข้า', 'ดูสินค้า (คน)', 'เริ่มกรอก (คน)', 'ออเดอร์', 'ยอดเงิน'], rows);
 
-    // ค่าแอด
-    renderAds(d);
-    renderMeta(d);
+    // ค่าแอดกับเทียบ Meta เติมทีหลังผ่าน loadMeta ระหว่างรอโชว์กล่องคงที่
+    setMetaLoading();
 
     // เงินจริง
     renderMoney(d);
@@ -687,7 +808,7 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
         api('/api/admin/markers?id=' + encodeURIComponent(b.getAttribute('data-del')), { method: 'DELETE' })
           .then(function (res) {
             if (!res.ok) { $('msg').hidden = false; $('msg').textContent = res.error; return; }
-            load(false);
+            load(false, false);
           });
       });
     });
@@ -708,10 +829,10 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
     token = $('token').value.trim();
     if (!token) { $('gate-msg').hidden = false; $('gate-msg').textContent = 'ใส่รหัสก่อนนะครับ'; return; }
     $('gate-msg').hidden = true;
-    load(true);
+    load(true, false);
   });
   $('token').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('enter').click(); });
-  $('reload').addEventListener('click', function () { load(false); });
+  $('reload').addEventListener('click', function () { load(false, true); });
   $('csv').addEventListener('click', function () {
     $('csv').disabled = true;
     fetch('/api/admin/visits-export?days=' + encodeURIComponent(state.days), { headers: { 'x-admin-token': token } })
@@ -735,11 +856,11 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
       var isAll = state.days === 'all';
       $('compare').disabled = isToday || isAll;
       if (isToday) $('incToday').checked = false;
-      load(false);
+      load(false, false);
     });
   });
-  $('compare').addEventListener('change', function () { load(false); });
-  $('incToday').addEventListener('change', function () { load(false); });
+  $('compare').addEventListener('change', function () { load(false, false); });
+  $('incToday').addEventListener('change', function () { load(false, false); });
   $('mk-add').addEventListener('click', function () {
     var day = $('mk-day').value;
     var label = $('mk-label').value.trim();
@@ -750,23 +871,24 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
         if (!res.ok) { $('msg').hidden = false; $('msg').textContent = res.error; return; }
         $('msg').hidden = true;
         $('mk-label').value = '';
-        load(false);
+        load(false, false);
       })
       .then(function () { $('mk-add').disabled = false; });
   });
 
-  if (token) load(true);
+  $('kp-logout-top').addEventListener('click', function () {
+    forgetToken();
+    location.reload();
+  });
+
+  if (token) {
+    $('gate').hidden = true;
+    $('panel').hidden = false;
+    showSkeleton();
+    load(false, false);
+  }
 })();
 </script>
 
-<button type="button" id="kp-logout" style="position:fixed;right:12px;bottom:12px;z-index:50;background:#fff;color:#101538;border:2px solid #101538;border-radius:99px;padding:.35rem .9rem;font:inherit;font-size:.82rem;cursor:pointer">ออกจากระบบ</button>
-<script>
-// จำรหัสไว้ในเครื่องนี้ (หน้าสถิติกับหน้าพรีออเดอร์ใช้รหัสเดียวกัน) · เครื่องส่วนกลางกดออกจากระบบหลังใช้
-document.getElementById('kp-logout').addEventListener('click', function () {
-  try { localStorage.removeItem('kp_admin_token'); } catch (e) {}
-  try { sessionStorage.removeItem('kp_admin_token'); } catch (e) {}
-  location.reload();
-});
-</script>
 </body>
 </html>

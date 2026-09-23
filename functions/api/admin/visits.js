@@ -72,8 +72,14 @@ export async function onRequestGet({ request, env }) {
     prevFrom = addDays(prevTo, -(n - 1));
   }
 
-  // ดึงค่าแอด Meta คู่ขนานไปกับการ query ฐานข้อมูล
-  const spendPromise = fetchAdSpend(env, from, to);
+  const part = String(url.searchParams.get('part') || '').trim().toLowerCase();
+  const fresh = url.searchParams.get('fresh') === '1';
+
+  // ส่วน Meta แยกเป็นคำขอที่สอง หน้าเว็บเรนเดอร์ส่วนหลักก่อนแล้วค่อยเติม
+  // คำขอหลักไม่เรียก Meta เลย ตอบเร็ว
+  if (part === 'meta') {
+    return serveMetaPart(db, env, from, to, todayStr, fresh);
+  }
 
   let main;
   try {
@@ -231,53 +237,63 @@ export async function onRequestGet({ request, env }) {
 
   const sum = (rows, key) => rows.reduce((a, r) => a + Number(r[key] || 0), 0);
   const visitors = sum(daily, 'visitors'); // ผลรวมรายวัน อาจนับคนซ้ำข้ามวัน
-  const distinctPeople = await countDistinctVisitors(db, from, to);
   const sessions = sum(daily, 'sessions');
   const pageviews = sum(daily, 'pageviews');
   const purchaseHits = (totals.Purchase && totals.Purchase.hits) || 0;
 
+  const single = countSingleFromRows(R(idx.bounce));
+  const bounceTotal = (R(idx.bounce) || []).length;
+
+  // query ที่ไม่พึ่งกันรันขนานกันหมด ไม่รอทีละตัวแบบเดิม
+  // ผลลัพธ์เหมือนเดิมทุกฟิลด์ แค่รอพร้อมกัน
+  const wantPrevExtra = wantCompare && !!prevTotals;
+  const [
+    distinctPeople,
+    prevDistinct,
+    prevSingle,
+    money,
+    prevMoney,
+    stock,
+    markers,
+    paidSplit,
+    revenueBySource,
+    ordersByUtm,
+  ] = await Promise.all([
+    countDistinctVisitors(db, from, to),
+    wantPrevExtra ? countDistinctVisitors(db, prevFrom, prevTo) : null,
+    wantPrevExtra ? countSinglePageSessions(db, prevFrom, prevTo) : null,
+    // เงินจริงจาก preorders ช่วงนี้ + ช่วงก่อน
+    readMoney(db, from, to),
+    wantCompare ? readMoney(db, prevFrom, prevTo) : null,
+    // สต็อกกระเป๋าสะสม ไม่ผูกกับช่วงเวลา
+    readStock(db),
+    // markers แบบไม่ล้มถ้ายังไม่รัน migration
+    readMarkers(db),
+    // นิยามมาจากแอด: medium เท่ากับ paid เท่านั้น ไม่ใช่แค่มี fbclid
+    readPaidSplit(db, from, to),
+    readRevenueBySource(db, from, to),
+    // ออเดอร์แยกตาม utm_campaign สำหรับจับคู่ค่าแอด
+    readOrdersByUtm(db, from, to),
+  ]);
+
   let prevK = null;
-  if (wantCompare && prevTotals) {
+  if (wantPrevExtra) {
     const p = {};
     for (const row of prevDailyRows) p[row.day] = row;
     const pDays = eachDay(prevFrom, prevTo);
     prevK = {
-      visitors: await countDistinctVisitors(db, prevFrom, prevTo),
+      visitors: prevDistinct,
       sessions: pDays.reduce((a, d) => a + Number((p[d] || {}).sessions || 0), 0),
       pageviews: pDays.reduce((a, d) => a + Number((p[d] || {}).pageviews || 0), 0),
       purchaseHits: (prevTotals.Purchase && prevTotals.Purchase.hits) || 0,
-      single: await countSinglePageSessions(db, prevFrom, prevTo),
+      single: prevSingle,
     };
   }
-  const single = countSingleFromRows(R(idx.bounce));
-  const bounceTotal = (R(idx.bounce) || []).length;
 
-  // เงินจริงจาก preorders ช่วงนี้ + ช่วงก่อน
-  const money = await readMoney(db, from, to);
-  const prevMoney = wantCompare ? await readMoney(db, prevFrom, prevTo) : null;
-
-  // สต็อกกระเป๋าสะสม ไม่ผูกกับช่วงเวลา
-  const stock = await readStock(db);
-
-  // markers แบบไม่ล้มถ้ายังไม่รัน migration
-  const markers = await readMarkers(db);
-
-  // นิยามมาจากแอด: medium เท่ากับ paid เท่านั้น ไม่ใช่แค่มี fbclid
-  const paidSplit = await readPaidSplit(db, from, to);
-  const revenueBySource = await readRevenueBySource(db, from, to);
-
-  // ออเดอร์แยกตาม utm_campaign สำหรับจับคู่ค่าแอด
-  const ordersByUtm = await readOrdersByUtm(db, from, to);
-
-  // ค่าแอด Meta
-  const adSpendRaw = await spendPromise;
-  const adSpend = buildAdSpend(adSpendRaw, ordersByUtm);
-
-  // เทียบกับ Meta (แอด + Pixel) ล้มเฉพาะส่วน ไม่กระทบของเดิม
-  let metaCompare = null;
-  try {
-    metaCompare = await fetchMetaCompare(env, db, from, to, todayStr);
-  } catch { metaCompare = null; }
+  // ค่าแอด Meta กับเทียบ Meta แยกไปคำขอ part=meta หมด
+  // คำขอหลักคืน null ไว้ หน้าเว็บค่อยเติม ไม่รอ Meta ก่อนตอบ
+  const adSpend = null;
+  const metaCompare = null;
 
   const newRet = countNewReturning(R(idx.firstSeen), from, to);
 
@@ -645,6 +661,54 @@ async function readOrdersByUtm(db, from, to) {
     }
   }
   return { column: null, rows: [] };
+}
+
+/* ---------- ส่วน Meta แยกคำขอ ---------- */
+
+// GET /api/admin/visits?...&part=meta คืนแค่ {ok, adSpend, metaCompare, ordersByUtm}
+// คำขอหลักไม่แตะ Meta เลย ส่วนนี้เรียก D1 แค่ ordersByUtm ตัวเดียวที่เหลือคือ Meta
+async function serveMetaPart(db, env, from, to, todayStr, fresh) {
+  // key รวมแค่ from/to ห้ามใส่ token ใน key
+  const cacheKey = 'https://stats-meta.local/api/admin/visits-meta?from='
+    + encodeURIComponent(from) + '&to=' + encodeURIComponent(to);
+  const cache = getMetaCache();
+  if (cache && !fresh) {
+    try {
+      const hit = await cache.match(cacheKey);
+      if (hit) return json(await hit.json());
+    } catch { /* แคชพังก็ยิงใหม่ */ }
+  }
+  const [ordersByUtm, adSpendRaw, metaCompare] = await Promise.all([
+    readOrdersByUtm(db, from, to),
+    fetchAdSpend(env, from, to),
+    fetchMetaCompare(env, db, from, to, todayStr).catch(() => null),
+  ]);
+  const body = {
+    ok: true,
+    adSpend: buildAdSpend(adSpendRaw, ordersByUtm),
+    metaCompare,
+    ordersByUtm,
+  };
+  if (cache) {
+    try {
+      // ช่วงที่มีวันนี้แคช 5 นาที นอกนั้น 10 นาที
+      const ttl = to === todayStr ? 300 : 600;
+      await cache.put(cacheKey, new Response(JSON.stringify(body), {
+        headers: {
+          'content-type': 'application/json',
+          'cache-control': 'public, max-age=' + ttl,
+        },
+      }));
+    } catch { /* เขียนแคชไม่ได้ก็ตอบปกติ */ }
+  }
+  return json(body);
+}
+
+function getMetaCache() {
+  try {
+    if (typeof caches !== 'undefined' && caches && caches.default) return caches.default;
+  } catch { /* ไม่มี Cache API */ }
+  return null;
 }
 
 /* ---------- ค่าแอด Meta ---------- */

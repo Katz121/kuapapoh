@@ -18,6 +18,8 @@ header{background:var(--ink);color:#fff;padding:14px 0}
 header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 header h1{font-family:var(--display);font-size:1.1rem;margin:0}
 header a{color:var(--yellow)}
+header .hlinks{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+header .hbtn{background:transparent;color:#fff;border:2px solid #fff;border-radius:99px;padding:.25rem .8rem;font-size:.82rem;font-weight:600;cursor:pointer;width:auto}
 main{padding:20px 0 60px}
 .gate{max-width:380px;margin:60px auto;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:20px}
 input,select,textarea{font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--rule);border-radius:10px;background:var(--paper);color:var(--ink);width:100%}
@@ -86,7 +88,7 @@ button.danger:hover{background:var(--red);color:#fff}
 <body>
 <header><div class="wrap">
   <h1>พรีออเดอร์เสื้อเทศกาลกินผัก</h1>
-  <div><a href="/stats.html">สถิติคนเข้าเว็บ</a> · <a href="/preorder/" target="_blank" rel="noopener">เปิดหน้าสั่งซื้อ ↗</a></div>
+  <div class="hlinks"><a href="/stats.html">สถิติคนเข้าเว็บ</a> · <a href="/preorder/" target="_blank" rel="noopener">เปิดหน้าสั่งซื้อ ↗</a><button type="button" id="kp-logout-top" class="hbtn">ออกจากระบบ</button></div>
 </div></header>
 
 <main class="wrap">
@@ -677,18 +679,15 @@ button.danger:hover{background:var(--red);color:#fff}
     });
   }
 
+  $('kp-logout-top').addEventListener('click', function () {
+    try { localStorage.removeItem('kp_admin_token'); } catch (e) {}
+    try { sessionStorage.removeItem('kp_admin_token'); } catch (e) {}
+    location.reload();
+  });
+
   if (token) load(true);
 })();
 </script>
 
-<button type="button" id="kp-logout" style="position:fixed;right:12px;bottom:12px;z-index:50;background:#fff;color:#101538;border:2px solid #101538;border-radius:99px;padding:.35rem .9rem;font:inherit;font-size:.82rem;cursor:pointer">ออกจากระบบ</button>
-<script>
-// จำรหัสไว้ในเครื่องนี้ (หน้าสถิติกับหน้าพรีออเดอร์ใช้รหัสเดียวกัน) · เครื่องส่วนกลางกดออกจากระบบหลังใช้
-document.getElementById('kp-logout').addEventListener('click', function () {
-  try { localStorage.removeItem('kp_admin_token'); } catch (e) {}
-  try { sessionStorage.removeItem('kp_admin_token'); } catch (e) {}
-  location.reload();
-});
-</script>
 </body>
 </html>

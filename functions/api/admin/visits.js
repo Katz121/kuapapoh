@@ -761,17 +761,19 @@ async function fetchMetaCompare(env, db, from, to, todayStr) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 5000);
   try {
-    const [insights, utmMap, pixelTotals] = await Promise.all([
+    const [insights, utmMap, pixelTotals, pixelSources] = await Promise.all([
       fetchMetaAdInsights(env, token, from, to, ctrl.signal).catch(() => null),
       fetchMetaAdUtm(env, token, ctrl.signal).catch(() => null),
       fetchMetaPixelStats(env, token, from, to, todayStr, ctrl.signal).catch(() => null),
+      // Meta รับ event 2 ทาง (เบราว์เซอร์ + เซิร์ฟเวอร์) แล้วค่อยตัดซ้ำ · ยอด /stats คือก่อนตัดซ้ำ
+      fetchMetaPixelStats(env, token, from, to, todayStr, ctrl.signal, 'event_source').catch(() => null),
     ]);
     const oursByContent = await readOursByContent(db, from, to).catch(() => null);
     const hitsByEvent = await readHitsByEvent(db, from, to).catch(() => null);
     const ads = insights ? buildMetaAds(insights, utmMap, oursByContent) : null;
     const pixel = pixelTotals ? buildMetaPixel(pixelTotals, hitsByEvent) : null;
     if (ads == null && pixel == null) return null;
-    return { ads, pixel };
+    return { ads, pixel, pixelSources: pixelSources || null };
   } catch {
     return null;
   } finally {
@@ -830,11 +832,11 @@ function parseUtmContent(link) {
 }
 
 // ยอด Pixel รวมทุกชั่วโมงในช่วง ตาม paging ไม่เกิน 10 หน้า
-async function fetchMetaPixelStats(env, token, from, to, todayStr, signal) {
+async function fetchMetaPixelStats(env, token, from, to, todayStr, signal, aggregation = 'event') {
   const range = thaiRangeUnix(from, to, todayStr);
   const proof = env.META_APP_SECRET ? await appProof(env.META_APP_SECRET, token) : null;
   const first = new URLSearchParams({
-    aggregation: 'event',
+    aggregation,
     start_time: String(range.start),
     end_time: String(range.end),
     access_token: token,

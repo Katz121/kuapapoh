@@ -463,7 +463,7 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
       html += '<div class="note">ดึงยอด Pixel จาก Meta ไม่ได้</div>';
     } else {
       var prows = mc.pixel.map(function (p) {
-        var bad = p.ratio != null && (p.ratio < 0.7 || p.ratio > 1.3);
+        var bad = p.ratio != null && (p.ratio < 0.9 || p.ratio > 2.3);
         var rc = p.ratio == null ? '-' : String(p.ratio);
         return '<tr><td>' + esc(META_EV_TH[p.event] || p.event) + ' <span class="tiny">' + esc(p.event) + '</span></td>' +
           '<td class="num">' + num(p.meta) + '</td>' +
@@ -471,15 +471,18 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
           '<td class="num">' + num(p.bots) + '</td>' +
           '<td class="num' + (bad ? ' warn' : '') + '">' + esc(rc) + (bad ? ' ควรดู' : '') + '</td></tr>';
       }).join('');
-      html += '<p><b>Pixel นับได้เท่าไหร่</b> <span class="tiny">อัตราส่วนคือ Meta หารด้วยเรา</span></p>' +
+      var src = mc.pixelSources || {};
+      var srcLine = (src.BROWSER != null || src.SERVER != null)
+        ? '<p class="tiny">Meta รับจากเบราว์เซอร์ ' + num(src.BROWSER || 0) + ' ครั้ง และจากเซิร์ฟเวอร์เรา ' + num(src.SERVER || 0) + ' ครั้ง (ทุก event รวมกัน)</p>' : '';
+      html += '<p><b>Pixel นับได้เท่าไหร่</b> <span class="tiny">อัตราส่วนคือ Meta หารด้วยเรา · ปกติอยู่ราว 1 ถึง 2 เท่า</span></p>' + srcLine +
         '<div class="table-wrap"><table style="min-width:560px"><tr>' +
-        '<th>event</th><th class="num">Meta</th><th class="num">เรา</th>' +
+        '<th>event</th><th class="num">Meta รับเข้า (ก่อนตัดซ้ำ)</th><th class="num">เรา</th>' +
         '<th class="num">บอทที่เราตัดทิ้ง</th><th class="num">อัตราส่วน</th></tr>' +
         prows + '</table></div>' +
-        '<p class="tiny">ช่องสีแดงคืออัตราส่วนห่างกันเกิน 30 เปอร์เซ็นต์ ควรดูว่าเกิดจากอะไร</p>';
+        '<p class="tiny">Meta รับ event เดียวกันได้ 2 ทาง คือจากเบราว์เซอร์ลูกค้าและจากเซิร์ฟเวอร์เรา ตัวเลขนี้นับก่อน Meta ตัดตัวซ้ำ จึงสูงกว่าเราราว 1 ถึง 2 เท่าเป็นเรื่องปกติ · ช่องสีแดง: ต่ำกว่า 0.9 แปลว่า Meta ได้ข้อมูลไม่ครบ ส่วนเกิน 2.3 แปลว่าอาจมีส่งซ้ำหรือบอทปน ควรเช็ค</p>';
     }
     html += '<div class="note"><b>ทำไมตัวเลขสองฝั่งไม่เท่ากันเป๊ะ</b>' +
-      '<br>1. Meta รวม event ที่เบราว์เซอร์กับเซิร์ฟเวอร์ส่ง แล้วตัดซ้ำด้วย event_id ส่วนเรานับจากเซิร์ฟเวอร์อย่างเดียว' +
+      '<br>1. Meta รับ event จากเบราว์เซอร์และเซิร์ฟเวอร์ แล้วตัดตัวซ้ำด้วย event_id ตอนคิดผลแอด ส่วนตาราง Pixel ข้างบนเป็นยอดก่อนตัดซ้ำ ของเรานับครั้งเดียวต่อ event' +
       '<br>2. เราตัดบอททิ้ง แต่ Meta อาจนับบอทรีวิวแอดรวมไปด้วย' +
       '<br>3. คนที่ปิดการติดตามหรือเปิดตัวบล็อกโฆษณา Meta จะไม่เห็น แต่เซิร์ฟเวอร์เราเห็น' +
       '<br>4. Meta ผูกยอดให้แอดตามคลิก 1 วันหรือเห็นแอด 1 วัน ส่วนเราผูกตาม utm ใน session' +

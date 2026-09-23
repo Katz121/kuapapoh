@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>สถิติคนเข้าเว็บ · กั่วป่าโพ้</title>
+<title>สถิติร้าน · กั่วป่าโพ้</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--yellow:#FFE81C;--red:#F4331F;--magenta:#EC0A72;--paper:#FBF7EC;--ink:#101538;--muted:#4d5474;--rule:rgba(16,21,56,.16);--ok:#0d7a4a;
+:root{--yellow:#FFE81C;--red:#D42614;--paper:#FBF7EC;--ink:#101538;--muted:#4d5474;--rule:rgba(16,21,56,.16);--ok:#0d7a4a;--line:#B78A00;
 --display:'Bai Jamjuree','IBM Plex Sans Thai',sans-serif;--body:'IBM Plex Sans Thai',sans-serif}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
@@ -20,36 +20,85 @@ header h1{font-family:var(--display);font-size:1.1rem;margin:0}
 header a{color:var(--yellow)}
 main{padding:20px 0 60px}
 .gate{max-width:380px;margin:60px auto;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:20px}
-input,select{font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--rule);border-radius:10px;background:var(--paper);color:var(--ink);width:100%}
+input,select{font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--rule);border-radius:10px;background:#fff;color:var(--ink);width:100%}
 button{font:inherit;font-weight:600;border:0;border-radius:99px;padding:.6rem 1.1rem;background:var(--ink);color:#fff;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+button.small{padding:.3rem .8rem;font-size:.85rem}
+button:disabled{opacity:.5}
 h2{font-family:var(--display);font-size:1.05rem;margin:26px 0 10px}
+h2 .sub{font-family:var(--body);font-weight:400;font-size:.82rem;color:var(--muted)}
+.rangebar{position:sticky;top:0;z-index:5;background:var(--paper);padding:10px 0;border-bottom:2px solid var(--ink);margin-bottom:6px}
+.rangebar .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+.seg button.on{background:var(--ink);color:#fff}
+.checks{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:.9rem}
+.checks label{display:flex;gap:6px;align-items:center;white-space:nowrap}
+.checks input{width:auto}
+.rangenote{font-size:.85rem;color:var(--muted);margin:6px 0 0}
 .cards{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.cards.traffic{grid-template-columns:repeat(4,1fr)}
 .card{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:12px}
-.card b{display:block;font-family:var(--display);font-size:1.6rem}
+.card.north{background:var(--yellow)}
+.card b.big{display:block;font-family:var(--display);font-size:1.6rem;line-height:1.2}
 .card small{color:var(--muted)}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-.toolbar select{width:auto}
+.card.north small{color:#3a3f66}
+.delta{font-weight:600;font-size:.9rem;margin-top:4px;display:block}
+.delta.up{color:var(--ok)} .delta.down{color:var(--red)} .delta.flat{color:var(--muted)}
+.badge{display:inline-block;font-size:.75rem;font-weight:600;background:#e8e6da;border-radius:99px;padding:.1rem .6rem;color:var(--muted)}
+.badge.today{background:var(--ink);color:#fff}
+.todaycard{background:#fff;border:2px dashed var(--ink);border-radius:12px;padding:12px;margin-top:10px}
 .note{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:14px;margin-bottom:18px}
-.note b{font-family:var(--display)}
 .err{background:#ffeceb;border:2px solid var(--red);color:#8e1a0c;border-radius:10px;padding:10px 12px;margin-bottom:14px}
+.tiny{font-size:.82rem;color:var(--muted)}
 .table-wrap{overflow-x:auto;border:2px solid var(--ink);border-radius:12px;background:#fff}
-table{width:100%;border-collapse:collapse;background:#fff}
+table{width:100%;border-collapse:collapse;background:#fff;min-width:480px}
+table.slim{min-width:0}
 th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--rule);font-size:.9rem}
-th{background:var(--yellow);font-family:var(--display);font-size:.86rem}
+th{background:var(--yellow);font-family:var(--display);font-size:.86rem;white-space:nowrap}
 tr:last-child td{border-bottom:0}
-td.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
-.step{display:grid;grid-template-columns:150px 1fr 120px;gap:10px;align-items:center;margin-bottom:8px}
+td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.step{display:grid;grid-template-columns:150px 1fr 150px;gap:10px;align-items:center;margin-bottom:8px}
 .bar{background:#fff;border:2px solid var(--ink);border-radius:99px;height:26px;overflow:hidden}
-.bar span{display:block;height:100%;background:var(--magenta)}
+.bar span{display:block;height:100%;background:var(--ink)}
+.bar span.hot{background:var(--red)}
 .step small{color:var(--muted)}
 .grid2{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.chartbox{border:2px solid var(--ink);border-radius:12px;background:#fff;padding:10px;overflow-x:auto}
+.chartbox svg{display:block;width:100%;height:auto;min-width:520px}
+.markers{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.pill{display:inline-flex;gap:8px;align-items:center;background:#fff;border:2px solid var(--ink);border-radius:99px;padding:.2rem .4rem .2rem .8rem;font-size:.85rem}
+.pill button{padding:.1rem .6rem;font-size:.8rem}
+.mform{display:grid;grid-template-columns:150px 1fr auto;gap:8px;margin-top:8px}
+.stockbar{background:#fff;border:2px solid var(--ink);border-radius:99px;height:24px;overflow:hidden;display:flex}
+.stockbar i{display:block;height:100%}
+.hbars{display:flex;gap:3px;align-items:flex-end;height:120px;border:2px solid var(--ink);border-radius:12px;background:#fff;padding:10px}
+.hbars div{flex:1;background:var(--ink);border-radius:4px 4px 0 0;min-height:2px}
+.hbars div.pk{background:var(--red)}
+.hlabels{display:flex;gap:3px;font-size:.68rem;color:var(--muted)}
+.hlabels span{flex:1;text-align:center}
+.wbars{display:flex;gap:8px;align-items:flex-end;height:120px;border:2px solid var(--ink);border-radius:12px;background:#fff;padding:10px;overflow:hidden}
+.wbars .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.wbars .v{width:100%;background:var(--ink);border-radius:6px 6px 0 0;min-height:2px}
+.donutrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.foot{font-size:.85rem;color:var(--muted)}
+.foot li{margin-bottom:4px}
 [hidden]{display:none !important}
+@media (max-width:520px){
+  body{font-size:14px}
+  .cards.northgrid{grid-template-columns:1fr}
+  .cards.traffic{grid-template-columns:1fr 1fr}
+  .step{grid-template-columns:110px 1fr 110px}
+  .mform{grid-template-columns:1fr}
+  .card b.big{font-size:1.4rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
 </head>
 <body>
 <header><div class="wrap">
-  <h1>สถิติคนเข้าเว็บ · กั่วป่าโพ้</h1>
-  <a href="/preorder-admin.html">→ หน้าจัดการพรีออเดอร์</a>
+  <h1>สถิติร้าน · กั่วป่าโพ้</h1>
+  <a href="/preorder-admin.html">ไปหน้าจัดการพรีออเดอร์</a>
 </div></header>
 
 <main class="wrap">
@@ -61,52 +110,96 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
   </section>
 
   <section id="panel" hidden>
-    <div class="toolbar">
-      <label for="days">ช่วงเวลา</label>
-      <select id="days">
-        <option value="7">7 วันล่าสุด</option>
-        <option value="30" selected>30 วันล่าสุด</option>
-        <option value="90">90 วันล่าสุด</option>
-        <option value="365">1 ปี</option>
-      </select>
-      <button id="reload" class="ghost" style="background:transparent;color:var(--ink);border:2px solid var(--ink)">โหลดใหม่</button>
-      <button id="csv" class="ghost" style="background:transparent;color:var(--ink);border:2px solid var(--ink)">ดาวน์โหลด CSV</button>
+    <div class="rangebar"><div class="row">
+      <div class="seg" id="seg">
+        <button data-days="1">วันนี้</button>
+        <button data-days="7">7 วัน</button>
+        <button data-days="14">14 วัน</button>
+        <button data-days="30" class="on">30 วัน</button>
+        <button data-days="all">ทั้งหมด</button>
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" id="compare" checked> เทียบกับช่วงก่อน</label>
+        <label><input type="checkbox" id="incToday"> รวมวันนี้ (ยังไม่จบวัน)</label>
+      </div>
+      <button id="reload" class="ghost small">โหลดใหม่</button>
+      <button id="csv" class="ghost small">ดาวน์โหลด CSV</button>
     </div>
+    <p class="rangenote" id="rangenote"></p></div>
 
     <p class="err" id="msg" hidden></p>
 
-    <div class="cards" id="cards"></div>
+    <div class="todaycard" id="todaycard"></div>
 
-    <h2>ทางเดินของลูกค้า</h2>
+    <h2>เงินโอนผ่านแล้ว <span class="sub">เลขนี้ใช้คุยกับบัญชี</span></h2>
+    <div class="cards northgrid" id="north"></div>
+
+    <h2>คนเข้าเว็บ <span class="sub">ดูทุกเช้า</span></h2>
+    <div class="cards traffic" id="traffic"></div>
+
+    <h2>คนเข้าเว็บรายวัน <span class="sub">แท่งคือคน เส้นแดงคือเฉลี่ย 7 วัน เส้นประเหลืองคือเหตุการณ์</span></h2>
+    <div class="chartbox"><svg id="chart" viewBox="0 0 640 260" role="img" aria-label="กราฟคนเข้าเว็บรายวัน"></svg></div>
+    <p class="tiny" id="weekendnote" style="margin:6px 0 0"></p>
+    <div class="markers" id="markerlist"></div>
+    <div class="mform">
+      <input id="mk-day" type="date" value="">
+      <input id="mk-label" type="text" maxlength="40" placeholder="ชื่อเหตุการณ์สั้นๆ เช่น เปิดแอดภาพใหม่ (ไม่เกิน 40 ตัวอักษร)">
+      <button id="mk-add" class="small">เพิ่มเส้นกำกับ</button>
+    </div>
+    <p class="tiny">เช่น เปิดแอดภาพ A, ปิดแอด, LINE broadcast 19:00, โพสต์เพจ, ปิดรับกระเป๋า ยอดของร้านเล็กมักขยับเพราะเหตุการณ์เดียว ดูเส้นนี้คู่กับยอดเสมอ</p>
+
+    <h2>ทางเดินลูกค้า <span class="sub">จากคนเปิดเว็บว่าเหลือถึงขั้นไหน</span></h2>
     <div id="funnel"></div>
 
-    <div class="note" id="metanote"></div>
+    <h2>ภาพแอดไหนพาคนซื้อ <span class="sub">นับตาม utm_content ระดับ session</span></h2>
+    <div class="table-wrap"><table id="tbl-creative"></table></div>
+    <p class="tiny">ฐานน้อยคือ session รวมน้อยกว่า 30 ตัวเลขแกว่งง่าย ดูเป็นแนวทางพอ อย่าเพิ่งปิดแอดเพราะเลขนี้วันเดียว</p>
 
-    <p id="botline" style="color:var(--muted);margin:0 0 8px"></p>
-    <p id="capiline" style="color:var(--muted);margin:0 0 14px"></p>
+    <h2>ค่าแอด Meta <span class="sub">ดึงอัตโนมัติเฉพาะแคมเปญที่ขึ้นต้นด้วย KP</span></h2>
+    <div id="adblock"></div>
 
-    <h2>ภาพแอดไหนพาคนซื้อ</h2>
-    <div class="table-wrap"><table id="adcreatives"></table></div>
+    <h2>เงินจริง <span class="sub">ยอดสั่งคือกดฟอร์ม ยอดโอนคือสลิปผ่านแล้ว</span></h2>
+    <div class="note" id="money"></div>
+    <div id="stock"></div>
 
-    <h2>ยอดขายมาจากทางไหน</h2>
-    <div class="table-wrap"><table id="revenue"></table></div>
+    <h2>คนมาจากทางไหน</h2>
+    <div class="table-wrap"><table id="tbl-source"></table></div>
+    <p class="tiny">ช่องมาจากแอดนับเฉพาะ medium เท่ากับ paid เท่านั้น โพสต์ปกติที่มี fbclid ไม่นับเป็นแอด ส่วนทักจาก LINE มักกลายเป็นเข้าตรงเพราะแอปส่งต่อที่มาไม่ได้</p>
 
     <div class="grid2">
       <div>
         <h2>หน้าที่คนเปิดมากสุด</h2>
-        <div class="table-wrap"><table id="pages"></table></div>
+        <div class="table-wrap"><table id="tbl-pages" class="slim"></table></div>
       </div>
       <div>
-        <h2>คนมาจากไหน</h2>
-        <div class="table-wrap"><table id="sources"></table></div>
+        <h2>เปิดจากแอปอะไร</h2>
+        <div class="table-wrap"><table id="tbl-ua" class="slim"></table></div>
       </div>
     </div>
 
-    <h2>รายวัน</h2>
-    <div class="table-wrap"><table id="daily"></table></div>
+    <h2>ชั่วโมงที่คนเข้า (เวลาไทย)</h2>
+    <div class="hbars" id="hours"></div>
+    <div class="hlabels" id="hourlabels"></div>
+    <p class="tiny">ใช้ตั้งเวลายิงแอดและ broadcast ช่วงที่แท่งสูงสุดคือช่วงที่คนว่าง</p>
 
-    <h2>เปิดจากแอปอะไร</h2>
-    <div class="table-wrap"><table id="browsers"></table></div>
+    <h2>วันไหนคนเข้าเยอะ</h2>
+    <div class="wbars" id="weekday"></div>
+
+    <h2>คนใหม่กับคนกลับมา <span class="sub">ค่าประมาณ</span></h2>
+    <div class="note donutrow" id="newret"></div>
+    <p class="tiny">นับจากเบราว์เซอร์ อาจนับคนเดียวซ้ำถ้าเปิดหลายแอป ล้างเบราว์เซอร์หรือสลับจากแอปเฟซไป Chrome ก็นับเป็นคนใหม่ ช่วงเพิ่งเริ่มเก็บข้อมูลทุกคนจะดูเป็นคนใหม่หมด</p>
+
+    <h2>สุขภาพข้อมูล</h2>
+    <div class="note" id="health"></div>
+
+    <h2>อ่านเลขยังไงไม่ให้หลอกตัวเอง</h2>
+    <ul class="foot">
+      <li>ดูเทรนด์ 7 วัน อย่าตัดสินจากวันเดียว</li>
+      <li>ป้ายฐานน้อยคือคนยังน้อย เลขบวกลบแรงเป็นปกติ โชว์เลขดิบคู่อย่างเดียว ไม่โชว์เปอร์เซ็นต์</li>
+      <li>ตัวเลขคือขั้นต่ำ คนจริงมากกว่านี้เพราะบางคนเปิดกันโฆษณาไว้</li>
+      <li>ยอดสั่งคือกดฟอร์มสำเร็จ ส่วนเงินจริงดูที่ยอดโอนผ่านแล้วเท่านั้น ส่วนต่างคือยอดที่ต้องตามทวงสลิป</li>
+      <li>เปิดหน้าเดียวแล้วไปเป็นค่าประมาณ คนอ่านจบในหน้าเดียวแล้วทัก LINE มาสั่งก็โดนนับด้วย</li>
+    </ul>
   </section>
 </main>
 
@@ -114,98 +207,411 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
 (function () {
   var $ = function (id) { return document.getElementById(id); };
   var token = sessionStorage.getItem('kp_admin_token') || '';
+  var state = { days: '30', data: null };
+  var TH_M = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 
-  function esc(value) {
-    return String(value == null ? '' : value)
+  function esc(v) {
+    return String(v == null ? '' : v)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
-  function num(value) { return Number(value || 0).toLocaleString('th-TH'); }
+  function num(v) { return Number(v || 0).toLocaleString('th-TH'); }
+  function money(v) { return Number(v || 0).toLocaleString('th-TH') + ' บาท'; }
+  function fmtDay(d) {
+    var p = String(d || '').split('-');
+    if (p.length < 3) return esc(d);
+    return Number(p[2]) + ' ' + TH_M[Number(p[1]) - 1];
+  }
+  function api(path, opts) {
+    var headers = { 'x-admin-token': token };
+    if (opts && opts.json) headers['content-type'] = 'application/json';
+    return fetch(path, {
+      method: (opts && opts.method) || 'GET',
+      headers: headers,
+      body: opts && opts.json ? JSON.stringify(opts.json) : undefined
+    }).then(function (r) {
+      return r.json().catch(function () { return { ok: false, error: 'ระบบตอบกลับผิดพลาด' }; });
+    });
+  }
+
+  function query() {
+    var c = $('compare').checked && state.days !== '1' && state.days !== 'all';
+    var inc = $('incToday').checked ? '1' : '0';
+    return '/api/admin/visits?days=' + encodeURIComponent(state.days) +
+      '&compare=' + (c ? '1' : '0') + '&include_today=' + inc;
+  }
 
   function load(fromGate) {
-    fetch('/api/admin/visits?days=' + $('days').value, { headers: { 'x-admin-token': token } })
-      .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'ระบบตอบกลับผิดพลาด' }; }); })
-      .then(function (data) {
-        if (!data.ok) {
-          var box = fromGate ? $('gate-msg') : $('msg');
-          box.hidden = false; box.textContent = data.error;
-          return;
-        }
-        sessionStorage.setItem('kp_admin_token', token);
-        $('gate').hidden = true; $('panel').hidden = false; $('msg').hidden = true;
-        render(data);
-      });
-  }
-
-  function render(data) {
-    var t = data.totals || {};
-    var purchase = t.Purchase || { people: 0, hits: 0, value: 0 };
-    var pageview = t.PageView || { people: 0, hits: 0 };
-    $('cards').innerHTML = [
-      card(num(pageview.people), 'คนที่เข้าเว็บ', 'นับหัว ไม่นับรีเฟรช'),
-      card(num(pageview.hits), 'จำนวนครั้งที่เปิดหน้า', ''),
-      card(num(purchase.hits), 'ออเดอร์ที่สั่งสำเร็จ', ''),
-      card(num(purchase.value) + ' บาท', 'ยอดรวมที่สั่งเข้ามา', 'รวมค่าส่ง'),
-    ].join('');
-
-    $('funnel').innerHTML = (data.funnel || []).map(function (step) {
-      return '<div class="step"><div>' + esc(step.label) + '</div>' +
-        '<div class="bar"><span style="width:' + Math.max(step.rate, step.people ? 2 : 0) + '%"></span></div>' +
-        '<small>' + num(step.people) + ' คน · ' + step.rate + '%</small></div>';
-    }).join('');
-
-    var meta = data.meta || {};
-    $('metanote').innerHTML = '<b>เตรียมไว้ให้ Meta แล้ว</b><br>' +
-      'เก็บไว้ทั้งหมด ' + num(meta.allRows) + ' รายการ · ยังไม่ได้ส่งเข้า Meta ' + num(meta.pending) + ' รายการ · ' +
-      'ในนั้นมีรหัสติดตามจากเฟซบุ๊ก (fbclid) ' + num(meta.withFbclid) + ' รายการ<br>' +
-      '<small>วันที่สร้าง Pixel แล้ว ข้อมูลชุดนี้ส่งย้อนเข้า Meta ผ่าน Conversions API ได้ ' +
-      'โดยไม่ถูกนับซ้ำ เพราะทุกรายการมีเลขกำกับของตัวเอง<br>' +
-      'สั่งส่งด้วย <code>python scripts/meta_backfill.py --days 7</code> (ดูก่อน) แล้วเติม <code>--send</code> เมื่อพร้อม</small>';
-
-    $('botline').textContent = 'ตัดบอทออกแล้ว ' + num(meta.bots || 0) + ' แถว';
-    $('capiline').textContent = 'ส่งเข้า Meta สด: ok ' + num(meta.capiOk || 0) + ' / err ' + num(meta.capiErr || 0);
-
-    $('adcreatives').innerHTML = table(['ภาพแอด (utm_content)', 'ดูเสื้อ (คน)', 'เริ่มกรอก (คน)', 'ออเดอร์', 'ยอดเงิน'],
-      (data.adCreatives || []).map(function (row) {
-        return [esc(row.content || '-'), num(row.people_vc), num(row.people_ic), num(row.orders), num(row.revenue) + ' บาท'];
-      }));
-
-    $('revenue').innerHTML = table(['มาจาก', 'ออเดอร์', 'ยอดเงิน', 'มาจากแอด'],
-      (data.revenueBySource || []).map(function (row) {
-        return [esc(row.src), num(row.orders), num(row.revenue) + ' บาท', num(row.from_ads)];
-      }));
-    $('pages').innerHTML = table(['หน้า', 'ครั้ง', 'คน'], (data.topPages || []).map(function (row) {
-      return [esc(row.path || '/'), num(row.hits), num(row.people)];
-    }));
-    $('sources').innerHTML = table(['มาจาก', 'ครั้ง', 'คน'], (data.topSources || []).map(function (row) {
-      return [esc(row.src), num(row.hits), num(row.people)];
-    }));
-    $('browsers').innerHTML = table(['แอป/เบราว์เซอร์', 'คน'], (data.browsers || []).map(function (row) {
-      return [esc(row.ua), num(row.people)];
-    }));
-
-    // รวมรายวันให้อยู่บรรทัดเดียวกันทุกชนิดเหตุการณ์ จะได้อ่านเทียบกันได้
-    var byDay = {};
-    (data.byDay || []).forEach(function (row) {
-      byDay[row.day] = byDay[row.day] || {};
-      byDay[row.day][row.event] = row.people;
+    api(query()).then(function (data) {
+      if (!data.ok) {
+        var box = fromGate ? $('gate-msg') : $('msg');
+        box.hidden = false; box.textContent = data.error || 'โหลดไม่สำเร็จ';
+        return;
+      }
+      sessionStorage.setItem('kp_admin_token', token);
+      $('gate').hidden = true; $('panel').hidden = false; $('msg').hidden = true;
+      state.data = data;
+      render(data);
     });
-    var days = Object.keys(byDay).sort().reverse();
-    $('daily').innerHTML = table(['วัน', 'เข้าเว็บ', 'ดูเสื้อ', 'เลือกไซส์', 'เริ่มกรอก', 'สั่งสำเร็จ'],
-      days.map(function (day) {
-        var d = byDay[day];
-        return [esc(day), num(d.PageView), num(d.ViewContent), num(d.AddToCart),
-                num(d.InitiateCheckout), num(d.Purchase)];
-      }));
   }
 
-  function card(big, label, hint) {
-    return '<div class="card"><b>' + esc(big) + '</b>' + esc(label) +
+  function deltaLine(k) {
+    if (!k) return '';
+    if (k.prev == null) return '<span class="tiny">ช่วงแรกยังไม่มีช่วงก่อนให้เทียบ</span>';
+    var pair = ' (' + num(k.prev) + ' ไป ' + num(k.value) + ')';
+    if (k.low_base) return '<span class="badge">ฐานน้อย</span><span class="tiny">' + esc(pair) + '</span>';
+    if (k.delta_pct == null) return '<span class="tiny">' + esc(pair) + '</span>';
+    if (k.delta_pct > 0) return '<span class="delta up">ขึ้น ' + esc(k.delta_pct) + '%' + esc(pair) + '</span>';
+    if (k.delta_pct < 0) return '<span class="delta down">ลง ' + esc(Math.abs(k.delta_pct)) + '%' + esc(pair) + '</span>';
+    return '<span class="delta flat">เท่าเดิม' + esc(pair) + '</span>';
+  }
+
+  function kpiCard(big, label, hint, k) {
+    return '<div class="card"><b class="big">' + big + '</b>' + esc(label) +
+      '<br>' + deltaLine(k) +
       (hint ? '<br><small>' + esc(hint) + '</small>' : '') + '</div>';
   }
+  function northCard(big, label, hint, k) {
+    return '<div class="card north"><b class="big">' + big + '</b>' + esc(label) +
+      '<br>' + deltaLine(k) +
+      (hint ? '<br><small>' + esc(hint) + '</small>' : '') + '</div>';
+  }
+
+  function render(d) {
+    var k = d.kpis || {};
+    var rng = d.range || {};
+    var note = esc(d.compareNote || '');
+    if (rng.excluded_today) note += ' ข้อมูลถึงเมื่อวาน';
+    $('rangenote').textContent = '';
+    $('rangenote').innerHTML = note;
+
+    // การ์ดวันนี้ใบเดียว
+    var t = d.today || {};
+    $('todaycard').innerHTML = '<span class="badge today">วันนี้ ยังไม่จบวัน</span> ' +
+      '<b>' + fmtDay(t.day) + '</b> คนเข้าเว็บ ' + num(t.visitors) + ' คน, ' +
+      'เปิด ' + num(t.sessions) + ' ครั้ง, ' +
+      'สั่ง ' + num(t.orders) + ' ออเดอร์, ' +
+      'โอนผ่านแล้ว ' + num(t.paidOrders) + ' ออเดอร์' +
+      '<br><span class="tiny">เลขวันนี้ยังขยับได้ทั้งวัน อย่าเอาไปเทียบกับวันเต็ม</span>';
+
+    // North Star
+    $('north').innerHTML =
+      northCard(num(k.paidOrders ? k.paidOrders.value : 0), 'ออเดอร์โอนผ่านแล้ว', 'เงินที่ยืนยันสลิปแล้ว ใช้เลขนี้คุยกับบัญชี', k.paidOrders) +
+      northCard(money(k.paidRevenue ? k.paidRevenue.value : 0), 'รายได้โอนผ่าน', 'เฉพาะออเดอร์ที่สลิปผ่านแล้ว ไม่นับแค่กดฟอร์ม', k.paidRevenue) +
+      northCard(money(k.aov ? k.aov.value : 0), 'ยอดเฉลี่ยต่อออเดอร์', 'เฉลี่ยต่อ 1 ออเดอร์ ยิ่งสูงแปลว่าขายพ่วงดี', k.aov);
+
+    // จราจร
+    var sp = k.singlePage || {};
+    var spExtra = sp.sessions ? '<br><small>เปิดหน้าเดียว ' + num(sp.value) + ' จาก ' + num(sp.sessions) + ' ครั้ง (' + esc(sp.rate) + '%)</small>' : '';
+    $('traffic').innerHTML =
+      kpiCard(num(k.visitors ? k.visitors.value : 0), 'คนเข้าเว็บ', 'จำนวนหัว ไม่นับคนรีเฟรชซ้ำ', k.visitors) +
+      kpiCard(num(k.sessions ? k.sessions.value : 0), 'จำนวนครั้งที่เปิด', 'รวมกลับมาอ่านต่อด้วย เป็นค่าประมาณ', k.sessions) +
+      kpiCard(num(k.pageviews ? k.pageviews.value : 0), 'ครั้งที่เปิดหน้า', 'นับทุกครั้งที่เปิดหน้า', k.pageviews) +
+      '<div class="card"><b class="big">' + num(sp.value || 0) + '</b>เปิดหน้าเดียวแล้วไป' +
+      '<br>' + deltaLine(sp) + spExtra +
+      '<br><small>ค่าประมาณ อาจรวมคนอ่านจบในหน้าเดียว</small></div>';
+
+    drawChart(d.daily || [], d.markers || []);
+    renderMarkers(d.markers || []);
+    $('weekendnote').textContent = weekendNote(d);
+
+    // funnel
+    $('funnel').innerHTML = (d.funnel || d.funnelLegacy || []).map(function (s, i) {
+      var sub = '';
+      if (i === 0) sub = 'จุดตั้งต้น';
+      else if (s.stepLowBase) sub = 'ฐานน้อย ดูเป็นแนวทางพอ';
+      else if (s.stepRate != null) sub = 'จากขั้นก่อน ' + s.stepRate + '%';
+      else sub = 'ยังไม่มีคนผ่านขั้นก่อน';
+      var pct = Math.max(s.rate || 0, s.people ? 2 : 0);
+      var cls = i >= 3 ? 'hot' : '';
+      return '<div class="step"><div>' + esc(s.label) + '</div>' +
+        '<div class="bar"><span class="' + cls + '" style="width:' + pct + '%"></span></div>' +
+        '<small>' + num(s.people) + ' คน (' + esc(s.rate) + '%)<br>' + esc(sub) + '</small></div>';
+    }).join('') +
+    '<p class="tiny">100 คนเปิดเว็บ มี ' + num(stepPeople(d, 'ViewContent')) + ' คนดูสินค้า มี ' +
+    num(stepPeople(d, 'InitiateCheckout')) + ' คนเริ่มกรอกฟอร์ม ช่องว่างระหว่างกรอกกับสั่งคือเงินที่หล่น</p>';
+
+    // ภาพแอด
+    var rows = (d.creatives || []).map(function (r) {
+      return [esc(r.content || '-'), num(r.sessions), num(r.peopleVc), num(r.peopleIc), num(r.orders), money(r.revenue)];
+    });
+    $('tbl-creative').innerHTML = table(['ภาพแอด', 'ครั้งที่เข้า', 'ดูสินค้า (คน)', 'เริ่มกรอก (คน)', 'ออเดอร์', 'ยอดเงิน'], rows);
+
+    // ค่าแอด
+    renderAds(d);
+
+    // เงินจริง
+    renderMoney(d);
+
+    // ที่มา
+    $('tbl-source').innerHTML = table(['มาจาก', 'คน', 'ออเดอร์', 'ยอดเงิน', 'มาจากแอด'],
+      (d.revenueBySource || []).map(function (r) {
+        var ppl = peopleForSource(d, r.src);
+        return [esc(r.src), num(ppl), num(r.orders), money(r.revenue), num(r.from_ads)];
+      }));
+    $('tbl-pages').innerHTML = table(['หน้า', 'ครั้ง', 'คน'],
+      (d.topPages || []).map(function (r) { return [esc(r.path || '/'), num(r.hits), num(r.people)]; }));
+    $('tbl-ua').innerHTML = table(['แอป', 'คน'],
+      (d.browsers || []).map(function (r) { return [esc(r.ua), num(r.people)]; }));
+
+    renderHours(d.byHour || []);
+    renderWeekday(d.byWeekday || []);
+    renderNewRet(d.newReturning || {});
+
+    var m = d.meta || {};
+    $('health').innerHTML = 'ตัดบอทออกแล้ว ' + num(m.bots) + ' แถว · ' +
+      'เก็บไว้ทั้งหมด ' + num(m.allRows) + ' รายการ · ' +
+      'ยังไม่ได้ส่งเข้า Meta ' + num(m.pending) + ' รายการ (มีรหัสติดตาม ' + num(m.withFbclid) + ')' +
+      '<br>ส่งเข้า Meta สด: ok ' + num(m.capiOk) + ' / err ' + num(m.capiErr) +
+      '<br><span class="tiny">ตัวเลขคือขั้นต่ำ คนจริงมากกว่านี้เพราะบางคนเปิดกันโฆษณาไว้</span>';
+  }
+
+  function stepPeople(d, ev) {
+    var f = d.funnel || d.funnelLegacy || [];
+    for (var i = 0; i < f.length; i++) if (f[i].event === ev) return f[i].people || 0;
+    return 0;
+  }
+  function peopleForSource(d, src) {
+    var rows = d.topSources || [];
+    for (var i = 0; i < rows.length; i++) if (String(rows[i].src) === String(src)) return rows[i].people || 0;
+    return 0;
+  }
+
+  function renderAds(d) {
+    var box = $('adblock');
+    var spend = d.adSpend;
+    if (!spend) {
+      var list = (d.ordersByUtm && d.ordersByUtm.rows) || [];
+      var utmTxt = list.map(function (r) { return esc(r.utm) + ' ' + num(r.orders) + ' ออเดอร์'; }).join(', ');
+      box.innerHTML = '<div class="note">ดึงค่าแอดไม่ได้' +
+        (utmTxt ? '<br><span class="tiny">ออเดอร์แยกตาม utm: ' + utmTxt + '</span>' : '') +
+        '<br><span class="tiny">ซ่อนต้นทุนต่อออเดอร์ไว้ก่อน เช็กว่าใส่ META_CAPI_TOKEN ในระบบหรือยัง</span></div>';
+      return;
+    }
+    var totalOrders = 0;
+    var rows = (spend.campaigns || []).map(function (c) {
+      totalOrders += Number(c.orders || 0);
+      return '<tr><td>' + esc(c.campaign_name) + '</td><td>' + esc(c.label || '-') + '</td>' +
+        '<td class="num">' + money(c.spend) + '</td>' +
+        '<td class="num">' + num(c.impressions) + '</td>' +
+        '<td class="num">' + num(c.clicks) + '</td>' +
+        '<td class="num">' + num(c.orders) + '</td>' +
+        '<td class="num">' + (c.costPerOrder != null ? money(c.costPerOrder) : '-') + '</td></tr>';
+    }).join('');
+    box.innerHTML = '<div class="table-wrap"><table><tr><th>แคมเปญ</th><th>หมวด</th>' +
+      '<th class="num">ใช้ไป</th><th class="num">แสดงผล</th><th class="num">คลิก</th>' +
+      '<th class="num">ออเดอร์ที่ utm ตรงกัน</th><th class="num">ต้นทุนต่อออเดอร์</th></tr>' +
+      (rows || '<tr><td>ยังไม่มีแคมเปญที่ขึ้นต้นด้วย KP ในช่วงนี้</td></tr>') + '</table></div>' +
+      '<p class="tiny">ใช้ไปทั้งหมด ' + money(spend.total) + ' จับคู่ออเดอร์จาก utm_campaign ' +
+      'เสื้อคือ kp-preorder-0921 กระเป๋าคือ kp-bag-0923 ถ้าเพิ่มแคมเปญใหม่ให้เพิ่มชื่อในตารางในโค้ด visits.js</p>';
+  }
+
+  function renderMoney(d) {
+    var m = d.money;
+    if (!m) {
+      $('money').innerHTML = 'ยังอ่านตารางออเดอร์ไม่ได้ <span class="tiny">รัน migration ตาราง preorders ก่อน</span>';
+      $('stock').innerHTML = '';
+      return;
+    }
+    var wait = (m.placedCount || 0) - (m.paidCount || 0);
+    $('money').innerHTML = 'ยอดสั่ง ' + num(m.placedCount) + ' ออเดอร์ (' + money(m.placedRevenue) + ')' +
+      '<br>ยอดโอนผ่าน ' + num(m.paidCount) + ' ออเดอร์ (' + money(m.paidRevenue) + ')' +
+      '<br>รอตามสลิป ' + num(wait) + ' ออเดอร์' +
+      '<br><span class="tiny">ยอดสั่งคือกดฟอร์มสำเร็จ ส่วนต่างคือเงินที่ต้องตามทวงหรือรอสลิป</span>' +
+      '<br>เสื้อ ' + num(m.shirtUnits) + ' ตัว · กระเป๋า ' + num(m.bagUnits) + ' ใบ' +
+      ' <span class="tiny">(เหลือง ' + num(m.bagByColor ? m.bagByColor['BAG-YELLOW'] : 0) +
+      ' / แดง ' + num(m.bagByColor ? m.bagByColor['BAG-RED'] : 0) + ')</span>';
+    var st = d.stock || [];
+    $('stock').innerHTML = st.map(function (s) {
+      var pct = Math.min(100, Math.max(0, s.pctReserved || 0));
+      var low = s.left <= 5;
+      return '<p style="margin:8px 0 2px"><b>' + esc(s.name) + '</b> จองแล้ว ' + num(s.reserved) +
+        ' / ทั้งหมด ' + num(s.total) + ' / เหลือ ' +
+        (low ? '<b style="color:var(--red)">' + num(s.left) + ' ใบ ใกล้หมด</b>' : num(s.left) + ' ใบ') + '</p>' +
+        '<div class="stockbar" role="img" aria-label="' + esc(s.name) + ' จองแล้ว ' + num(s.reserved) + ' เหลือ ' + num(s.left) + '">' +
+        '<i style="width:' + pct + '%;background:var(--yellow)"></i>' +
+        '<i style="width:' + (100 - pct) + '%;background:' + (low ? 'var(--red)' : '#fff') + '"></i></div>';
+    }).join('') +
+    '<p class="tiny">จองแล้วนับจากออเดอร์ที่ยังไม่ยกเลิก เหลือน้อยให้รีบโพสต์แจ้งหรือปิดรับ อย่าปล่อยให้สั่งลม</p>';
+  }
+
+  function renderHours(hours) {
+    var max = 1;
+    hours.forEach(function (r) { max = Math.max(max, Number(r.people || 0)); });
+    var pk = 0, pv = -1;
+    hours.forEach(function (r) { if (Number(r.people || 0) > pv) { pv = Number(r.people || 0); pk = r.h; } });
+    $('hours').innerHTML = hours.map(function (r) {
+      var h = Math.max(2, Math.round((Number(r.people || 0) / max) * 110));
+      return '<div style="height:' + h + 'px" class="' + (r.h === pk && pv > 0 ? 'pk' : '') +
+        '" title="' + r.h + ' น. ' + num(r.people) + ' คน"></div>';
+    }).join('');
+    $('hourlabels').innerHTML = hours.map(function (r) {
+      return '<span>' + (r.h % 3 === 0 ? r.h : '') + '</span>';
+    }).join('');
+  }
+
+  function renderWeekday(rows) {
+    var max = 1;
+    rows.forEach(function (r) { max = Math.max(max, Number(r.people || 0)); });
+    $('weekday').innerHTML = rows.map(function (r) {
+      var h = Math.max(2, Math.round((Number(r.people || 0) / max) * 44));
+      return '<div class="col"><div class="v" style="height:' + h + 'px" title="' + esc(r.label) + ' ' + num(r.people) + ' คน"></div>' +
+        '<span>' + esc(r.label) + '</span><small>' + num(r.people) + '</small></div>';
+    }).join('');
+  }
+
+  function renderNewRet(nr) {
+    var a = Number(nr.newVisitors || 0), b = Number(nr.returningVisitors || 0);
+    var sum = a + b || 1;
+    var pctA = Math.round((a / sum) * 100);
+    var c = 2 * Math.PI * 40;
+    $('newret').innerHTML =
+      '<svg width="110" height="110" viewBox="0 0 110 110" role="img" aria-label="คนใหม่กับคนกลับมา">' +
+      '<circle cx="55" cy="55" r="40" fill="none" stroke="#e8e6da" stroke-width="18"/>' +
+      '<circle cx="55" cy="55" r="40" fill="none" stroke="var(--ink)" stroke-width="18" ' +
+      'stroke-dasharray="' + (c * a / sum) + ' ' + c + '" transform="rotate(-90 55 55)"/>' +
+      '</svg>' +
+      '<div>คนใหม่ ' + num(a) + ' คน (' + pctA + '%)<br>คนกลับมา ' + num(b) + ' คน' +
+      '<br><span class="tiny">นับจากเบราว์เซอร์ ช่วงแรกทุกคนดูเป็นคนใหม่หมด</span></div>';
+  }
+
+  function weekendNote(d) {
+    var days = d.daily || [];
+    var n = days.length;
+    var sat = 0;
+    days.forEach(function (r) {
+      var dt = new Date(r.day + 'T00:00:00Z');
+      var w = dt.getUTCDay();
+      if (w === 0 || w === 6) sat++;
+    });
+    var txt = 'ช่วงนี้มีเสาร์อาทิตย์ ' + sat + ' วัน จากทั้งหมด ' + n + ' วัน';
+    var rng = d.range || {};
+    if (rng.prev_from && rng.prev_to) {
+      var c = 0, t = 0;
+      var cur = rng.prev_from;
+      while (cur <= rng.prev_to && t < 400) {
+        var w2 = new Date(cur + 'T00:00:00Z').getUTCDay();
+        if (w2 === 0 || w2 === 6) c++;
+        t++;
+        cur = addDay(cur);
+      }
+      txt += ' / ช่วงก่อนมี ' + c + ' วัน';
+    }
+    return txt + ' เสาร์อาทิตย์คนว่างเข้าเว็บเยอะเป็นปกติ';
+  }
+  function addDay(s) {
+    var dt = new Date(s + 'T00:00:00Z');
+    dt.setUTCDate(dt.getUTCDate() + 1);
+    return dt.toISOString().slice(0, 10);
+  }
+
+  /* กราฟรายวัน SVG วาดเอง */
+  function drawChart(daily, markers) {
+    var svg = $('chart');
+    var W = 640, H = 260, pL = 38, pR = 10, pT = 26, pB = 30;
+    var pw = W - pL - pR, ph = H - pT - pB;
+    var n = daily.length || 1;
+    var maxV = 1;
+    daily.forEach(function (r) {
+      maxV = Math.max(maxV, Number(r.visitors || 0), Number(r.ma7 || 0));
+    });
+    maxV = Math.ceil(maxV * 1.15) || 1;
+    function X(i) { return pL + (pw / n) * (i + 0.5); }
+    function Y(v) { return pT + ph - (Number(v || 0) / maxV) * ph; }
+    var s = '';
+    s += '<defs><pattern id="hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">' +
+      '<rect width="6" height="6" fill="#fff"/><line x1="0" y1="0" x2="0" y2="6" stroke="#101538" stroke-width="2"/></pattern></defs>';
+    // grid
+    for (var g = 0; g <= 3; g++) {
+      var gv = Math.round((maxV / 3) * g);
+      var gy = Y(gv);
+      s += '<line x1="' + pL + '" y1="' + gy + '" x2="' + (W - pR) + '" y2="' + gy + '" stroke="rgba(16,21,56,.16)"/>' +
+        '<text x="' + (pL - 4) + '" y="' + (gy + 4) + '" font-size="10" text-anchor="end" fill="#4d5474">' + gv + '</text>';
+    }
+    // markers รวมวันเดียวกันเป็นเส้นเดียว กันป้ายทับกัน ใต้แท่งเพื่อให้แท่งทับเส้น
+    var byDay = {};
+    daily.forEach(function (r, i) { byDay[r.day] = i; });
+    var mkByDay = {};
+    (markers || []).forEach(function (mk) {
+      if (!(mk.day in byDay)) return;
+      (mkByDay[mk.day] = mkByDay[mk.day] || []).push(mk);
+    });
+    Object.keys(mkByDay).forEach(function (day) {
+      var list = mkByDay[day];
+      var x = X(byDay[day]);
+      var first = String(list[0].label || '');
+      var shortFirst = first.length > 10 ? first.slice(0, 10) + '...' : first;
+      var top = list.length > 1 ? shortFirst + ' +' + (list.length - 1) : shortFirst;
+      var all = list.map(function (m) { return m.label; }).join(', ');
+      var anchor = 'middle', tx = x;
+      if (x > W - pR - 50) { anchor = 'end'; tx = W - pR - 2; }
+      s += '<line x1="' + x + '" y1="' + pT + '" x2="' + x + '" y2="' + (H - pB) + '" stroke="#B78A00" stroke-width="1.5" stroke-dasharray="4 3">' +
+        '<title>' + esc(day) + ' ' + esc(all) + '</title></line>' +
+        '<text x="' + tx + '" y="' + (pT - 6) + '" font-size="10" text-anchor="' + anchor + '" fill="#7a5c00">' + esc(top) +
+        '<title>' + esc(all) + '</title></text>';
+    });
+    // bars
+    var bw = Math.min(34, (pw / n) * 0.6);
+    var topI = 0;
+    daily.forEach(function (r, i) { if (Number(r.visitors || 0) > Number(daily[topI].visitors || 0)) topI = i; });
+    daily.forEach(function (r, i) {
+      var h = Math.max(Number(r.visitors || 0) ? 2 : 0, (Number(r.visitors || 0) / maxV) * ph);
+      var x = X(i) - bw / 2, y = H - pB - h;
+      var fill = r.isToday ? 'url(#hatch)' : '#101538';
+      s += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) +
+        '" fill="' + fill + '" stroke="#101538">' +
+        '<title>' + esc(r.day) + ' ' + num(r.visitors) + ' คน</title></rect>';
+    });
+    if (daily[topI]) {
+      s += '<text x="' + X(topI) + '" y="' + (Y(daily[topI].visitors) - 6) + '" font-size="11" font-weight="bold" text-anchor="middle" fill="#101538">' +
+        num(daily[topI].visitors) + '</text>';
+    }
+    // MA7: เส้นทึบตอนครบ 7 วัน เส้นประตอนยังไม่ครบ
+    function path(idxs, dash) {
+      if (idxs.length < 2) return '';
+      var dAttr = idxs.map(function (i, k) {
+        return (k ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(daily[i].ma7).toFixed(1);
+      }).join(' ');
+      return '<path d="' + dAttr + '" fill="none" stroke="#D42614" stroke-width="2.5"' +
+        (dash ? ' stroke-dasharray="5 4"' : '') + '/>';
+    }
+    var full = [], part = [];
+    daily.forEach(function (r, i) { if (r.ma7 != null) ((r.ma7full ? full : part)).push(i); });
+    s += path(part, true) + path(full, false);
+    // แกน x เว้นทุก N วัน
+    var step = Math.max(1, Math.ceil(n / 6));
+    daily.forEach(function (r, i) {
+      if (i % step !== 0 && i !== n - 1) return;
+      s += '<text x="' + X(i) + '" y="' + (H - 10) + '" font-size="10" text-anchor="middle" fill="#4d5474">' + fmtDay(r.day) + '</text>';
+    });
+    svg.innerHTML = s;
+  }
+
+  function renderMarkers(markers) {
+    var box = $('markerlist');
+    if (!markers.length) {
+      box.innerHTML = '<span class="tiny">ยังไม่มีเส้นกำกับ เพิ่มด้านล่างได้เลย</span>';
+      return;
+    }
+    box.innerHTML = markers.map(function (m) {
+      return '<span class="pill">' + fmtDay(m.day) + ' ' + esc(m.label) +
+        ' <button class="small" data-del="' + m.id + '">ลบ</button></span>';
+    }).join('');
+    box.querySelectorAll('[data-del]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        b.disabled = true;
+        api('/api/admin/markers?id=' + encodeURIComponent(b.getAttribute('data-del')), { method: 'DELETE' })
+          .then(function (res) {
+            if (!res.ok) { $('msg').hidden = false; $('msg').textContent = res.error; return; }
+            load(false);
+          });
+      });
+    });
+  }
+
   function table(head, rows) {
     if (!rows.length) return '<tr><td>ยังไม่มีข้อมูลในช่วงนี้</td></tr>';
     return '<tr>' + head.map(function (h, i) {
-      return '<th' + (i ? ' style="text-align:right"' : '') + '>' + esc(h) + '</th>';
+      return '<th' + (i ? ' class="num"' : '') + '>' + esc(h) + '</th>';
     }).join('') + '</tr>' + rows.map(function (cells) {
       return '<tr>' + cells.map(function (cell, i) {
         return i ? '<td class="num">' + cell + '</td>' : '<td>' + cell + '</td>';
@@ -223,7 +629,7 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
   $('reload').addEventListener('click', function () { load(false); });
   $('csv').addEventListener('click', function () {
     $('csv').disabled = true;
-    fetch('/api/admin/visits-export?days=' + $('days').value, { headers: { 'x-admin-token': token } })
+    fetch('/api/admin/visits-export?days=' + encodeURIComponent(state.days), { headers: { 'x-admin-token': token } })
       .then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error('ดาวน์โหลดไม่สำเร็จ')); })
       .then(function (blob) {
         var a = document.createElement('a');
@@ -232,10 +638,37 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
         document.body.appendChild(a); a.click(); a.remove();
         setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
       })
-      .catch(function (error) { $('msg').hidden = false; $('msg').textContent = error.message; })
+      .catch(function (err) { $('msg').hidden = false; $('msg').textContent = err.message; })
       .then(function () { $('csv').disabled = false; });
   });
-  $('days').addEventListener('change', function () { load(false); });
+  $('seg').querySelectorAll('button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $('seg').querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      state.days = b.getAttribute('data-days');
+      var isToday = state.days === '1';
+      var isAll = state.days === 'all';
+      $('compare').disabled = isToday || isAll;
+      if (isToday) $('incToday').checked = false;
+      load(false);
+    });
+  });
+  $('compare').addEventListener('change', function () { load(false); });
+  $('incToday').addEventListener('change', function () { load(false); });
+  $('mk-add').addEventListener('click', function () {
+    var day = $('mk-day').value;
+    var label = $('mk-label').value.trim();
+    if (!day || !label) { $('msg').hidden = false; $('msg').textContent = 'ใส่วันและชื่อเหตุการณ์ก่อนนะครับ'; return; }
+    $('mk-add').disabled = true;
+    api('/api/admin/markers', { method: 'POST', json: { day: day, label: label } })
+      .then(function (res) {
+        if (!res.ok) { $('msg').hidden = false; $('msg').textContent = res.error; return; }
+        $('msg').hidden = true;
+        $('mk-label').value = '';
+        load(false);
+      })
+      .then(function () { $('mk-add').disabled = false; });
+  });
 
   if (token) load(true);
 })();

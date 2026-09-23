@@ -223,8 +223,8 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
     </section>
 
     <section class="step" id="bag">
-      <h2>กระเป๋าผ้าเทศกาลกินผัก ฿250 · ลิมิเต็ด 50 ใบ</h2>
-      <p class="hint">ผ้าแคนวาส 13 x 15 นิ้ว พรีเซนเตอร์น้องจำปูน · มีสีเหลืองกับสีแดง สีละ 25 ใบ หมดแล้วหมดเลย สั่งพร้อมเสื้อในออเดอร์เดียวได้</p>
+      <h2>กระเป๋าผ้าเทศกาลกินผัก ฿250 · จำนวนจำกัด</h2>
+      <p class="hint">ผ้าแคนวาส 13 x 15 นิ้ว พรีเซนเตอร์น้องจำปูน · มีสีเหลืองกับสีแดง จำนวนจำกัด ช้าหมดอด สั่งพร้อมเสื้อในออเดอร์เดียวได้</p>
       <div class="size-group" id="bags"></div>
     </section>
     <section class="step">
@@ -425,7 +425,7 @@ var PREORDER = {
       row.innerHTML =
         '<img src="' + color.img + '" width="1080" height="1350" loading="lazy" decoding="async" alt="กระเป๋าผ้าเทศกาลกินผัก' + color.label + '">' +
         '<div class="label"><b>' + color.label + '</b><small class="bag-price">฿' + PREORDER.bag.price + '</small>' +
-        '<small class="bag-left">สีละ ' + PREORDER.bag.stock + ' ใบ</small>' +
+        '<small class="bag-left" hidden></small>' +
         '<small class="bag-out" hidden>หมดแล้ว</small></div>' +
         '<div class="stepper">' +
         '<button type="button" data-act="minus" aria-label="ลดจำนวน' + color.name + '" disabled>−</button>' +
@@ -465,7 +465,11 @@ var PREORDER = {
       var inCart = cart[color.code] || 0;
       var leftEl = row.querySelector('.bag-left');
       var outEl = row.querySelector('.bag-out');
-      if (leftEl && !leftEl.hidden) leftEl.textContent = bagReady ? ('เหลือ ' + left + ' ใบ') : ('สีละ ' + PREORDER.bag.stock + ' ใบ');
+      if (leftEl) {
+        if (!bagReady || left > 5) { leftEl.hidden = true; }
+        else if (left <= 0) { leftEl.hidden = true; }
+        else { leftEl.hidden = false; leftEl.textContent = 'ใกล้หมดแล้ว'; }
+      }
       if (outEl) outEl.hidden = left > 0;
       var plus = row.querySelector('[data-act="plus"]');
       if (plus) plus.disabled = left <= 0 || inCart >= left;
@@ -985,7 +989,7 @@ var PREORDER = {
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Product",
 "name":"กระเป๋าผ้าเทศกาลกินผัก กั่วป่าโพ้","image":"https://kuapapoh.com/images/je-bag-yellow.webp",
-"description":"กระเป๋าผ้าแคนวาส 13 x 15 นิ้ว ลายเทศกาลกินผักย่านเมืองเก่าตะกั่วป่า มีสีเหลืองและสีแดง สีละ 25 ใบ",
+"description":"กระเป๋าผ้าแคนวาส 13 x 15 นิ้ว ลายเทศกาลกินผักย่านเมืองเก่าตะกั่วป่า มีสีเหลืองและสีแดง ทำจำนวนจำกัด ช้าหมดอด",
 "brand":{"@type":"Brand","name":"กั่วป่าโพ้ · Kuapapoh"},
 "offers":{"@type":"Offer","url":"https://kuapapoh.com/preorder/#bag","price":"250","priceCurrency":"THB","availability":"https://schema.org/PreOrder"}}
 </script>

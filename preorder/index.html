@@ -155,7 +155,36 @@ textarea{min-height:88px;resize:vertical}
 
 .msg{margin:0 0 14px;padding:12px 14px;border-radius:10px;font-size:.92rem;display:none}
 .msg.err{display:block;background:#ffeceb;border:2px solid var(--red);color:#8e1a0c}
-.line-btn{display:inline-block;background:#06C755;color:#fff;text-decoration:none;font-weight:700;padding:.75rem 1.3rem;border-radius:99px;margin-top:10px}
+.line-btn{display:inline-block;background:#067A35;color:#fff;text-decoration:none;font-weight:700;padding:.75rem 1.3rem;border-radius:99px;margin-top:10px}
+
+/* กล่องบอกว่าแนบสลิปทีหลังได้ · โทนอุ่น ไม่ใช่สีเตือน */
+.slip-later{background:#FFF6E8;border:2px solid var(--ink);border-radius:12px;padding:12px 14px;margin:0 0 14px}
+.slip-later .head{display:block;font-family:var(--display);font-size:1rem;margin-bottom:2px}
+.slip-later p{margin:0;font-size:.95rem}
+
+/* ปุ่มติดต่อ 2 ทาง · ขนาดเท่ากัน สีแบรนด์แต่ละเจ้า */
+.chat-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.chat-btn{flex:1 1 160px;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;padding:.75rem 1.1rem;border-radius:99px;font-weight:700;font-size:.95rem;line-height:1.4;text-decoration:none;color:#fff;border:0;cursor:pointer;text-align:center}
+.chat-btn.small{min-height:44px;padding:.65rem .9rem}
+.chat-line{background:#067A35;color:#fff}
+.chat-fb{background:#0866FF;color:#fff}
+
+/* หน้าจบ · กล่องขั้นต่อไป + ยอดและบัญชีซ้ำ */
+.done-next{background:#FFF6E8;border:2px solid var(--ink);border-radius:12px;padding:16px 14px;margin:16px auto 0;max-width:480px}
+.done-next-head{display:block;font-family:var(--display);font-size:1.05rem;margin-bottom:4px}
+.done-next-text{font-size:.95rem;margin:.4rem 0}
+.done-pay{text-align:left;margin:12px auto 0;border:2px dashed var(--ink);border-radius:10px;padding:10px 12px;font-size:.92rem;background:#fff}
+.done-pay div{display:flex;justify-content:space-between;gap:12px;padding:3px 0}
+
+/* แถบถามได้ 2 ทางท้ายหน้า */
+.help-strip{background:#fff;border:2px solid var(--ink);border-radius:16px;padding:18px;margin:0 0 18px;text-align:center;box-shadow:4px 4px 0 rgba(16,21,56,.1)}
+.help-strip b{font-family:var(--display);font-size:1.08rem}
+.help-strip p{margin:.3rem 0 0;color:var(--muted);font-size:.95rem}
+.help-strip .chat-btns{max-width:480px;margin-left:auto;margin-right:auto}
+
+/* ปุ่มสำรองตอนส่งออเดอร์ไม่สำเร็จ */
+.fallback-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.fallback-btns .chat-btn{margin-top:0}
 
 /* แผงทวนรายการก่อนยืนยัน */
 .review{background:#fff;border:3px solid var(--red);border-radius:16px;padding:18px;margin:0 0 18px;box-shadow:4px 4px 0 rgba(244,51,31,.18)}
@@ -235,7 +264,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
       <label class="f"><span>ชื่อ-นามสกุล</span><input id="f-name" name="name" autocomplete="name" required></label>
       <label class="f"><span>เบอร์โทร</span><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="08x-xxx-xxxx" required></label>
       <label class="f"><span>อีเมล (ไม่บังคับ · ไว้ติดต่อเรื่องออเดอร์)</span><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"></label>
-      <label class="f"><span>LINE หรือ Facebook (ไม่บังคับ)</span><input id="f-contact" name="contact" autocomplete="off"></label>
+      <label class="f"><span>LINE ID หรือชื่อ Facebook (ไม่บังคับ) · ไว้ติดต่อกลับเรื่องสลิปและการรับของ</span><input id="f-contact" name="contact" autocomplete="off"></label>
 
       <p style="font-weight:600;font-size:.9rem;margin:16px 0 8px">รับสินค้าแบบไหน</p>
       <div class="choices">
@@ -255,8 +284,12 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
     </section>
 
     <section class="step">
-      <h2><span class="n">3</span> โอนเงินและแนบสลิป</h2>
+      <h2><span class="n">3</span> โอนเงินและแนบสลิป (แนบทีหลังได้)</h2>
       <p class="hint">โอนยอดตามตัวเลขด้านล่างนี้ แล้วแนบสลิปไว้ในออเดอร์ได้เลย ทีมงานจะตรวจและยืนยันกลับ</p>
+      <div class="slip-later">
+        <b class="head">✓ ยังไม่สะดวกโอนตอนนี้ ไม่เป็นไร</b>
+        <p>กดยืนยันออเดอร์ได้เลยโดยไม่ต้องแนบสลิป เราจะเก็บออเดอร์ไว้ให้ พอโอนแล้วค่อยส่งสลิปมาทาง LINE หรือ Facebook ก็ได้</p>
+      </div>
       <div class="due" id="due">
         <div class="due-label">ยอดที่ต้องโอน</div>
         <div class="due-amount" id="due-amount">฿0</div>
@@ -284,7 +317,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
       <label class="slip-drop" id="slip-drop">
         <input type="file" id="f-slip" accept="image/*">
         <b id="slip-label">📎 แตะเพื่อแนบสลิป</b>
-        <div style="font-size:.9rem;color:var(--ink);margin-top:6px">ถ่ายรูปหรือเลือกจากคลังภาพ · <b>ยังไม่สะดวกตอนนี้ก็กดยืนยันไปก่อนได้ แล้วส่งสลิปทาง LINE ทีหลัง</b></div>
+        <div style="font-size:.9rem;color:var(--ink);margin-top:6px">ถ่ายรูปหรือเลือกจากคลังภาพ · <b>ไม่บังคับ</b></div>
         <img class="slip-preview" id="slip-preview" alt="ตัวอย่างสลิปที่แนบ" hidden>
         <span class="slip-ref" id="slip-ref" hidden></span>
       </label>
@@ -306,10 +339,35 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
     <p style="margin:.2rem 0;color:var(--muted);font-size:.92rem">เลขออเดอร์ของคุณ · <b style="color:var(--red)">แคปหน้าจอนี้เก็บไว้</b></p>
     <div class="code" id="done-code">—</div>
     <button type="button" class="copy" id="copy-code">คัดลอกเลขออเดอร์</button>
-    <p style="font-size:.93rem;max-width:44ch;margin:0 auto">ทีมงานจะตรวจสลิปและทักกลับไปยืนยันรอบผลิต ถ้าอยากเช็คสถานะหรือส่งสลิปเพิ่ม ทักมาที่ LINE พร้อมเลขออเดอร์นี้ได้เลย</p>
+    <div class="done-next" id="done-noslip" hidden>
+      <b class="done-next-head">✓ ขั้นต่อไป โอนแล้วส่งสลิปมาทางไหนก็ได้</b>
+      <p class="done-next-text">โอนยอดด้านล่าง แล้วส่งสลิปพร้อมเลขออเดอร์นี้มาได้เลย เราจะตรวจแล้วทักกลับไปยืนยัน</p>
+      <div class="chat-btns">
+        <a class="chat-btn chat-line" id="done-line" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">ส่งสลิปทาง LINE</a>
+        <a class="chat-btn chat-fb" href="https://m.me/61590430773715" target="_blank" rel="noopener">ส่งสลิปทาง Facebook</a>
+      </div>
+      <p class="done-next-text">ส่งทาง Facebook อย่าลืมวางเลขออเดอร์ในแชทด้วย กดปุ่มคัดลอกด้านบนได้เลย</p>
+      <div class="done-pay" id="done-pay"></div>
+      <button type="button" class="copy" id="done-copy-acct">คัดลอกเลขบัญชี</button>
+    </div>
+    <div id="done-hasslip" hidden>
+      <p class="done-next-text">ทีมงานจะตรวจสลิปและทักกลับไปยืนยันรอบผลิต ถ้าอยากเช็คสถานะ ทักมาพร้อมเลขออเดอร์นี้ได้เลย</p>
+      <div class="chat-btns">
+        <a class="chat-btn small chat-line" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สอบถามทาง LINE</a>
+        <a class="chat-btn small chat-fb" href="https://m.me/61590430773715" target="_blank" rel="noopener">สอบถามทาง Facebook</a>
+      </div>
+    </div>
     <div class="recap" id="done-recap"></div>
-    <a class="line-btn" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">ทักทีมงานทาง LINE</a>
+
     <p style="margin-top:14px"><a href="../">← กลับหน้าแรกกั่วป่าโพ้</a></p>
+  </section>
+  <section class="help-strip">
+    <b>มีคำถาม ทักได้ 2 ทาง</b>
+    <p>เรื่องสลิป การโอน หรือการรับของ ถามเราได้เลย</p>
+    <div class="chat-btns">
+      <a class="chat-btn chat-line" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">ทักทาง LINE</a>
+      <a class="chat-btn chat-fb" href="https://m.me/61590430773715" target="_blank" rel="noopener">ทักทาง Facebook</a>
+    </div>
   </section>
 </main>
 
@@ -328,7 +386,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
 
 <footer><div class="wrap">
   รายได้ทั้งหมดสมทบกองทุนกลุ่มกั่วป่าโพ้ เพื่อฟื้นฟูและขับเคลื่อนย่านเมืองเก่าตะกั่วป่า ·
-  สอบถาม <a href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">LINE @kuapapoh</a> ·
+  สอบถาม <a href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">LINE @kuapapoh</a> · <a href="https://m.me/61590430773715" target="_blank" rel="noopener">Facebook กั่วป่าโพ้</a> ·
   <a href="/privacy/">นโยบายความเป็นส่วนตัว</a>
 </div></footer>
 
@@ -679,7 +737,7 @@ var PREORDER = {
           slipDataUrl = '';
           $('slip-preview').hidden = true;
           $('slip-drop').classList.remove('on');
-          $('slip-label').textContent = '📎 รูปนี้ใหญ่เกินไป แตะเพื่อเลือกรูปใหม่ หรือส่งทาง LINE';
+          $('slip-label').textContent = '📎 รูปนี้ใหญ่เกินไป แตะเพื่อเลือกรูปใหม่ หรือกดยืนยันไปก่อนแล้วส่งทีหลังได้';
           return;
         }
         $('slip-preview').src = slipDataUrl;
@@ -844,7 +902,7 @@ var PREORDER = {
       (payload.email ? reviewRow('อีเมล', payload.email) : '') +
       reviewRow('รับสินค้า', payload.delivery === 'ship' ? 'ส่งไปรษณีย์' : 'รับเองที่บ้าน 78') +
       (payload.delivery === 'ship' ? reviewRow('ที่อยู่', payload.address) : '') +
-      reviewRow('สลิป', slipDataUrl ? 'แนบแล้ว' : 'ยังไม่แนบ (ส่งทาง LINE ทีหลังได้)') +
+      reviewRow('สลิป', slipDataUrl ? 'แนบแล้ว' : 'ยังไม่แนบ · ส่งทีหลังทาง LINE หรือ Facebook ได้') +
       reviewRow('ยอดที่ต้องโอน', baht(t.total));
     $('review').hidden = false;
     $('review').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -871,6 +929,15 @@ var PREORDER = {
     reviewed = true;
     $('review').hidden = true;
     form.dispatchEvent(new Event('submit', { cancelable: true }));
+  });
+
+  $('done-copy-acct').addEventListener('click', function () {
+    var button = this;
+    if (!navigator.clipboard) { button.textContent = 'กดค้างที่ตัวเลขเพื่อคัดลอก'; return; }
+    navigator.clipboard.writeText(String(PREORDER.pay.number).replace(/\D/g, '')).then(function () {
+      button.textContent = 'คัดลอกแล้ว ✓';
+      setTimeout(function () { button.textContent = 'คัดลอกเลขบัญชี'; }, 1800);
+    }).catch(function () { button.textContent = 'กดค้างที่ตัวเลขเพื่อคัดลอก'; });
   });
 
   $('copy-code').addEventListener('click', function () {
@@ -935,7 +1002,7 @@ var PREORDER = {
       'ยอดรวม ' + t.total + ' บาท'
     ].join('\n');
     var link = document.createElement('a');
-    link.className = 'line-btn';
+    link.className = 'chat-btn small chat-line';
     link.href = 'https://line.me/R/ti/p/%40kuapapoh';
     link.target = '_blank';
     link.rel = 'noopener';
@@ -953,7 +1020,19 @@ var PREORDER = {
     backup.style.cssText = 'width:100%;margin-top:8px;font-size:.82rem;min-height:92px';
     wrapLater.push(backup);
     var wrap = document.createElement('div');
+    wrap.className = 'fallback-btns';
     wrap.appendChild(link);
+    // ปุ่มสำรองอีกทาง · คัดลอกรายการแล้วเปิดแชท Facebook (ปุ่มนี้ไม่ยิง event)
+    var fb = document.createElement('a');
+    fb.className = 'chat-btn small chat-fb';
+    fb.href = 'https://m.me/61590430773715';
+    fb.target = '_blank';
+    fb.rel = 'noopener';
+    fb.textContent = 'หรือส่งทาง Facebook';
+    fb.addEventListener('click', function () {
+      try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch (error) { /* ปล่อยผ่าน */ }
+    });
+    wrap.appendChild(fb);
     wrapLater.forEach(function (node) { wrap.appendChild(node); });
     return wrap;
   }
@@ -984,11 +1063,28 @@ var PREORDER = {
     $('bar').hidden = true;
     $('done').classList.add('show');
     $('done-code').textContent = data.id;
+    var hasSlip = !!(data.hasSlip || slipDataUrl);
+    if (hasSlip) {
+      $('done-hasslip').hidden = false;
+      $('done-noslip').hidden = true;
+    } else {
+      $('done-hasslip').hidden = true;
+      $('done-noslip').hidden = false;
+      // เติมเลขออเดอร์และยอดในข้อความ LINE ให้เลย ลูกค้ากดส่งได้ทันที
+      var lineMsg = 'ส่งสลิปออเดอร์ ' + data.id + ' ยอด ' + data.total + ' บาท';
+      $('done-line').href = 'https://line.me/R/oaMessage/@kuapapoh/?' + encodeURIComponent(lineMsg);
+      // โอนทีหลังได้โดยไม่ต้องย้อนกลับ · ใช้ค่าบัญชีจาก PREORDER.pay ที่เดิม
+      $('done-pay').innerHTML =
+        row('ยอดที่ต้องโอน', baht(data.total)) +
+        row('โอนเข้าบัญชี', PREORDER.pay.bank) +
+        row('เลขบัญชี', PREORDER.pay.number) +
+        row('ชื่อบัญชี', String(PREORDER.pay.name || '').replace(/^ชื่อบัญชี\s*/, ''));
+    }
     $('done-recap').innerHTML =
       row('รายการ', cartLines().join(' · ')) +
       row('รับสินค้า', payload.delivery === 'ship' ? 'ส่งไปรษณีย์' : 'รับเองที่บ้าน 78') +
       row('ยอดรวม', baht(data.total)) +
-      row('สลิป', data.hasSlip ? 'แนบแล้ว ✓' : 'ยังไม่แนบ · ส่งทาง LINE ได้');
+      row('สลิป', hasSlip ? 'แนบแล้ว ✓' : 'ยังไม่แนบ · ส่งทีหลังทาง LINE หรือ Facebook ได้');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (history.replaceState) history.replaceState(null, '', '?ok=' + data.id);
   }

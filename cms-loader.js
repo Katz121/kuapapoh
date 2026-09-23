@@ -198,9 +198,19 @@
     return data;
   }
 
+  // การ์ดลอยมุมจอ · เครื่องที่เคยเปิด admin จะอ่านข้อมูลเก่าใน localStorage ไม่โหลด content.json
+  // เปลี่ยนสินค้าที่โปรโมตเมื่อไร ให้แก้ค่าที่นี่และขยับ rev · ข้อมูลเก่าที่ rev ไม่ตรงจะถูกแทนที่
+  const FLOATING_BADGE = {
+    rev: '2026-09-23-bag', enabled: true, tag: 'ใหม่ · จำนวนจำกัด', title: 'กระเป๋าผ้ากินผัก กั่วป่าโพ้',
+    price: 250, priceLabel: '฿250', image: 'images/je-bag-red-friends.webp', ctaText: 'สั่งกระเป๋า →', target: 'preorder/#bag'
+  };
+
   function applyContent(data) {
     if (!data) return;
     data = limitShopProducts(data);
+    if (!data.floatingBadge || data.floatingBadge.rev !== FLOATING_BADGE.rev) {
+      data.floatingBadge = Object.assign({}, FLOATING_BADGE);
+    }
 
     try {
       // 0. Typography Management

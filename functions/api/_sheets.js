@@ -5,6 +5,7 @@
 const SIZE_TH = {
   'S': 'S', 'M': 'M', 'L': 'L', 'XL': 'XL', '2XL': '2XL',
   'KID-S': 'เด็ก S', 'KID-M': 'เด็ก M', 'KID-L': 'เด็ก L',
+  'BAG-YELLOW': 'กระเป๋าเหลือง', 'BAG-RED': 'กระเป๋าแดง',
 };
 
 import { payStatus } from './_shared.js';

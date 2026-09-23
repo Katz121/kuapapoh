@@ -1,8 +1,57 @@
 // เครื่องมือร่วมของ API พรีออเดอร์ · Cloudflare Pages Functions (vanilla JS)
 
-export const PRICE = 350;            // ราคาต่อตัว (ทุกไซส์ รวมไซส์เด็ก)
+export const PRICE = 350;            // ราคาเสื้อต่อตัว (ทุกไซส์ รวมไซส์เด็ก)
 export const SHIPPING = 50;          // ค่าส่งไปรษณีย์ต่อ 1 ออเดอร์
 export const SIZES = ['S', 'M', 'L', 'XL', '2XL', 'KID-S', 'KID-M', 'KID-L'];
+export const BAG_PRICE = 250;        // ราคากระเป๋าผ้าต่อใบ (ทุกสี)
+export const BAG_CODES = ['BAG-YELLOW', 'BAG-RED'];
+export const BAG_STOCK = { 'BAG-YELLOW': 25, 'BAG-RED': 25 };
+export const BAG_TH = { 'BAG-YELLOW': 'กระเป๋าเหลือง', 'BAG-RED': 'กระเป๋าแดง' };
+export const BAG_COLOR_TH = { 'BAG-YELLOW': 'กระเป๋าสีเหลือง', 'BAG-RED': 'กระเป๋าสีแดง' };
+// รหัสสินค้าที่ยอมรับทั้งหมด · SIZES เก็บไว้เฉพาะเสื้อเหมือนเดิม หลังบ้านจะได้นับยอดสั่งโรงงานไม่ปนกระเป๋า
+export const ITEM_CODES = [...SIZES, ...BAG_CODES];
+
+// ราคาต่อชิ้นคิดที่ server เสมอ · กระเป๋า 250 บาท นอกนั้นคือเสื้อ 350 บาท
+export function unitPrice(code) {
+  return BAG_CODES.includes(code) ? BAG_PRICE : PRICE;
+}
+
+export function isBagCode(code) {
+  return BAG_CODES.includes(code);
+}
+
+// นับกระเป๋าแยกสีจาก items ที่ parse เป็นอาร์เรย์แล้ว · ใช้ตรวจสต็อกทั้งตอนรับออเดอร์และตอนสรุปยอด
+export function countBags(items) {
+  const out = { 'BAG-YELLOW': 0, 'BAG-RED': 0 };
+  for (const item of Array.isArray(items) ? items : []) {
+    if (!item || !isBagCode(item.size)) continue;
+    const qty = Number.parseInt(item.qty, 10);
+    if (Number.isFinite(qty) && qty > 0) out[item.size] += qty;
+  }
+  return out;
+}
+
+// ยอดกระเป๋าที่ถูกจองแล้ว = ผลรวมทุกออเดอร์ที่ยังไม่ยกเลิก
+// ข้อจำกัด: อ่านแล้วค่อยเขียนโดยไม่มีล็อก ถ้าลูกค้ากดพร้อมกันในเสี้ยววินาทีเดียวกันอาจเกินสต็อกได้นิดหน่อย
+// ยอดกระเป๋าน้อย (สีละ 25) ทีมงานตรวจทานเองได้ จึงยอมรับได้ ไม่ทำล็อกซับซ้อน
+export async function reservedBags(db) {
+  const out = { 'BAG-YELLOW': 0, 'BAG-RED': 0 };
+  const { results } = await db
+    .prepare("SELECT items FROM preorders WHERE status != 'cancelled'")
+    .all();
+  for (const row of results || []) {
+    try {
+      const parsed = JSON.parse(row.items);
+      if (!Array.isArray(parsed)) continue;
+      const counted = countBags(parsed);
+      out['BAG-YELLOW'] += counted['BAG-YELLOW'];
+      out['BAG-RED'] += counted['BAG-RED'];
+    } catch {
+      // แถว items เสียข้ามไป ทีมงานเห็นจากยอดรวมอยู่แล้ว
+    }
+  }
+  return out;
+}
 export const MAX_QTY_PER_LINE = 20;
 export const MAX_QTY_PER_ORDER = 50;          // สั่งเกินนี้ให้ทักทีมงานตรงๆ จะได้คุยเรื่องรอบผลิต
 export const MAX_BODY_BYTES = 900 * 1024;     // ตัดตั้งแต่ก่อน parse กัน payload ยักษ์กิน CPU

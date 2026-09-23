@@ -79,6 +79,13 @@ main{padding:26px 0 140px}
 .stepper button{width:48px;height:48px;border-radius:10px;border:2px solid var(--ink);background:var(--paper);font-size:1.45rem;font-weight:700;color:var(--ink);cursor:pointer;line-height:1}
 .stepper button:disabled{opacity:.35;cursor:not-allowed}
 .stepper .qty{min-width:38px;text-align:center;font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums}
+/* กระเป๋าผ้า · ใช้แถวและปุ่มแบบเดียวกับไซส์เสื้อ */
+.bag-row{gap:10px}
+.bag-row img{width:52px;height:65px;object-fit:cover;border:2px solid var(--rule);border-radius:10px;flex:none}
+.bag-row b,.bag-row small{white-space:nowrap}
+.bag-row .bag-price{color:var(--ink);font-weight:600}
+.bag-row .label{flex:1}
+.bag-out{color:var(--red-deep);font-weight:700}
 details.chart{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
 details.chart summary{cursor:pointer;font-weight:600;font-size:.9rem;color:var(--cobalt)}
 details.chart .charts{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:12px}
@@ -215,6 +222,11 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
       </details>
     </section>
 
+    <section class="step" id="bag">
+      <h2>กระเป๋าผ้าเทศกาลกินผัก ฿250 · ลิมิเต็ด 50 ใบ</h2>
+      <p class="hint">ผ้าแคนวาส 13 x 15 นิ้ว พรีเซนเตอร์น้องจำปูน · มีสีเหลืองกับสีแดง สีละ 25 ใบ หมดแล้วหมดเลย สั่งพร้อมเสื้อในออเดอร์เดียวได้</p>
+      <div class="size-group" id="bags"></div>
+    </section>
     <section class="step">
       <h2><span class="n">2</span> ข้อมูลผู้สั่ง</h2>
       <p class="hint">ใช้ติดต่อกลับตอนของถึงเท่านั้น</p>
@@ -243,7 +255,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
       <div class="due" id="due">
         <div class="due-label">ยอดที่ต้องโอน</div>
         <div class="due-amount" id="due-amount">฿0</div>
-        <div class="due-break" id="due-break">ยังไม่ได้เลือกไซส์</div>
+        <div class="due-break" id="due-break">ยังไม่ได้เลือกสินค้า</div>
       </div>
       <div class="pay">
         <div class="qr-box" id="qr-box" hidden>
@@ -298,7 +310,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
 
 <div class="bar" id="bar">
   <div class="bar-in">
-    <div class="sum"><span id="sum-line">ยังไม่ได้เลือกไซส์</span><b id="sum-total">฿0</b></div>
+    <div class="sum"><span id="sum-line">ยังไม่ได้เลือกสินค้า</span><b id="sum-total">฿0</b></div>
     <button type="submit" form="order-form" id="submit-btn" disabled>ยืนยันพรีออเดอร์</button>
   </div>
 </div>
@@ -350,6 +362,14 @@ var PREORDER = {
       { code: 'KID-M', label: 'เด็ก M', detail: 'รอบอก 27.5" · ยาว 18"' },
       { code: 'KID-L', label: 'เด็ก L', detail: 'รอบอก 31.5" · ยาว 20"' }
     ]
+  },
+  bag: {
+    price: 250,
+    stock: 25,
+    colors: [
+      { code: 'BAG-YELLOW', label: 'สีเหลือง', name: 'กระเป๋าเหลือง', img: '../images/je-bag-yellow.webp' },
+      { code: 'BAG-RED', label: 'สีแดง', name: 'กระเป๋าแดง', img: '../images/je-bag-red.webp' }
+    ]
   }
 };
 
@@ -359,6 +379,7 @@ var PREORDER = {
   var slipRef = '';        // เลขอ้างอิงที่อ่านได้จากคิวอาร์ในสลิป
   var slipHash = '';       // ลายนิ้วมือไฟล์สลิป
   var touchedCart = false;
+  var touchedBag = false;
   var startedCheckout = false;
   var reviewed = false;   // ผ่านแผงทวนรายการแล้วหรือยัง
   var submitRef = '';     // รหัสอ้างอิงของการกดยืนยันครั้งนี้ · กดซ้ำตอนเน็ตหลุดจะไม่ได้ออเดอร์ซ้ำ
@@ -390,36 +411,111 @@ var PREORDER = {
   buildSizes('sizes-adult', PREORDER.sizes.adult);
   buildSizes('sizes-kid', PREORDER.sizes.kid);
 
+  /* กระเป๋าผ้า · แถวและปุ่มแบบเดียวกับไซส์เสื้อ เลขเหลือมาจาก /api/stock */
+  var BAG_TH = { 'BAG-YELLOW': 'กระเป๋าเหลือง', 'BAG-RED': 'กระเป๋าแดง' };
+  var bagStock = { 'BAG-YELLOW': PREORDER.bag.stock, 'BAG-RED': PREORDER.bag.stock };
+  var bagReady = false;
+  function isBagCode(code) { return !!BAG_TH[code]; }
+  function buildBags() {
+    var host = $('bags');
+    PREORDER.bag.colors.forEach(function (color) {
+      var row = document.createElement('div');
+      row.className = 'size-row bag-row';
+      row.dataset.size = color.code;
+      row.innerHTML =
+        '<img src="' + color.img + '" width="1080" height="1350" loading="lazy" decoding="async" alt="กระเป๋าผ้าเทศกาลกินผัก' + color.label + '">' +
+        '<div class="label"><b>' + color.label + '</b><small class="bag-price">฿' + PREORDER.bag.price + '</small>' +
+        '<small class="bag-left">สีละ ' + PREORDER.bag.stock + ' ใบ</small>' +
+        '<small class="bag-out" hidden>หมดแล้ว</small></div>' +
+        '<div class="stepper">' +
+        '<button type="button" data-act="minus" aria-label="ลดจำนวน' + color.name + '" disabled>−</button>' +
+        '<span class="qty">0</span>' +
+        '<button type="button" data-act="plus" aria-label="เพิ่มจำนวน' + color.name + '">+</button>' +
+        '</div>';
+      host.appendChild(row);
+    });
+  }
+  buildBags();
+
+  // เลขเหลือโหลดตอนเปิดหน้า · โหลดไม่ได้ก็ซ่อนตัวเลข ขายต่อได้ตามปกติเพราะ server คุมสต็อกจริง
+  function loadStock() {
+    fetch('/api/stock', { headers: { 'accept': 'application/json' } }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      if (!data || !data.ok || !data.bags) throw new Error('no stock');
+      Object.keys(bagStock).forEach(function (code) {
+        if (data.bags[code] && typeof data.bags[code].left === 'number') {
+          bagStock[code] = Math.max(0, data.bags[code].left);
+        }
+      });
+      bagReady = true;
+      render();
+    }).catch(function () {
+      var labels = document.querySelectorAll('.bag-left');
+      for (var i = 0; i < labels.length; i++) labels[i].hidden = true;
+    });
+  }
+
+  // ซิงก์ปุ่มบวกกับเลขเหลือทุกครั้งที่ตะกร้าเปลี่ยน · หยิบเกินที่เหลือไม่ได้ หมดแล้วกดไม่ได้
+  function refreshBagRows() {
+    PREORDER.bag.colors.forEach(function (color) {
+      var row = document.querySelector('.size-row[data-size="' + color.code + '"]');
+      if (!row) return;
+      var left = bagStock[color.code] || 0;
+      var inCart = cart[color.code] || 0;
+      var leftEl = row.querySelector('.bag-left');
+      var outEl = row.querySelector('.bag-out');
+      if (leftEl && !leftEl.hidden) leftEl.textContent = bagReady ? ('เหลือ ' + left + ' ใบ') : ('สีละ ' + PREORDER.bag.stock + ' ใบ');
+      if (outEl) outEl.hidden = left > 0;
+      var plus = row.querySelector('[data-act="plus"]');
+      if (plus) plus.disabled = left <= 0 || inCart >= left;
+    });
+  }
+
   document.addEventListener('click', function (event) {
     var btn = event.target.closest('.stepper button');
     if (!btn) return;
     var row = btn.closest('.size-row');
     var code = row.dataset.size;
+    var bag = isBagCode(code);
+    var max = bag ? (bagStock[code] || 0) : 20;
     var current = cart[code] || 0;
-    var next = btn.dataset.act === 'plus' ? Math.min(20, current + 1) : Math.max(0, current - 1);
+    var next = btn.dataset.act === 'plus' ? current + 1 : current - 1;
+    if (next > max) next = max;
+    if (next < 0) next = 0;
     if (next === current) return;
     if (next) { cart[code] = next; } else { delete cart[code]; }
     row.querySelector('.qty').textContent = next;
     row.querySelector('[data-act="minus"]').disabled = !next;
     row.classList.toggle('on', !!next);
-    if (!touchedCart && next) {
+    if (next && !bag && !touchedCart) {
       touchedCart = true;
       track('AddToCart', { value: PREORDER.price, content_ids: ['je-shirt'], content_type: 'product' });
+    }
+    if (next && bag && !touchedBag) {
+      touchedBag = true;
+      track('AddToCart', { value: PREORDER.bag.price, content_ids: ['je-bag'], content_type: 'product' });
     }
     render();
   });
 
   function totals() {
-    var qty = 0;
-    Object.keys(cart).forEach(function (code) { qty += cart[code]; });
+    var shirts = 0;
+    var bags = 0;
+    Object.keys(cart).forEach(function (code) {
+      if (isBagCode(code)) bags += cart[code]; else shirts += cart[code];
+    });
+    var qty = shirts + bags;
+    var subtotal = shirts * PREORDER.price + bags * PREORDER.bag.price;
     var ship = qty && deliveryMode() === 'ship' ? PREORDER.shipping : 0;
-    return { qty: qty, subtotal: qty * PREORDER.price, shipping: ship, total: qty * PREORDER.price + ship };
+    return { qty: qty, shirts: shirts, bags: bags, subtotal: subtotal, shipping: ship, total: subtotal + ship };
   }
   function deliveryMode() {
     var checked = document.querySelector('input[name="delivery"]:checked');
     return checked ? checked.value : 'pickup';
   }
   function labelOf(code) {
+    if (BAG_TH[code]) return BAG_TH[code];
     var all = PREORDER.sizes.adult.concat(PREORDER.sizes.kid);
     for (var i = 0; i < all.length; i++) { if (all[i].code === code) return all[i].label; }
     return code;
@@ -429,18 +525,22 @@ var PREORDER = {
   }
   function render() {
     var t = totals();
+    var parts = [];
+    if (t.shirts) parts.push('เสื้อ ' + t.shirts + ' ตัว × ' + PREORDER.price);
+    if (t.bags) parts.push('กระเป๋า ' + t.bags + ' ใบ × ' + PREORDER.bag.price);
     $('sum-total').textContent = baht(t.total);
     $('sum-line').textContent = t.qty
-      ? cartLines().join(' · ') + (t.shipping ? ' + ค่าส่ง ' + t.shipping : '')
-      : 'ยังไม่ได้เลือกไซส์';
+      ? parts.join(' · ') + (t.shipping ? ' + ค่าส่ง ' + t.shipping : '')
+      : 'ยังไม่ได้เลือกสินค้า';
     $('submit-btn').disabled = !t.qty;
 
     // ยอดต้องอยู่ตรงหน้าตอนโอนด้วย ไม่ใช่มีแต่ในแถบล่าง คนจะโอนขาดค่าส่ง
     $('due-amount').textContent = baht(t.total);
     $('due-break').textContent = t.qty
-      ? 'เสื้อ ' + t.qty + ' ตัว × ' + PREORDER.price + (t.shipping ? ' + ค่าส่ง ' + t.shipping : ' · ไม่มีค่าส่ง')
-      : 'ยังไม่ได้เลือกไซส์';
+      ? parts.join(' · ') + (t.shipping ? ' + ค่าส่ง ' + t.shipping : ' · ไม่มีค่าส่ง')
+      : 'ยังไม่ได้เลือกสินค้า';
 
+    refreshBagRows();
     renderQr(t.total);
   }
 
@@ -681,14 +781,28 @@ var PREORDER = {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(payload)
     }).then(function (response) {
-      return response.json().catch(function () { return { ok: false, error: 'ระบบตอบกลับผิดพลาด' }; });
+      return response.json().catch(function () { return { ok: false, error: 'ระบบตอบกลับผิดพลาด' }; }).then(function (data) {
+        data._status = response.status;
+        return data;
+      });
     }).then(function (data) {
-      if (!data.ok) throw new Error(data.error || 'ส่งออเดอร์ไม่สำเร็จ');
+      if (!data.ok) {
+        var err = new Error(data.error || 'ส่งออเดอร์ไม่สำเร็จ');
+        err.soldout = data.soldout;
+        err.status = data._status;
+        throw err;
+      }
       success(data, payload);
     }).catch(function (error) {
       button.disabled = false;
       button.textContent = 'ยืนยันพรีออเดอร์';
-      fail(error.message + ' · สั่งทาง LINE ได้ทันที', lineFallback(payload, t));
+      // สต็อกหมด (409) = โชว์ข้อความ server แล้วดึงเลขเหลือใหม่ ไม่ล้างฟอร์ม
+      if (error && (error.soldout || error.status === 409)) {
+        loadStock();
+        fail(error.message, lineFallback(payload, t));
+      } else {
+        fail(error.message + ' · สั่งทาง LINE ได้ทันที', lineFallback(payload, t));
+      }
     });
   });
 
@@ -744,7 +858,7 @@ var PREORDER = {
 
   // คืนทั้งข้อความและช่องที่ผิด จะได้พาไปที่ช่องนั้นเลย ไม่ต้องให้ลูกค้าเลื่อนหาเอง
   function validate(payload, t) {
-    if (!t.qty) return { message: 'กรุณาเลือกไซส์อย่างน้อย 1 ตัว', field: 'sizes-adult' };
+    if (!t.qty) return { message: 'กรุณาเลือกสินค้าอย่างน้อย 1 ชิ้น', field: 'sizes-adult' };
     if (payload.name.length < 2) return { message: 'กรุณากรอกชื่อ-นามสกุล', field: 'f-name' };
     if (payload.phone.replace(/\D/g, '').length < 9) return { message: 'เบอร์โทรไม่ถูกต้อง', field: 'f-phone' };
     if (payload.delivery === 'ship' && payload.address.length < 15) {
@@ -810,10 +924,23 @@ var PREORDER = {
     return wrap;
   }
 
+  // content_ids ต้องเป็นรายการจริงตามที่สั่ง · Purchase ยิงครั้งเดียวตอนสั่งสำเร็จเท่านั้น
+  function bagContentIds(payload) {
+    var ids = [];
+    var hasShirt = false;
+    var hasBag = false;
+    (payload.items || []).forEach(function (item) {
+      if (isBagCode(item.size)) hasBag = true; else hasShirt = true;
+    });
+    if (hasShirt) ids.push('je-shirt');
+    if (hasBag) ids.push('je-bag');
+    return ids.length ? ids : ['je-shirt'];
+  }
+
   function success(data, payload) {
     track('Purchase', {
       value: data.total,
-      content_ids: ['je-shirt'],
+      content_ids: bagContentIds(payload),
       content_type: 'product',
       num_items: data.qty,
       // ผูกกับเลขออเดอร์ไว้ · ทีหลังจะรู้ว่ายอดนี้มาจากแอดตัวไหน และส่งเข้า Meta ได้แม่นขึ้น
@@ -843,6 +970,7 @@ var PREORDER = {
     content_name: 'เสื้อเทศกาลกินผัก กั่วป่าโพ้'
   });
 
+  loadStock();
   render();
 })();
 </script>
@@ -853,6 +981,13 @@ var PREORDER = {
 "description":"เสื้อยืดสีขาว ผ้าฝ้าย 100% เกรด 32 คอมบ์ ลายเทศกาลกินผักย่านเมืองเก่าตะกั่วป่า มีไซส์ผู้ใหญ่ S ถึง 2XL และไซส์เด็ก S M L",
 "brand":{"@type":"Brand","name":"กั่วป่าโพ้ · Kuapapoh"},
 "offers":{"@type":"Offer","url":"https://kuapapoh.com/preorder/","price":"350","priceCurrency":"THB","availability":"https://schema.org/PreOrder"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Product",
+"name":"กระเป๋าผ้าเทศกาลกินผัก กั่วป่าโพ้","image":"https://kuapapoh.com/images/je-bag-yellow.webp",
+"description":"กระเป๋าผ้าแคนวาส 13 x 15 นิ้ว ลายเทศกาลกินผักย่านเมืองเก่าตะกั่วป่า มีสีเหลืองและสีแดง สีละ 25 ใบ",
+"brand":{"@type":"Brand","name":"กั่วป่าโพ้ · Kuapapoh"},
+"offers":{"@type":"Offer","url":"https://kuapapoh.com/preorder/#bag","price":"250","priceCurrency":"THB","availability":"https://schema.org/PreOrder"}}
 </script>
 </body>
 </html>

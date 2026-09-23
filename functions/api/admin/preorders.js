@@ -1,7 +1,7 @@
 // GET  /api/admin/preorders?q=&status=      · รายการออเดอร์ + สรุปยอด (ค้นหาได้)
 // POST /api/admin/preorders {id, status, adminNote}  · อัปเดตสถานะ (+ ดันขึ้นชีต)
 // POST /api/admin/preorders {id, action:'resync'}    · ซิงก์แถวที่ตกหล่นขึ้นชีตใหม่
-import { json, bad, requireDb, adminOk, clean, logEvent, payStatus } from '../_shared.js';
+import { json, bad, requireDb, adminOk, clean, logEvent, payStatus, SIZES, BAG_CODES, BAG_STOCK } from '../_shared.js';
 import { pushToSheet, sheetsReady } from '../_sheets.js';
 import { verifySlip, slipCheckReady } from '../_slipcheck.js';
 
@@ -50,23 +50,39 @@ export async function onRequestGet({ request, env }) {
   const { results: allRows } = await db
     .prepare("SELECT items, qty, total, status, sheet_row FROM preorders")
     .all();
+  // ยอดเสื้อต้องนับเฉพาะรหัสเสื้อเท่านั้น กระเป๋านับแยกอีกก้อน ไม่งั้นยอดสั่งโรงงานจะปนกระเป๋า
   const bySize = {};
+  const bagBooked = { 'BAG-YELLOW': 0, 'BAG-RED': 0 };
   let shirts = 0;
   let revenue = 0;
   let unsynced = 0;
   for (const row of allRows || []) {
     if (!row.sheet_row) unsynced += 1;
     if (row.status === 'cancelled') continue;
-    shirts += row.qty;
     revenue += row.total;
-    for (const item of safeParse(row.items)) bySize[item.size] = (bySize[item.size] || 0) + item.qty;
+    for (const item of safeParse(row.items)) {
+      if (SIZES.includes(item.size)) {
+        shirts += item.qty;
+        bySize[item.size] = (bySize[item.size] || 0) + item.qty;
+      } else if (BAG_CODES.includes(item.size)) {
+        bagBooked[item.size] += item.qty;
+      }
+    }
+  }
+  const bags = {};
+  for (const code of BAG_CODES) {
+    bags[code] = {
+      stock: BAG_STOCK[code],
+      booked: bagBooked[code],
+      left: Math.max(0, BAG_STOCK[code] - bagBooked[code]),
+    };
   }
 
   return json({
     ok: true,
     orders,
     sheets: sheetsReady(env),
-    summary: { orders: (allRows || []).length, shown: orders.length, shirts, revenue, bySize, unsynced },
+    summary: { orders: (allRows || []).length, shown: orders.length, shirts, revenue, bySize, bags, unsynced },
   });
 }
 

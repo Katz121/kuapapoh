@@ -1,6 +1,7 @@
 // POST /api/preorders · รับออเดอร์พรีจากหน้า /preorder
 import {
-  PRICE, SHIPPING, SIZES, MAX_QTY_PER_LINE, MAX_QTY_PER_ORDER, MAX_SLIP_BYTES, MAX_BODY_BYTES,
+  SHIPPING, ITEM_CODES, BAG_CODES, BAG_STOCK, BAG_TH, BAG_COLOR_TH, MAX_QTY_PER_LINE, MAX_QTY_PER_ORDER,
+  MAX_SLIP_BYTES, MAX_BODY_BYTES, unitPrice, countBags, reservedBags,
   json, bad, requireDb, makeOrderId, clean, normalisePhone, ipFingerprint, logEvent,
 } from './_shared.js';
 import { pushToSheet, sheetsReady } from './_sheets.js';
@@ -38,24 +39,24 @@ export async function onRequestPost(context) {
   if (phone.replace(/\D/g, '').length < 9) return bad('เบอร์โทรไม่ถูกต้อง');
   if (delivery === 'ship' && address.length < 15) return bad('กรุณากรอกที่อยู่จัดส่งให้ครบ');
 
-  // รวมไซส์ซ้ำเป็นบรรทัดเดียว กันคนกดเพิ่มแถวซ้ำ
+  // รวมรหัสซ้ำเป็นบรรทัดเดียว กันคนกดเพิ่มแถวซ้ำ · รหัสเสื้อและรหัสกระเป๋าใช้ช่อง size เดิม ไม่เปลี่ยน schema
   const merged = new Map();
   for (const raw of Array.isArray(body.items) ? body.items : []) {
     const size = clean(raw && raw.size, 10).toUpperCase();
     const qty = Number.parseInt(raw && raw.qty, 10);
-    if (!SIZES.includes(size)) continue;
+    if (!ITEM_CODES.includes(size)) continue;
     if (!Number.isFinite(qty) || qty < 1 || qty > MAX_QTY_PER_LINE) continue;
     merged.set(size, Math.min(MAX_QTY_PER_LINE, (merged.get(size) || 0) + qty));
   }
   const items = [...merged].map(([size, qty]) => ({ size, qty }));
   const qty = items.reduce((sum, item) => sum + item.qty, 0);
-  if (!qty) return bad('กรุณาเลือกไซส์และจำนวนอย่างน้อย 1 ตัว');
+  if (!qty) return bad('กรุณาเลือกสินค้าอย่างน้อย 1 ชิ้น');
   if (qty > MAX_QTY_PER_ORDER) {
-    return bad(`สั่งครั้งละไม่เกิน ${MAX_QTY_PER_ORDER} ตัว ถ้าต้องการมากกว่านี้ทักทีมงานทาง LINE ได้เลย`);
+    return bad(`สั่งครั้งละไม่เกิน ${MAX_QTY_PER_ORDER} ชิ้น ถ้าต้องการมากกว่านี้ทักทีมงานทาง LINE ได้เลย`);
   }
 
-  // ราคาคิดที่เซิร์ฟเวอร์เสมอ · ยอดที่ส่งมาจากหน้าเว็บใช้แค่โชว์
-  const subtotal = qty * PRICE;
+  // ราคาคิดที่เซิร์ฟเวอร์เสมอ · ยอดที่ส่งมาจากหน้าเว็บใช้แค่โชว์ · เสื้อ 350 กระเป๋า 250
+  const subtotal = items.reduce((sum, item) => sum + item.qty * unitPrice(item.size), 0);
   const shipping = delivery === 'ship' ? SHIPPING : 0;
   const total = subtotal + shipping;
 
@@ -116,6 +117,29 @@ export async function onRequestPost(context) {
     .first();
   if (recent && recent.n >= RATE_MAX_ORDERS) {
     return bad('สั่งถี่เกินไป กรุณารอสักครู่ หรือทักทีมงานทาง LINE', 429);
+  }
+
+  // กันขายกระเป๋าเกินสต็อก · นับยอดจองจากออเดอร์ที่ยังไม่ยกเลิกก่อน insert ทุกครั้ง
+  // ข้อจำกัด: ไม่มีล็อกข้ามคำขอ ถ้ากดพร้อมกันในเสี้ยววินาทีเดียวกันอาจเกินได้นิดหน่อย ยอดน้อยทีมงานตรวจเองได้
+  const bagOrder = countBags(items);
+  if (bagOrder['BAG-YELLOW'] > 0 || bagOrder['BAG-RED'] > 0) {
+    let reserved;
+    try {
+      reserved = await reservedBags(db);
+    } catch {
+      return bad('ตรวจสต็อกกระเป๋าไม่สำเร็จ กรุณาลองใหม่หรือสั่งทาง LINE', 500);
+    }
+    for (const code of BAG_CODES) {
+      const left = BAG_STOCK[code] - (reserved[code] || 0);
+      if (bagOrder[code] > left) {
+        const name = BAG_COLOR_TH[code] || code;
+        const rest = Math.max(0, left);
+        return json(
+          { ok: false, error: `${name}เหลือ ${rest} ใบ`, soldout: { code, left: rest, stock: BAG_STOCK[code] } },
+          409
+        );
+      }
+    }
   }
 
   const now = new Date().toISOString();
@@ -184,7 +208,7 @@ export async function onRequestPost(context) {
 
   // งานหลังบ้านทั้งหมดต้องไม่หน่วงลูกค้า · ปล่อยให้วิ่งต่อหลังตอบกลับไปแล้ว
   const background = (async () => {
-    await logEvent(db, id, 'created', `${qty} ตัว · ${total} บาท`, 'customer');
+    await logEvent(db, id, 'created', `${qty} ชิ้น · ${total} บาท`, 'customer');
     if (slip) {
       await logEvent(db, id, 'slip_attached', slipRef ? 'อ่านเลขอ้างอิงจากสลิปได้' : 'ไม่มีเลขอ้างอิงในสลิป', 'customer');
     }
@@ -260,11 +284,11 @@ async function syncSheet(db, env, order) {
 
 async function notifyTelegram(env, order) {
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
-  const lines = order.items.map((item) => `${item.size} x${item.qty}`).join(' · ');
+  const lines = order.items.map((item) => `${BAG_TH[item.size] || item.size} x${item.qty}`).join(' · ');
   const text = [
     `🧧 พรีออเดอร์ใหม่ ${order.id}`,
     `${order.name} · ${order.phone}`,
-    `${lines} (รวม ${order.qty} ตัว)`,
+    `${lines} (รวม ${order.qty} ชิ้น)`,
     `${order.delivery === 'ship' ? 'จัดส่งไปรษณีย์' : 'รับเองที่บ้าน 78'} · ยอด ${order.total} บาท`,
     order.hasSlip ? 'แนบสลิปแล้ว' : 'ยังไม่แนบสลิป',
   ].join('\n');

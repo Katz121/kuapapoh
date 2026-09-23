@@ -180,7 +180,7 @@ export async function onRequestPost(context) {
         if (event === 'Purchase' && orderId) {
           try {
             const order = await db
-              .prepare('SELECT name, phone FROM preorders WHERE id = ?')
+              .prepare('SELECT name, phone, email FROM preorders WHERE id = ?')
               .bind(orderId)
               .first();
             if (order) {
@@ -188,6 +188,11 @@ export async function onRequestPost(context) {
                 const ph = phoneForMeta(order.phone);
                 const phHash = ph && await sha256Hex(ph);
                 if (phHash) userData.ph = phHash;
+              }
+              // อีเมล = match key ระดับสูงของ Meta · normalize ตัดช่องว่าง + ตัวพิมพ์เล็กก่อนแฮช
+              if (order.email) {
+                const emHash = await sha256Hex(String(order.email).trim().toLowerCase());
+                if (emHash) userData.em = emHash;
               }
               // ชื่อที่มีช่องว่างนำหน้าต้องไม่ทำให้ fn หาย
               const nameParts = String(order.name || '').trim().split(/\s+/).filter(Boolean);

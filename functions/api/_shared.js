@@ -146,6 +146,12 @@ export function clean(value, max) {
   return String(value == null ? '' : value).replace(/\s+/g, ' ').trim().slice(0, max);
 }
 
+// อีเมลไม่บังคับ · รูปแบบผิดให้ทิ้งเป็นค่าว่าง ไม่ตีกลับออเดอร์
+export function cleanEmail(value) {
+  const email = String(value || '').trim().toLowerCase().slice(0, 120);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : '';
+}
+
 export function normalisePhone(value) {
   return String(value || '').replace(/[^\d+]/g, '').slice(0, 20);
 }

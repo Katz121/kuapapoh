@@ -92,6 +92,8 @@ def build_event(row, orders, test_code=None):
     if order:
         if order.get("phone"):
             user_data["ph"] = phone_for_meta(order["phone"])
+        if order.get("email"):
+            user_data["em"] = sha(str(order["email"]).strip().lower())
         name = str(order.get("name") or "").split()
         if name:
             user_data["fn"] = sha(name[0])
@@ -189,7 +191,7 @@ def main():
     orders = {}
     if order_ids:
         listed = ",".join("'" + i.replace("'", "") + "'" for i in order_ids)
-        for order in d1(f"SELECT id, name, phone FROM preorders WHERE id IN ({listed})"):
+        for order in d1(f"SELECT id, name, phone, email FROM preorders WHERE id IN ({listed})"):
             orders[order["id"]] = order
 
     events, skipped, ids = [], 0, []

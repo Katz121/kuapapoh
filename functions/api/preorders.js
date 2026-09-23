@@ -2,7 +2,7 @@
 import {
   SHIPPING, ITEM_CODES, BAG_CODES, BAG_STOCK, BAG_TH, BAG_COLOR_TH, MAX_QTY_PER_LINE, MAX_QTY_PER_ORDER,
   MAX_SLIP_BYTES, MAX_BODY_BYTES, unitPrice, countBags, reservedBags,
-  json, bad, requireDb, makeOrderId, clean, normalisePhone, ipFingerprint, logEvent,
+  json, bad, requireDb, makeOrderId, clean, normalisePhone, cleanEmail, ipFingerprint, logEvent,
 } from './_shared.js';
 import { pushToSheet, sheetsReady } from './_sheets.js';
 import { verifySlip, slipCheckReady } from './_slipcheck.js';
@@ -31,6 +31,7 @@ export async function onRequestPost(context) {
   const name = clean(body.name, 80);
   const phone = normalisePhone(body.phone);
   const contact = clean(body.contact, 80);
+  const email = cleanEmail(body.email);
   const delivery = body.delivery === 'ship' ? 'ship' : 'pickup';
   const address = clean(body.address, 400);
   const note = clean(body.note, 400);
@@ -153,12 +154,12 @@ export async function onRequestPost(context) {
       db.prepare(
         `INSERT INTO preorders
            (id, created_at, name, phone, contact, items, qty, subtotal, shipping, total,
-            delivery, address, note, has_slip, client_ref, ip_hash, slip_ref, slip_hash, status, sheet_error)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new', 'ยังไม่ได้ซิงก์ขึ้นชีต')`
+            delivery, address, note, has_slip, client_ref, ip_hash, slip_ref, slip_hash, email, status, sheet_error)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'new', 'ยังไม่ได้ซิงก์ขึ้นชีต')`
       ).bind(
         candidate, now, name, phone, contact, JSON.stringify(items), qty, subtotal, shipping, total,
         delivery, delivery === 'ship' ? address : '', note, slip ? 1 : 0, clientRef || null, fingerprint,
-        slipRef || null, slipHash || null
+        slipRef || null, slipHash || null, email || null
       ),
     ];
     if (slip) {
@@ -201,7 +202,7 @@ export async function onRequestPost(context) {
   }
 
   const order = {
-    id, created_at: now, name, phone, contact, items, qty, subtotal, shipping, total,
+    id, created_at: now, name, phone, contact, email, items, qty, subtotal, shipping, total,
     delivery, address: delivery === 'ship' ? address : '', note,
     has_slip: !!slip, slip_ref: slipRef, status: 'new',
   };

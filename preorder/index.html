@@ -234,6 +234,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
       <p class="hint">ใช้ติดต่อกลับตอนของถึงเท่านั้น</p>
       <label class="f"><span>ชื่อ-นามสกุล</span><input id="f-name" name="name" autocomplete="name" required></label>
       <label class="f"><span>เบอร์โทร</span><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="08x-xxx-xxxx" required></label>
+      <label class="f"><span>อีเมล (ไม่บังคับ · ไว้ติดต่อเรื่องออเดอร์)</span><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"></label>
       <label class="f"><span>LINE หรือ Facebook (ไม่บังคับ)</span><input id="f-contact" name="contact" autocomplete="off"></label>
 
       <p style="font-weight:600;font-size:.9rem;margin:16px 0 8px">รับสินค้าแบบไหน</p>
@@ -781,6 +782,7 @@ var PREORDER = {
       name: $('f-name').value.trim(),
       phone: $('f-phone').value.trim(),
       contact: $('f-contact').value.trim(),
+      email: $('f-email').value.trim(),
       delivery: deliveryMode(),
       address: $('f-address').value.trim(),
       note: $('f-note').value.trim(),
@@ -837,6 +839,7 @@ var PREORDER = {
       reviewRow('รายการ', cartLines().join(' · ')) +
       reviewRow('ชื่อ', payload.name) +
       reviewRow('เบอร์โทร', payload.phone) +
+      (payload.email ? reviewRow('อีเมล', payload.email) : '') +
       reviewRow('รับสินค้า', payload.delivery === 'ship' ? 'ส่งไปรษณีย์' : 'รับเองที่บ้าน 78') +
       (payload.delivery === 'ship' ? reviewRow('ที่อยู่', payload.address) : '') +
       reviewRow('สลิป', slipDataUrl ? 'แนบแล้ว' : 'ยังไม่แนบ (ส่งทาง LINE ทีหลังได้)') +
@@ -887,6 +890,7 @@ var PREORDER = {
     if (!t.qty) return { message: 'กรุณาเลือกสินค้าอย่างน้อย 1 ชิ้น', field: 'sizes-adult' };
     if (payload.name.length < 2) return { message: 'กรุณากรอกชื่อ-นามสกุล', field: 'f-name' };
     if (payload.phone.replace(/\D/g, '').length < 9) return { message: 'เบอร์โทรไม่ถูกต้อง', field: 'f-phone' };
+    if (payload.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) return { message: 'อีเมลไม่ถูกต้อง (เว้นว่างได้)', field: 'f-email' };
     if (payload.delivery === 'ship' && payload.address.length < 15) {
       return { message: 'กรุณากรอกที่อยู่จัดส่งให้ครบ', field: 'f-address' };
     }
@@ -894,7 +898,7 @@ var PREORDER = {
   }
 
   function markField(id) {
-    ['f-name', 'f-phone', 'f-address'].forEach(function (key) {
+    ['f-name', 'f-phone', 'f-email', 'f-address'].forEach(function (key) {
       var field = $(key);
       field.removeAttribute('aria-invalid');
       field.style.borderColor = '';

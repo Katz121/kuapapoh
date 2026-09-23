@@ -328,7 +328,8 @@ button.danger:hover{background:var(--red);color:#fff}
       return '<tr class="row-' + payCode + '">' +
         '<td><b>' + order.id + '</b><div class="rowline">' + when + '</div></td>' +
         '<td>' + escapeHtml(order.name) + '<div class="rowline">' + escapeHtml(order.phone) +
-          (order.contact ? ' · ' + escapeHtml(order.contact) : '') + '</div></td>' +
+          (order.contact ? ' · ' + escapeHtml(order.contact) : '') +
+          (order.email ? ' · ' + escapeHtml(order.email) : '') + '</div></td>' +
         '<td>' + items + (order.note ? '<div class="rowline">หมายเหตุ: ' + escapeHtml(order.note) + '</div>' : '') + '</td>' +
         '<td class="num">฿' + order.total.toLocaleString('th-TH') + '</td>' +
         '<td>' + (order.delivery === 'ship'
@@ -646,12 +647,12 @@ button.danger:hover{background:var(--red);color:#fff}
 
   /* ส่งให้โรงงาน/ขนส่งได้เลย ไม่ต้องก๊อปทีละแถว */
   function exportCsv() {
-    var header = ['order_id', 'created_at', 'name', 'phone', 'contact', 'items', 'qty', 'total', 'delivery', 'address', 'note', 'slip_ref', 'status'];
+    var header = ['order_id', 'created_at', 'name', 'phone', 'contact', 'email', 'items', 'qty', 'total', 'delivery', 'address', 'note', 'slip_ref', 'status'];
     var lines = [header.join(',')];
     orders.forEach(function (order) {
       var items = order.items.map(function (item) { return item.size + 'x' + item.qty; }).join(' ');
       lines.push([
-        order.id, order.created_at, order.name, order.phone, order.contact || '', items,
+        order.id, order.created_at, order.name, order.phone, order.contact || '', order.email || '', items,
         order.qty, order.total, order.delivery === 'ship' ? 'ส่งไปรษณีย์' : 'รับเอง',
         order.address || '', order.note || '', order.slip_ref || '', STATUS_TH[order.status] || order.status
       ].map(csvCell).join(','));

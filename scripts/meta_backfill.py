@@ -102,8 +102,8 @@ def build_event(row, orders, test_code=None):
     # ไอพีเราเก็บแบบแฮช ส่งเป็น client_ip_address ไม่ได้ · user agent อย่างเดียวก็ไม่พอให้จับคู่
     if not (user_data.get("fbc") or user_data.get("ph")):
         return None
-    if row.get("ua"):
-        user_data["client_user_agent"] = row["ua"]
+    # ไม่ส่ง client_user_agent · คอลัมน์ ua ใน D1 เก็บแค่ชื่อเบราว์เซอร์ ("Chrome") ไม่ใช่ UA เต็ม
+    # และ Meta ต้องการ UA คู่กับ IP เสมอ ส่ง UA เดี่ยวๆ = คำเตือน "ขาดที่อยู่ IP" ใน Events Manager
 
     event = {
         "event_name": row["event"],

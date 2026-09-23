@@ -41,8 +41,29 @@
         "name": "เสื้อเทศกาลกินผัก กั่วป่าโพ้",
         "image": "https://kuapapoh.com/images/je-shirt.webp",
         "description": "เสื้อยืดสีขาว อกซ้ายเป็นตราผ้ากันเปื้อนกั่วป่าโพ้สีแดง ด้านหลังรวมสัญลักษณ์เทศกาลกินผักของตะกั่วป่า ศาลเจ้า มังกร เสือ และเตาไฟ",
-        "brand": { "@type": "Brand", "name": "กั่วป่าโพ้" },
-        "offers": { "@type": "Offer", "price": 350, "priceCurrency": "THB", "url": "https://kuapapoh.com/preorder/" }
+        "brand": {
+          "@type": "Brand",
+          "name": "กั่วป่าโพ้"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": 350,
+          "priceCurrency": "THB",
+          "url": "https://kuapapoh.com/preorder/",
+          "availability": "https://schema.org/PreOrder",
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "50",
+              "currency": "THB"
+            },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "TH"
+            }
+          }
+        }
       }
     },
     {
@@ -53,8 +74,29 @@
         "name": "กระเป๋าผ้าเทศกาลกินผัก กั่วป่าโพ้",
         "image": "https://kuapapoh.com/images/je-bag-red-friends.webp",
         "description": "กระเป๋าผ้าแคนวาส 13 x 15 นิ้ว ลายเดียวกับเสื้อเทศกาลกินผัก รวมศาลเจ้า มังกร เสือ เตาไฟ ประทัด และตัวหนังสือ KUAPAPOH ลองหาน้องจำปูนที่แอบอยู่ในลายด้วย ทำจำนวนจำกัด ช้าหมดอด",
-        "brand": { "@type": "Brand", "name": "กั่วป่าโพ้" },
-        "offers": { "@type": "Offer", "price": 250, "priceCurrency": "THB", "url": "https://kuapapoh.com/preorder/#bag" }
+        "brand": {
+          "@type": "Brand",
+          "name": "กั่วป่าโพ้"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": 250,
+          "priceCurrency": "THB",
+          "url": "https://kuapapoh.com/preorder/#bag",
+          "availability": "https://schema.org/PreOrder",
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "50",
+              "currency": "THB"
+            },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "TH"
+            }
+          }
+        }
       }
     },
     {
@@ -65,8 +107,17 @@
         "name": "เสื้อยืดกั่วป่าโพ้ KUAPAPOH",
         "image": "https://kuapapoh.com/images/shirt-poh.webp",
         "description": "เสื้อยืดสีดำพรีเมียม สกรีนตรากั่วป่าโพ้ที่อกซ้าย ด้านหลังจัดเต็มกราฟิกลายรวมอัตลักษณ์ตะกั่วป่า 6 อ.",
-        "brand": { "@type": "Brand", "name": "กั่วป่าโพ้" },
-        "offers": { "@type": "Offer", "price": 350, "priceCurrency": "THB", "url": "https://kuapapoh.com/souvenir-takuapa/" }
+        "brand": {
+          "@type": "Brand",
+          "name": "กั่วป่าโพ้"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": 350,
+          "priceCurrency": "THB",
+          "url": "https://kuapapoh.com/souvenir-takuapa/",
+          "availability": "https://schema.org/InStock"
+        }
       }
     },
     {
@@ -77,8 +128,17 @@
         "name": "Poh Sparkling Tea ชาซ่ากั่วป่าโพ้",
         "image": "https://kuapapoh.com/images/poh-bottle.webp",
         "description": "ชาสปาร์กลิงจากวัตถุดิบพังงา ดาหลา ส้มแขก ลูกจันทน์ มิ้นท์ และกระเจี๊ยบ ออกแบบรสชาติโดยกลุ่มกั่วป่าโพ้ ดื่มหนึ่งขวด เมืองเก่าได้ผลิบาน",
-        "brand": { "@type": "Brand", "name": "กั่วป่าโพ้" },
-        "offers": { "@type": "Offer", "price": 159, "priceCurrency": "THB", "url": "https://kuapapoh.com/souvenir-takuapa/" }
+        "brand": {
+          "@type": "Brand",
+          "name": "กั่วป่าโพ้"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": 159,
+          "priceCurrency": "THB",
+          "url": "https://kuapapoh.com/souvenir-takuapa/",
+          "availability": "https://schema.org/InStock"
+        }
       }
     }
   ]
@@ -89,11 +149,46 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "ร้านกั่วป่าโพ้มีของฝากอะไรขายบ้าง", "acceptedAnswer": { "@type": "Answer", "text": "ตอนนี้มี 4 อย่าง คือเสื้อเทศกาลกินผัก กระเป๋าผ้าเทศกาลกินผัก เสื้อยืดกั่วป่าโพ้ และ Poh Sparkling Tea ชาสปาร์กลิงจากวัตถุดิบพังงา" } },
-    { "@type": "Question", "name": "เสื้อเทศกาลกินผักราคาเท่าไร ผ้าอะไร", "acceptedAnswer": { "@type": "Answer", "text": "ราคา 350 บาท ผ้าฝ้าย 100 เปอร์เซ็นต์ เกรด 32 คอมบ์ มีไซส์ผู้ใหญ่ตั้งแต่ S ถึง 2XL และไซส์เด็กตั้งแต่ S ถึง L สั่งพรีออเดอร์ได้ที่หน้า preorder ของเว็บเรา" } },
-    { "@type": "Question", "name": "กระเป๋าผ้าเทศกาลกินผักราคาเท่าไร", "acceptedAnswer": { "@type": "Answer", "text": "ราคา 250 บาท ผ้าแคนวาส ขนาด 13 x 15 นิ้ว ทำจำนวนจำกัด ช้าหมดอด พรีเซนเตอร์คือน้องจำปูนที่แอบอยู่ในลายกระเป๋า สั่งได้ที่หน้าพรีออเดอร์ของเว็บเรา" } },
-    { "@type": "Question", "name": "รับของฝากได้ที่ไหน สั่งออนไลน์ได้ไหม", "acceptedAnswer": { "@type": "Answer", "text": "รับด้วยตัวเองได้ที่บ้าน 78 Studio Takuapa ถนนศรีตะกั่วป่า ย่านเมืองเก่าตะกั่วป่า หรือสั่งทาง LINE @kuapapoh มีบริการจัดส่งทั่วประเทศ" } },
-    { "@type": "Question", "name": "รายได้จากร้านเอาไปทำอะไร", "acceptedAnswer": { "@type": "Answer", "text": "รายได้ทั้งหมดนำมาสมทบเป็นกองทุนของกลุ่มกั่วป่าโพ้ เพื่อใช้ในการฟื้นฟู ขับเคลื่อนกิจกรรม และดำเนินงานพัฒนาเมืองสร้างสรรค์อย่างต่อเนื่อง" } }
+    {
+      "@type": "Question",
+      "name": "ร้านกั่วป่าโพ้มีของฝากอะไรขายบ้าง",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ตอนนี้มี 4 อย่าง คือเสื้อเทศกาลกินผัก กระเป๋าผ้าเทศกาลกินผัก เสื้อยืดกั่วป่าโพ้ และ Poh Sparkling Tea ชาสปาร์กลิงจากวัตถุดิบพังงา"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "เสื้อเทศกาลกินผักราคาเท่าไร ผ้าอะไร",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ราคา 350 บาท ผ้าฝ้าย 100 เปอร์เซ็นต์ เกรด 32 คอมบ์ มีไซส์ผู้ใหญ่ตั้งแต่ S ถึง 2XL และไซส์เด็กตั้งแต่ S ถึง L สั่งพรีออเดอร์ได้ที่หน้า preorder ของเว็บเรา"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "กระเป๋าผ้าเทศกาลกินผักราคาเท่าไร",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ราคา 250 บาท ผ้าแคนวาส ขนาด 13 x 15 นิ้ว ทำจำนวนจำกัด ช้าหมดอด พรีเซนเตอร์คือน้องจำปูนที่แอบอยู่ในลายกระเป๋า สั่งได้ที่หน้าพรีออเดอร์ของเว็บเรา"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "รับของฝากได้ที่ไหน สั่งออนไลน์ได้ไหม",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "รับด้วยตัวเองได้ที่บ้าน 78 Studio Takuapa ถนนศรีตะกั่วป่า ย่านเมืองเก่าตะกั่วป่า หรือสั่งทาง LINE @kuapapoh มีบริการจัดส่งทั่วประเทศ"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "รายได้จากร้านเอาไปทำอะไร",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "รายได้ทั้งหมดนำมาสมทบเป็นกองทุนของกลุ่มกั่วป่าโพ้ เพื่อใช้ในการฟื้นฟู ขับเคลื่อนกิจกรรม และดำเนินงานพัฒนาเมืองสร้างสรรค์อย่างต่อเนื่อง"
+      }
+    }
   ]
 }
 </script>
@@ -102,8 +197,18 @@
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "หน้าแรก", "item": "https://kuapapoh.com/" },
-    { "@type": "ListItem", "position": 2, "name": "ของฝากตะกั่วป่า", "item": "https://kuapapoh.com/souvenir-takuapa/" }
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "หน้าแรก",
+      "item": "https://kuapapoh.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "ของฝากตะกั่วป่า",
+      "item": "https://kuapapoh.com/souvenir-takuapa/"
+    }
   ]
 }
 </script>

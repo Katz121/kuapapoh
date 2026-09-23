@@ -988,6 +988,7 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
           <p>แวะชมและรับสินค้าจริงได้ที่บ้าน 78 Studio Takuapa ถนนศรีตะกั่วป่า (<a href="https://www.google.com/maps/search/?api=1&query=8.827130055794738,98.36498044583587" target="_blank" rel="noopener" style="text-decoration:underline;color:var(--ink);font-weight:600">📍 เปิดแผนที่นำทาง</a>)</p>
         </div>
       </div>
+      <p class="shop-policy" style="font-size:.88rem;margin:.9rem 0 0">ค่าส่งไปรษณีย์ 50 บาทต่อออเดอร์ทั่วประเทศ · สินค้าทุกชิ้นไม่รับเปลี่ยนหรือคืน กรุณาเช็คไซส์และสีก่อนสั่ง</p>
       <a class="btn on-paper" href="https://line.me/R/ti/p/%40kuapapoh" target="_blank" rel="noopener">สั่งซื้อของที่ระลึกผ่าน LINE @kuapapoh</a>
     </div>
   </div>
@@ -1590,6 +1591,23 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
         "url": "https://kuapapoh.com/",
         "seller": {
           "@id": "https://kuapapoh.com/#org"
+        },
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "50",
+            "currency": "THB"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "TH"
+          }
+        },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "TH",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
         }
       }
     },
@@ -1609,6 +1627,23 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
         "url": "https://kuapapoh.com/",
         "seller": {
           "@id": "https://kuapapoh.com/#org"
+        },
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "50",
+            "currency": "THB"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "TH"
+          }
+        },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "TH",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
         }
       }
     },
@@ -1640,6 +1675,11 @@ footer .about-en b{display:block;font-size:.9rem;margin-bottom:.2rem}
             "@type": "DefinedRegion",
             "addressCountry": "TH"
           }
+        },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "TH",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
         }
       }
     },

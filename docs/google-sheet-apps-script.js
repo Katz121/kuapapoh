@@ -14,6 +14,17 @@
  *      SHEETS_WEBHOOK_URL = URL ที่ได้
  *      SHEETS_SECRET      = รหัสลับเดียวกับ SECRET ด้านล่าง
  * ─────────────────────────────────────────────────────────────
+ * วิธีอัปเดตโค้ดเวอร์ชันใหม่ (URL เดิมไม่เปลี่ยน ไม่ต้องแก้ Cloudflare)
+ * 1. เปิดชีต → เมนู ส่วนขยาย (Extensions) → Apps Script
+ * 2. ลบโค้ดเดิมทั้งหมด วางไฟล์ใหม่นี้ลงไปแทน
+ * 3. ใส่ SECRET ตัวจริงกลับไป (ดูรหัสเดิมในเวอร์ชันก่อน ห้ามใช้ค่าตัวอย่าง)
+ * 4. กดบันทึก (Save)
+ * 5. กด Deploy → Manage deployments → กดรูปดินสอแก้ไข
+ *    → ตรง Version เลือก New version → กด Deploy
+ *    (URL เดิมไม่เปลี่ยน ไม่ต้องแก้ Cloudflare)
+ * 6. กลับมาที่ชีต กดเมนู "พรีออเดอร์ → เพิ่มช่องกระเป๋า (ข้อมูลเดิมอยู่ครบ)"
+ *    หนึ่งครั้ง เพื่อเพิ่มช่องกระเป๋าในแท็บกรอกมือโดยข้อมูลเดิมอยู่ครบ
+ * ─────────────────────────────────────────────────────────────
  */
 
 var SECRET = 'เปลี่ยนรหัสนี้ก่อนใช้งาน';
@@ -21,7 +32,7 @@ var SHEET_NAME = '';   // เว้นว่าง = ใช้แท็บแร
 
 var HEADERS = [
   'เลขออเดอร์', 'วันเวลาที่สั่ง', 'ชื่อ-นามสกุล', 'เบอร์โทร', 'LINE/Facebook',
-  'รายการไซส์', 'จำนวน (ตัว)', 'ค่าเสื้อ', 'ค่าส่ง', 'ยอดรวม',
+  'รายการสินค้า', 'จำนวน (ชิ้น)', 'ค่าสินค้า', 'ค่าส่ง', 'ยอดรวม',
   'วิธีรับของ', 'ที่อยู่จัดส่ง', 'หมายเหตุลูกค้า', 'สลิป', 'เลขอ้างอิงสลิป',
   'สถานะ', 'อัปเดตล่าสุด', 'หมายเหตุทีมงาน', 'การโอน', 'ยอดที่โอนจริง'
 ];
@@ -182,17 +193,29 @@ function reply(data) {
 var MANUAL_SHEET = 'กรอกมือ';
 var SUMMARY_SHEET = 'สรุปไซส์';
 var SIZE_COLS = ['S', 'M', 'L', 'XL', '2XL', 'เด็ก S', 'เด็ก M', 'เด็ก L'];
+var BAG_COLS = ['กระเป๋าเหลือง', 'กระเป๋าแดง'];
 var PRICE = 350;
+var BAG_PRICE = 250;
 var SHIPPING = 50;
 
 function setupManualTab() {
   var ss = SpreadsheetApp.getActive();
+  var ui = SpreadsheetApp.getUi();
   var sh = ss.getSheetByName(MANUAL_SHEET) || ss.insertSheet(MANUAL_SHEET);
+  // ฟังก์ชันนี้ล้างข้อมูลทั้งหมดในแท็บกรอกมือ · ถ้ามีข้อมูลอยู่แล้วให้ใช้เมนู
+  // "เพิ่มช่องกระเป๋า (ข้อมูลเดิมอยู่ครบ)" แทน
+  if (sh.getLastRow() > 1 || sh.getLastColumn() > 1) {
+    var confirm = ui.alert('ล้างข้อมูลทั้งหมดในแท็บกรอกมือ?',
+      'การสร้างใหม่จะลบข้อมูลที่กรอกไว้ทั้งหมด ถ้ามีข้อมูลอยู่แล้วให้กด No แล้วใช้เมนู "เพิ่มช่องกระเป๋า (ข้อมูลเดิมอยู่ครบ)" แทน',
+      ui.ButtonSet.YES_NO);
+    if (confirm !== ui.Button.YES) return;
+  }
   sh.clear();
 
   var headers = ['วันที่', 'ชื่อ-นามสกุล', 'เบอร์โทร', 'ช่องทาง']
     .concat(SIZE_COLS)
-    .concat(['รวม (ตัว)', 'ค่าส่ง', 'ยอดรวม', 'รับของ', 'ที่อยู่จัดส่ง', 'สถานะ', 'หมายเหตุ']);
+    .concat(BAG_COLS)
+    .concat(['รวมเสื้อ (ตัว)', 'รวมกระเป๋า (ใบ)', 'ค่าส่ง', 'ยอดรวม', 'รับของ', 'ที่อยู่จัดส่ง', 'สถานะ', 'หมายเหตุ']);
   sh.getRange(1, 1, 1, headers.length).setValues([headers])
     .setFontWeight('bold').setBackground('#FFE81C').setVerticalAlignment('middle');
   sh.setFrozenRows(1);
@@ -200,25 +223,19 @@ function setupManualTab() {
 
   var firstSize = 5;                       // คอลัมน์ E
   var lastSize = firstSize + SIZE_COLS.length - 1;
-  var colTotalQty = lastSize + 1;
-  var colShipping = colTotalQty + 1;
+  var firstBag = lastSize + 1;
+  var lastBag = firstBag + BAG_COLS.length - 1;
+  var colShirtQty = lastBag + 1;
+  var colBagQty = colShirtQty + 1;
+  var colShipping = colBagQty + 1;
   var colTotal = colShipping + 1;
   var colPickup = colTotal + 1;
   var colStatus = colTotal + 3;
 
-  // สูตรรวมจำนวนและยอดเงินให้เอง กรอกแค่จำนวนต่อไซส์ก็พอ
+  // สูตรรวมจำนวนและยอดเงินให้เอง กรอกแค่จำนวนต่อไซส์/ต่อสีก็พอ
+  // ยอดรวม = เสื้อx350 + กระเป๋าx250 + ค่าส่ง · ว่างถ้ายังไม่ได้กรอกจำนวนเลย
   var rows = 300;
-  var qtyFormulas = [];
-  var totalFormulas = [];
-  for (var i = 0; i < rows; i++) {
-    var r = i + 2;
-    var range = columnLetter(firstSize) + r + ':' + columnLetter(lastSize) + r;
-    qtyFormulas.push(['=IF(COUNTA(' + range + ')=0,"",SUM(' + range + '))']);
-    totalFormulas.push(['=IF(' + columnLetter(colTotalQty) + r + '="","",' +
-      columnLetter(colTotalQty) + r + '*' + PRICE + '+N(' + columnLetter(colShipping) + r + '))']);
-  }
-  sh.getRange(2, colTotalQty, rows, 1).setFormulas(qtyFormulas);
-  sh.getRange(2, colTotal, rows, 1).setFormulas(totalFormulas);
+  setManualFormulas(sh, firstSize, lastSize, firstBag, lastBag, colShirtQty, colBagQty, colShipping, colTotal, rows);
 
   // ค่าส่ง: เลือกรับของแล้วเติมเอง 0 หรือ 50
   sh.getRange(2, colShipping, rows, 1).setNote('ใส่ ' + SHIPPING + ' ถ้าส่งไปรษณีย์ · เว้นว่างหรือ 0 ถ้ารับเอง');
@@ -231,10 +248,107 @@ function setupManualTab() {
   sh.getRange(2, 3, rows, 1).setNumberFormat('@');   // เบอร์โทรเป็นข้อความ 0 ตัวหน้าจะได้ไม่หาย
   sh.setColumnWidth(1, 95);
   sh.setColumnWidth(2, 170);
-  for (var c = firstSize; c <= lastSize; c++) sh.setColumnWidth(c, 62);
+  for (var c = firstSize; c <= lastBag; c++) sh.setColumnWidth(c, 62);
 
   buildSummary();
   SpreadsheetApp.getActive().toast('สร้างแท็บ "' + MANUAL_SHEET + '" และ "' + SUMMARY_SHEET + '" แล้ว');
+}
+
+/* เขียนสูตรช่องรวมเสื้อ รวมกระเป๋า และยอดรวม · ใช้ร่วมกันทั้งตอนสร้างใหม่และตอนอัปเกรด */
+function setManualFormulas(sh, firstSize, lastSize, firstBag, lastBag, colShirtQty, colBagQty, colShipping, colTotal, rows) {
+  var shirtQtyFormulas = [];
+  var bagQtyFormulas = [];
+  var totalFormulas = [];
+  for (var i = 0; i < rows; i++) {
+    var r = i + 2;
+    var shirtRange = columnLetter(firstSize) + r + ':' + columnLetter(lastSize) + r;
+    var bagRange = columnLetter(firstBag) + r + ':' + columnLetter(lastBag) + r;
+    var sCell = columnLetter(colShirtQty) + r;
+    var bCell = columnLetter(colBagQty) + r;
+    shirtQtyFormulas.push(['=IF(COUNTA(' + shirtRange + ')=0,"",SUM(' + shirtRange + '))']);
+    bagQtyFormulas.push(['=IF(COUNTA(' + bagRange + ')=0,"",SUM(' + bagRange + '))']);
+    totalFormulas.push(['=IF(AND(' + sCell + '="",' + bCell + '=""),"",N(' + sCell + ')*' + PRICE + '+N(' + bCell + ')*' + BAG_PRICE + '+N(' + columnLetter(colShipping) + r + '))']);
+  }
+  sh.getRange(2, colShirtQty, rows, 1).setFormulas(shirtQtyFormulas);
+  sh.getRange(2, colBagQty, rows, 1).setFormulas(bagQtyFormulas);
+  sh.getRange(2, colTotal, rows, 1).setFormulas(totalFormulas);
+}
+
+/* เพิ่มช่องกระเป๋าในแท็บกรอกมือโดยข้อมูลเดิมอยู่ครบ · กดครั้งเดียวพอ
+   หาคอลัมน์จากชื่อหัวตาราง ไม่เดาตำแหน่ง · ใช้ insertColumnsAfter แทรกเท่านั้น */
+function addBagColumns() {
+  var ss = SpreadsheetApp.getActive();
+  var ui = SpreadsheetApp.getUi();
+  var sh = ss.getSheetByName(MANUAL_SHEET);
+  if (!sh) {
+    ui.alert('ยังไม่มีแท็บกรอกมือ · ให้กดเมนูสร้างแท็บกรอกมือใหม่ก่อน');
+    return;
+  }
+  var lastCol = sh.getLastColumn();
+  var heads = sh.getRange(1, 1, 1, lastCol).getValues()[0].map(function (h) {
+    return String(h).trim();
+  });
+  if (heads.indexOf(BAG_COLS[0]) >= 0 || heads.indexOf(BAG_COLS[1]) >= 0) {
+    ui.alert('ทำไปแล้ว · แท็บกรอกมือมีช่องกระเป๋าอยู่แล้ว ไม่ต้องทำซ้ำ');
+    return;
+  }
+  var kidL = heads.indexOf('เด็ก L') + 1;
+  var oldTotalCheck = heads.indexOf('รวม (ตัว)') + 1;
+  if (kidL < 1) {
+    ui.alert('หาคอลัมน์ "เด็ก L" ไม่เจอ · เช็กชื่อหัวตารางแถวแรกก่อน');
+    return;
+  }
+  if (oldTotalCheck < 1) {
+    ui.alert('หาคอลัมน์ "รวม (ตัว)" ไม่เจอ · เช็กชื่อหัวตารางแถวแรกก่อน');
+    return;
+  }
+  // 1. แทรกช่องกระเป๋า 2 คอลัมน์ต่อจากเด็ก L · ไม่ลบ ไม่เขียนทับค่าที่กรอกไว้
+  sh.insertColumnsAfter(kidL, BAG_COLS.length);
+  sh.getRange(1, kidL + 1, 1, BAG_COLS.length).setValues([BAG_COLS])
+    .setFontWeight('bold').setBackground('#FFE81C').setVerticalAlignment('middle');
+  for (var b = 1; b <= BAG_COLS.length; b++) {
+    sh.setColumnWidth(kidL + b, 62);
+    sh.getRange(2, kidL + b, Math.max(sh.getLastRow() - 1, 1), 1).setDataValidation(null);
+  }
+
+  // 2. อ่านหัวตารางใหม่ · เปลี่ยนหัวรวมเดิมเป็นรวมเสื้อ แล้วแทรกช่องรวมกระเป๋า
+  lastCol = sh.getLastColumn();
+  heads = sh.getRange(1, 1, 1, lastCol).getValues()[0].map(function (h) {
+    return String(h).trim();
+  });
+  var oldTotal = heads.indexOf('รวม (ตัว)') + 1;
+  if (oldTotal < 1) {
+    ui.alert('หาคอลัมน์ "รวม (ตัว)" ไม่เจอ · เช็กชื่อหัวตารางแถวแรกก่อน');
+    return;
+  }
+  sh.getRange(1, oldTotal).setValue('รวมเสื้อ (ตัว)');
+  sh.insertColumnsAfter(oldTotal, 1);
+  sh.getRange(1, oldTotal + 1).setValue('รวมกระเป๋า (ใบ)')
+    .setFontWeight('bold').setBackground('#FFE81C').setVerticalAlignment('middle');
+
+  // 3. หาตำแหน่งจริงจากชื่อหัว แล้วเขียนสูตรใหม่ทุกแถว (แถว 2 ถึงแถวสุดท้ายหรือ 301)
+  lastCol = sh.getLastColumn();
+  heads = sh.getRange(1, 1, 1, lastCol).getValues()[0].map(function (h) {
+    return String(h).trim();
+  });
+  var colOf = function (name) { return heads.indexOf(name) + 1; };
+  var firstSize = colOf('S');
+  var lastSize = colOf('เด็ก L');
+  var firstBag = colOf(BAG_COLS[0]);
+  var lastBag = colOf(BAG_COLS[1]);
+  var colShirtQty = colOf('รวมเสื้อ (ตัว)');
+  var colBagQty = colOf('รวมกระเป๋า (ใบ)');
+  var colShipping = colOf('ค่าส่ง');
+  var colTotal = colOf('ยอดรวม');
+  if (!firstSize || !lastSize || !firstBag || !lastBag || !colShirtQty || !colBagQty || !colShipping || !colTotal) {
+    ui.alert('หัวตารางไม่ครบ · เช็กว่ามี S ถึง เด็ก L, กระเป๋า 2 ช่อง, รวมเสื้อ, รวมกระเป๋า, ค่าส่ง, ยอดรวม');
+    return;
+  }
+  var endRow = Math.max(sh.getLastRow(), 301);
+  setManualFormulas(sh, firstSize, lastSize, firstBag, lastBag, colShirtQty, colBagQty, colShipping, colTotal, endRow - 1);
+
+  buildSummary();
+  ss.toast('เพิ่มช่องกระเป๋าแล้ว · ข้อมูลเดิมอยู่ครบ');
 }
 
 /* รวมยอดไซส์จากทั้งออเดอร์เว็บและออเดอร์ที่กรอกมือ ไว้ใช้สั่งโรงงานรอบเดียว
@@ -247,7 +361,7 @@ function buildSummary() {
   var fromWeb = countFromWeb(ss);
   var fromManual = countFromManual(ss);
 
-  var table = [['ไซส์', 'จากเว็บ', 'กรอกมือ', 'รวม']];
+  var shirtTable = [['ไซส์', 'จากเว็บ', 'กรอกมือ', 'รวม']];
   var sumWeb = 0;
   var sumManual = 0;
   for (var i = 0; i < SIZE_COLS.length; i++) {
@@ -256,18 +370,37 @@ function buildSummary() {
     var manual = fromManual[size] || 0;
     sumWeb += web;
     sumManual += manual;
-    table.push([size, web, manual, web + manual]);
+    shirtTable.push([size, web, manual, web + manual]);
   }
-  table.push(['รวมทั้งหมด', sumWeb, sumManual, sumWeb + sumManual]);
+  shirtTable.push(['รวมทั้งหมด', sumWeb, sumManual, sumWeb + sumManual]);
 
-  sh.getRange(1, 1, table.length, 4).setValues(table);
+  sh.getRange(1, 1, shirtTable.length, 4).setValues(shirtTable);
   sh.getRange(1, 1, 1, 4).setFontWeight('bold').setBackground('#FFE81C');
-  sh.getRange(table.length, 1, 1, 4).setFontWeight('bold').setBackground('#E4F7EC');
+  sh.getRange(shirtTable.length, 1, 1, 4).setFontWeight('bold').setBackground('#E4F7EC');
+
+  var bagStart = shirtTable.length + 2;
+  var bagTable = [['กระเป๋า', 'จากเว็บ', 'กรอกมือ', 'รวม']];
+  var bagWeb = 0;
+  var bagManual = 0;
+  for (var k = 0; k < BAG_COLS.length; k++) {
+    var bag = BAG_COLS[k];
+    var bWeb = fromWeb[bag] || 0;
+    var bManual = fromManual[bag] || 0;
+    bagWeb += bWeb;
+    bagManual += bManual;
+    bagTable.push([bag, bWeb, bManual, bWeb + bManual]);
+  }
+  bagTable.push(['รวมทั้งหมด', bagWeb, bagManual, bagWeb + bagManual]);
+
+  sh.getRange(bagStart, 1, bagTable.length, 4).setValues(bagTable);
+  sh.getRange(bagStart, 1, 1, 4).setFontWeight('bold').setBackground('#FFE81C');
+  sh.getRange(bagStart + bagTable.length - 1, 1, 1, 4).setFontWeight('bold').setBackground('#E4F7EC');
+
   sh.setFrozenRows(1);
   sh.setColumnWidths(1, 4, 130);
-  sh.getRange(table.length + 2, 1)
+  sh.getRange(bagStart + bagTable.length + 1, 1)
     .setValue('อัปเดตเมื่อ ' + Utilities.formatDate(new Date(), 'Asia/Bangkok', 'dd/MM/yyyy HH:mm') +
-              ' · กดเมนู "พรีออเดอร์ → อัปเดตสรุปไซส์" เพื่อนับใหม่')
+              ' · นับทั้งเสื้อและกระเป๋าแล้ว · กดเมนู "พรีออเดอร์ → อัปเดตสรุปไซส์" เพื่อนับใหม่')
     .setFontColor('#4d5474');
 }
 
@@ -296,21 +429,32 @@ function countFromWeb(ss) {
   return counts;
 }
 
-/* แท็บกรอกมือ · ช่องไซส์เป็นตัวเลขอยู่แล้ว บวกตรงๆ ได้เลย */
+/* แท็บกรอกมือ · ช่องไซส์/กระเป๋าเป็นตัวเลขอยู่แล้ว บวกตรงๆ ได้เลย
+   อ่านตำแหน่งคอลัมน์จากชื่อหัวตาราง ใช้ได้ทั้งเลย์เอาต์เก่าและใหม่ */
 function countFromManual(ss) {
   var sheet = ss.getSheetByName(MANUAL_SHEET);
   var counts = {};
   if (!sheet) return counts;
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return counts;
-  var firstSize = 5;
-  var values = sheet.getRange(2, firstSize, lastRow - 1, SIZE_COLS.length).getValues();
-  var statuses = sheet.getRange(2, firstSize + SIZE_COLS.length + 5, lastRow - 1, 1).getValues();
-  for (var i = 0; i < values.length; i++) {
-    if (String(statuses[i][0] || '') === 'ยกเลิก') continue;
-    for (var j = 0; j < SIZE_COLS.length; j++) {
-      var qty = Number(values[i][j]) || 0;
-      if (qty) counts[SIZE_COLS[j]] = (counts[SIZE_COLS[j]] || 0) + qty;
+  var lastCol = sheet.getLastColumn();
+  var heads = sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(function (h) {
+    return String(h).trim();
+  });
+  var colOf = function (name) { return heads.indexOf(name); };
+  var names = SIZE_COLS.concat(BAG_COLS);
+  var qtyIndex = [];
+  for (var n = 0; n < names.length; n++) {
+    var c = colOf(names[n]);
+    if (c >= 0) qtyIndex.push({ name: names[n], col: c });
+  }
+  var statusCol = colOf('สถานะ');
+  var rows = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
+  for (var i = 0; i < rows.length; i++) {
+    if (statusCol >= 0 && String(rows[i][statusCol] || '') === 'ยกเลิก') continue;
+    for (var j = 0; j < qtyIndex.length; j++) {
+      var qty = Number(rows[i][qtyIndex[j].col]) || 0;
+      if (qty) counts[qtyIndex[j].name] = (counts[qtyIndex[j].name] || 0) + qty;
     }
   }
   return counts;
@@ -325,7 +469,8 @@ function onOpen() {
     .addSeparator()
     .addItem('ตั้งรหัสผู้ดูแล', 'setAdminToken')
     .addItem('ให้ดึงข้อมูลเองทุก 15 นาที', 'enableAutoPull')
-    .addItem('สร้าง/ล้างแท็บกรอกมือใหม่', 'setupManualTab')
+    .addItem('เพิ่มช่องกระเป๋า (ข้อมูลเดิมอยู่ครบ)', 'addBagColumns')
+    .addItem('สร้างแท็บกรอกมือใหม่ (ล้างข้อมูลทั้งหมด)', 'setupManualTab')
     .addToUi();
 }
 
@@ -451,7 +596,8 @@ var STATUS_TH_MAP = {
 };
 var SIZE_TH = {
   'S': 'S', 'M': 'M', 'L': 'L', 'XL': 'XL', '2XL': '2XL',
-  'KID-S': 'เด็ก S', 'KID-M': 'เด็ก M', 'KID-L': 'เด็ก L'
+  'KID-S': 'เด็ก S', 'KID-M': 'เด็ก M', 'KID-L': 'เด็ก L',
+  'BAG-YELLOW': 'กระเป๋าเหลือง', 'BAG-RED': 'กระเป๋าแดง'
 };
 
 function thaiTime(iso) {

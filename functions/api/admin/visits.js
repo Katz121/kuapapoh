@@ -22,6 +22,7 @@ const UTM_BY_KEYWORD = [
 ];
 
 const META_ACCOUNT = 'act_1798326928176568';
+const META_PIXEL = '1621493986432899';
 
 export async function onRequestGet({ request, env }) {
   if (!adminOk(request, env)) return bad('รหัสผ่านไม่ถูกต้อง', 401);
@@ -272,6 +273,12 @@ export async function onRequestGet({ request, env }) {
   const adSpendRaw = await spendPromise;
   const adSpend = buildAdSpend(adSpendRaw, ordersByUtm);
 
+  // เทียบกับ Meta (แอด + Pixel) ล้มเฉพาะส่วน ไม่กระทบของเดิม
+  let metaCompare = null;
+  try {
+    metaCompare = await fetchMetaCompare(env, db, from, to, todayStr);
+  } catch { metaCompare = null; }
+
   const newRet = countNewReturning(R(idx.firstSeen), from, to);
 
   const kpis = {
@@ -343,6 +350,7 @@ export async function onRequestGet({ request, env }) {
     prevMoney,
     stock,
     adSpend,
+    metaCompare,
     markers,
     byHour: normaliseHours(R(idx.hours)),
     byWeekday: normaliseWeekday(R(idx.weekday)),
@@ -669,7 +677,6 @@ async function fetchAdSpend(env, from, to) {
     const timeRange = JSON.stringify({ since: from, until: to });
     const params = new URLSearchParams({
       level: 'campaign',
-      time_increment: '1',
       time_range: timeRange,
       fields: 'campaign_name,spend,impressions,clicks',
       limit: '500',
@@ -711,19 +718,256 @@ function buildAdSpend(rows, ordersByUtm) {
   for (const r of (ordersByUtm && ordersByUtm.rows) || []) {
     byUtm.set(String(r.utm || ''), Number(r.orders || 0));
   }
-  const campaigns = rows.map((r) => {
+  // แคมเปญหลายตัวใช้ utm เดียวกันได้ (เช่นแคมเปญเสื้อตัวเก่ากับตัวใหม่)
+  // ออเดอร์ผูกได้แค่ระดับ utm จึงคิดต้นทุนต่อออเดอร์จากค่าแอดรวมของทั้งกลุ่ม ไม่งั้นออเดอร์ถูกนับซ้ำทุกแถว
+  const merged = new Map();
+  for (const r of rows) {
+    const key = r.campaign_name;
+    const cur = merged.get(key) || { campaign_name: key, spend: 0, impressions: 0, clicks: 0 };
+    cur.spend += Number(r.spend || 0);
+    cur.impressions += Number(r.impressions || 0);
+    cur.clicks += Number(r.clicks || 0);
+    merged.set(key, cur);
+  }
+  const groupSpend = new Map();
+  for (const r of merged.values()) {
+    const u = utmForCampaign(r.campaign_name).utm || '';
+    groupSpend.set(u, (groupSpend.get(u) || 0) + r.spend);
+  }
+  const campaigns = [...merged.values()].map((r) => {
     const m = utmForCampaign(r.campaign_name);
     const orders = m.utm ? Number(byUtm.get(m.utm) || 0) : 0;
+    const gSpend = groupSpend.get(m.utm || '') || 0;
     return {
       ...r,
+      spend: Math.round(r.spend * 100) / 100,
       utm: m.utm,
       label: m.label,
       orders,
-      costPerOrder: orders > 0 ? Math.round((r.spend / orders) * 100) / 100 : null,
+      groupSpend: Math.round(gSpend * 100) / 100,
+      costPerOrder: orders > 0 ? Math.round((gSpend / orders) * 100) / 100 : null,
     };
-  });
+  }).sort((a, b) => b.spend - a.spend);
   const total = campaigns.reduce((a, c) => a + Number(c.spend || 0), 0);
   return { total: Math.round(total * 100) / 100, campaigns };
+}
+
+/* ---------- เทียบกับ Meta (แอด + Pixel) ---------- */
+
+// เรียก Meta 3 ทางขนานกัน timeout รวม 5 วินาที ตัวไหนล้มคืน null เฉพาะตัวนั้น
+async function fetchMetaCompare(env, db, from, to, todayStr) {
+  const token = env && env.META_CAPI_TOKEN;
+  if (!token) return null;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 5000);
+  try {
+    const [insights, utmMap, pixelTotals] = await Promise.all([
+      fetchMetaAdInsights(env, token, from, to, ctrl.signal).catch(() => null),
+      fetchMetaAdUtm(env, token, ctrl.signal).catch(() => null),
+      fetchMetaPixelStats(env, token, from, to, todayStr, ctrl.signal).catch(() => null),
+    ]);
+    const oursByContent = await readOursByContent(db, from, to).catch(() => null);
+    const hitsByEvent = await readHitsByEvent(db, from, to).catch(() => null);
+    const ads = insights ? buildMetaAds(insights, utmMap, oursByContent) : null;
+    const pixel = pixelTotals ? buildMetaPixel(pixelTotals, hitsByEvent) : null;
+    if (ads == null && pixel == null) return null;
+    return { ads, pixel };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function metaGet(env, token, path, params, signal) {
+  const qs = new URLSearchParams({ ...params, access_token: token });
+  if (env.META_APP_SECRET) {
+    qs.set('appsecret_proof', await appProof(env.META_APP_SECRET, token));
+  }
+  const res = await fetch('https://graph.facebook.com/v21.0/' + path + '?' + qs.toString(), { signal });
+  if (!res.ok) throw new Error('meta ' + res.status);
+  return res.json();
+}
+
+async function fetchMetaAdInsights(env, token, from, to, signal) {
+  const data = await metaGet(env, token, META_ACCOUNT + '/insights', {
+    level: 'ad',
+    fields: 'campaign_name,ad_id,ad_name,spend,impressions,clicks,actions,action_values',
+    time_range: JSON.stringify({ since: from, until: to }),
+    filtering: JSON.stringify([{ field: 'campaign.name', operator: 'CONTAIN', value: 'KP' }]),
+    limit: '200',
+  }, signal);
+  return (data && data.data) || [];
+}
+
+// จับคู่แอดกับ utm_content จากลิงก์ใน creative ถ้าไม่มีใช้ชื่อแอดแทน
+async function fetchMetaAdUtm(env, token, signal) {
+  const data = await metaGet(env, token, META_ACCOUNT + '/ads', {
+    fields: 'id,name,creative{object_story_spec}',
+    filtering: JSON.stringify([{ field: 'campaign.name', operator: 'CONTAIN', value: 'KP' }]),
+    limit: '200',
+  }, signal);
+  const map = new Map();
+  for (const ad of (data && data.data) || []) {
+    const id = String((ad && ad.id) || '');
+    if (!id) continue;
+    let link = null;
+    try {
+      const spec = ad.creative && ad.creative.object_story_spec;
+      link = spec && spec.link_data && spec.link_data.link;
+    } catch { link = null; }
+    map.set(id, parseUtmContent(link) || String((ad && ad.name) || ''));
+  }
+  return map;
+}
+
+function parseUtmContent(link) {
+  if (!link) return null;
+  try {
+    const v = new URL(String(link)).searchParams.get('utm_content');
+    return v && v.trim() ? v.trim() : null;
+  } catch { return null; }
+}
+
+// ยอด Pixel รวมทุกชั่วโมงในช่วง ตาม paging ไม่เกิน 10 หน้า
+async function fetchMetaPixelStats(env, token, from, to, todayStr, signal) {
+  const range = thaiRangeUnix(from, to, todayStr);
+  const proof = env.META_APP_SECRET ? await appProof(env.META_APP_SECRET, token) : null;
+  const first = new URLSearchParams({
+    aggregation: 'event',
+    start_time: String(range.start),
+    end_time: String(range.end),
+    access_token: token,
+  });
+  if (proof) first.set('appsecret_proof', proof);
+  const totals = {};
+  let url = 'https://graph.facebook.com/v21.0/' + META_PIXEL + '/stats?' + first.toString();
+  for (let page = 0; page < 10; page++) {
+    const res = await fetch(url, { signal });
+    if (!res.ok) throw new Error('pixel ' + res.status);
+    const data = await res.json();
+    for (const hour of (data && data.data) || []) {
+      for (const ev of (hour && hour.data) || []) {
+        const name = String((ev && ev.value) || '');
+        if (!name) continue;
+        totals[name] = (totals[name] || 0) + Number((ev && ev.count) || 0);
+      }
+    }
+    const next = data && data.paging && data.paging.next;
+    if (!next) break;
+    url = next;
+  }
+  return totals;
+}
+
+// วันไทย 00:00 ถึง 23:59:59 ถ้าช่วงลงท้ายวันนี้ใช้ถึงเวลาปัจจุบัน
+function thaiRangeUnix(from, to, todayStr) {
+  const start = Math.floor(new Date(from + 'T00:00:00+07:00').getTime() / 1000);
+  const end = (to === todayStr)
+    ? Math.floor(Date.now() / 1000)
+    : Math.floor(new Date(to + 'T23:59:59+07:00').getTime() / 1000);
+  return { start, end };
+}
+
+function metaActionVal(list, type) {
+  if (!Array.isArray(list)) return 0;
+  for (const a of list) {
+    if (a && a.action_type === type) return Number(a.value || 0);
+  }
+  return 0;
+}
+
+// ของเราผูกระดับ session แบบตาราง creatives เดิม บวกคนใส่ตะกร้า
+async function readOursByContent(db, from, to) {
+  const res = await db.prepare(
+    `WITH s AS (
+       SELECT session, MAX(content) AS content
+         FROM visits
+        WHERE day >= ? AND day <= ? AND is_bot = 0 AND content IS NOT NULL
+        GROUP BY session
+     )
+     SELECT s.content,
+            COUNT(DISTINCT s.session) AS sessions,
+            COUNT(DISTINCT CASE WHEN v.event = 'ViewContent' THEN v.visitor END) AS vc,
+            COUNT(DISTINCT CASE WHEN v.event = 'AddToCart' THEN v.visitor END) AS atc,
+            COUNT(DISTINCT CASE WHEN v.event = 'InitiateCheckout' THEN v.visitor END) AS ic,
+            SUM(CASE WHEN v.event = 'Purchase' THEN 1 ELSE 0 END) AS orders,
+            COALESCE(SUM(CASE WHEN v.event = 'Purchase' THEN v.value ELSE 0 END), 0) AS revenue
+       FROM s JOIN visits v ON v.session = s.session AND v.day >= ? AND v.day <= ? AND v.is_bot = 0
+      GROUP BY s.content`
+  ).bind(from, to, from, to).all();
+  const map = new Map();
+  for (const r of (res.results || [])) map.set(String(r.content || ''), r);
+  return map;
+}
+
+async function readHitsByEvent(db, from, to) {
+  const res = await db.prepare(
+    `SELECT event,
+            SUM(CASE WHEN is_bot = 0 THEN 1 ELSE 0 END) AS ours,
+            SUM(CASE WHEN is_bot = 1 THEN 1 ELSE 0 END) AS bots
+       FROM visits WHERE day >= ? AND day <= ? GROUP BY event`
+  ).bind(from, to).all();
+  const map = new Map();
+  for (const r of (res.results || [])) map.set(String(r.event), r);
+  return map;
+}
+
+function buildMetaAds(insights, utmMap, oursByContent) {
+  const rows = (insights || []).map((r) => {
+    const adId = String((r && (r.ad_id || r.adId)) || '');
+    const utmContent = ((utmMap && utmMap.get(adId)) || String((r && r.ad_name) || ''));
+    const meta = {
+      spend: Number((r && r.spend) || 0),
+      impressions: Number((r && r.impressions) || 0),
+      clicks: Number((r && r.clicks) || 0),
+      lpv: metaActionVal(r && r.actions, 'landing_page_view'),
+      vc: metaActionVal(r && r.actions, 'offsite_conversion.fb_pixel_view_content'),
+      atc: metaActionVal(r && r.actions, 'offsite_conversion.fb_pixel_add_to_cart'),
+      ic: metaActionVal(r && r.actions, 'offsite_conversion.fb_pixel_initiate_checkout'),
+      purchase: metaActionVal(r && r.actions, 'offsite_conversion.fb_pixel_purchase'),
+      purchaseValue: metaActionVal(r && r.action_values, 'offsite_conversion.fb_pixel_purchase'),
+    };
+    const o = (oursByContent && oursByContent.get(utmContent)) || null;
+    const ours = {
+      sessions: Number((o && o.sessions) || 0),
+      vc: Number((o && o.vc) || 0),
+      atc: Number((o && o.atc) || 0),
+      ic: Number((o && o.ic) || 0),
+      orders: Number((o && o.orders) || 0),
+      revenue: Number((o && o.revenue) || 0),
+    };
+    return {
+      ad_id: adId,
+      ad_name: String((r && r.ad_name) || ''),
+      campaign_name: String((r && r.campaign_name) || ''),
+      utm_content: utmContent,
+      meta,
+      ours,
+      costPerLpv: meta.lpv > 0 ? Math.round((meta.spend / meta.lpv) * 100) / 100 : null,
+      costPerOrder: ours.orders > 0 ? Math.round((meta.spend / ours.orders) * 100) / 100 : null,
+    };
+  });
+  rows.sort((a, b) => Number(b.meta.spend || 0) - Number(a.meta.spend || 0));
+  return rows;
+}
+
+const META_PIXEL_EVENTS = ['PageView', 'ViewContent', 'AddToCart', 'InitiateCheckout', 'Purchase'];
+
+function buildMetaPixel(totals, hitsByEvent) {
+  return META_PIXEL_EVENTS.map((event) => {
+    const meta = Number((totals && totals[event]) || 0);
+    const row = (hitsByEvent && hitsByEvent.get(event)) || null;
+    const ours = Number((row && row.ours) || 0);
+    const bots = Number((row && row.bots) || 0);
+    return {
+      event,
+      meta,
+      ours,
+      bots,
+      ratio: ours > 0 ? Math.round((meta / ours) * 100) / 100 : null,
+    };
+  });
 }
 
 /* ---------- ใหม่/กลับมา ชั่วโมง วัน ---------- */

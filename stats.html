@@ -51,6 +51,7 @@ h2 .sub{font-family:var(--body);font-weight:400;font-size:.82rem;color:var(--mut
 .note{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:14px;margin-bottom:18px}
 .err{background:#ffeceb;border:2px solid var(--red);color:#8e1a0c;border-radius:10px;padding:10px 12px;margin-bottom:14px}
 .tiny{font-size:.82rem;color:var(--muted)}
+td.warn{background:#ffeceb;color:#8e1a0c;font-weight:600}
 .table-wrap{overflow-x:auto;border:2px solid var(--ink);border-radius:12px;background:#fff}
 table{width:100%;border-collapse:collapse;background:#fff;min-width:480px}
 table.slim{min-width:0}
@@ -157,6 +158,9 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
 
     <h2>ค่าแอด Meta <span class="sub">ดึงอัตโนมัติเฉพาะแคมเปญที่ขึ้นต้นด้วย KP</span></h2>
     <div id="adblock"></div>
+
+    <h2>เทียบกับ Meta <span class="sub">แอดเห็นเท่าไหร่ เราเห็นเท่าไหร่</span></h2>
+    <div id="metablock"></div>
 
     <h2>เงินจริง <span class="sub">ยอดสั่งคือกดฟอร์ม ยอดโอนคือสลิปผ่านแล้ว</span></h2>
     <div class="note" id="money"></div>
@@ -338,6 +342,7 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
 
     // ค่าแอด
     renderAds(d);
+    renderMeta(d);
 
     // เงินจริง
     renderMoney(d);
@@ -399,10 +404,87 @@ td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:ri
     }).join('');
     box.innerHTML = '<div class="table-wrap"><table><tr><th>แคมเปญ</th><th>หมวด</th>' +
       '<th class="num">ใช้ไป</th><th class="num">แสดงผล</th><th class="num">คลิก</th>' +
-      '<th class="num">ออเดอร์ที่ utm ตรงกัน</th><th class="num">ต้นทุนต่อออเดอร์</th></tr>' +
+      '<th class="num">ออเดอร์ที่มาจากแอดกลุ่มนี้</th><th class="num">ต้นทุนต่อออเดอร์</th></tr>' +
       (rows || '<tr><td>ยังไม่มีแคมเปญที่ขึ้นต้นด้วย KP ในช่วงนี้</td></tr>') + '</table></div>' +
-      '<p class="tiny">ใช้ไปทั้งหมด ' + money(spend.total) + ' จับคู่ออเดอร์จาก utm_campaign ' +
+      '<p class="tiny">ใช้ไปทั้งหมด ' + money(spend.total) + ' · ออเดอร์ที่มาจากแอด = คนที่กดลิงก์ของแอดเข้ามา (ลิงก์มีป้าย utm ติดไว้) แล้วสั่งซื้อในการเข้าเว็บรอบนั้น · แคมเปญที่ใช้ป้ายเดียวกันนับออเดอร์ร่วมกัน ต้นทุนต่อออเดอร์จึงคิดจากค่าแอดรวมของกลุ่ม · ' +
       'เสื้อคือ kp-preorder-0921 กระเป๋าคือ kp-bag-0923 ถ้าเพิ่มแคมเปญใหม่ให้เพิ่มชื่อในตารางในโค้ด visits.js</p>';
+  }
+
+  var META_EV_TH = { PageView: 'เปิดเว็บ', ViewContent: 'ดูสินค้า', AddToCart: 'ใส่ตะกร้า', InitiateCheckout: 'เริ่มกรอก', Purchase: 'ซื้อ' };
+
+  function pairCell(mv, ov) {
+    return '<td class="num">' + mv + '</td><td class="num">' + ov + '</td>';
+  }
+
+  function renderMeta(d) {
+    var box = $('metablock');
+    var mc = d.metaCompare;
+    if (!mc) {
+      box.innerHTML = '<div class="note">ดึงข้อมูล Meta ไม่ได้' +
+        '<br><span class="tiny">เช็กว่าใส่ META_CAPI_TOKEN ในระบบหรือยัง แล้วกดโหลดใหม่อีกครั้ง</span></div>';
+      return;
+    }
+    var html = '';
+    if (!mc.ads) {
+      html += '<div class="note">ดึงข้อมูลแอดจาก Meta ไม่ได้' +
+        '<br><span class="tiny">ตาราง Pixel ด้านล่างยังดูได้ตามปกติ</span></div>';
+    } else if (!mc.ads.length) {
+      html += '<div class="note">ช่วงนี้ยังไม่มีแอดที่ขึ้นต้นด้วย KP</div>';
+    } else {
+      var rows = mc.ads.map(function (a) {
+        var m = a.meta || {}, o = a.ours || {};
+        var adCell = '<b>' + esc(a.ad_name || '-') + '</b>' +
+          '<br><span class="tiny">' + esc(a.campaign_name || '') + ' · utm_content=' + esc(a.utm_content || '-') + '</span>';
+        return '<tr><td>' + adCell + '</td>' +
+          '<td class="num">' + money(m.spend) + '<br><span class="tiny">เห็น ' + num(m.impressions) + ' ครั้ง</span></td>' +
+          pairCell(num(m.clicks) + '<br><span class="tiny">เข้าเว็บ ' + num(m.lpv) + '</span>',
+            num(o.sessions) + '<br><span class="tiny">ครั้งที่เข้า</span>') +
+          pairCell(num(m.vc), num(o.vc)) +
+          pairCell(num(m.atc), num(o.atc)) +
+          pairCell(num(m.ic), num(o.ic)) +
+          pairCell(num(m.purchase) + '<br><span class="tiny">' + money(m.purchaseValue) + '</span>',
+            num(o.orders) + '<br><span class="tiny">' + money(o.revenue) + '</span>') +
+          '<td class="num">' + (a.costPerLpv != null ? money(a.costPerLpv) : '-') + '</td>' +
+          '<td class="num">' + (a.costPerOrder != null ? money(a.costPerOrder) : '-') + '</td></tr>';
+      }).join('');
+      html += '<p><b>แอดแต่ละตัว: Meta เห็น กับ เราเห็น</b> <span class="tiny">เรียงตามค่าแอดมากไปน้อย</span></p>' +
+        '<div class="table-wrap"><table style="min-width:980px"><tr>' +
+        '<th>แอด</th><th class="num">ค่าแอด</th>' +
+        '<th class="num">คลิก Meta</th><th class="num">เข้าเว็บ เรา</th>' +
+        '<th class="num">ดูสินค้า Meta</th><th class="num">ดูสินค้า เรา</th>' +
+        '<th class="num">ใส่ตะกร้า Meta</th><th class="num">ใส่ตะกร้า เรา</th>' +
+        '<th class="num">เริ่มกรอก Meta</th><th class="num">เริ่มกรอก เรา</th>' +
+        '<th class="num">ซื้อ Meta</th><th class="num">ซื้อ เรา</th>' +
+        '<th class="num">ต่อคนเข้าเว็บ</th><th class="num">ต่อออเดอร์</th></tr>' +
+        rows + '</table></div>' +
+        '<p class="tiny">คลิก Meta คือคนกดลิงก์ ส่วนเข้าเว็บของ Meta คือคนที่หน้าเว็บโหลดสำเร็จ ต่อคนเข้าเว็บเอาค่าแอดหารด้วยเข้าเว็บของ Meta ต่อออเดอร์เอาค่าแอดหารด้วยออเดอร์ที่เราผูก utm_content ได้</p>';
+    }
+    if (!mc.pixel) {
+      html += '<div class="note">ดึงยอด Pixel จาก Meta ไม่ได้</div>';
+    } else {
+      var prows = mc.pixel.map(function (p) {
+        var bad = p.ratio != null && (p.ratio < 0.7 || p.ratio > 1.3);
+        var rc = p.ratio == null ? '-' : String(p.ratio);
+        return '<tr><td>' + esc(META_EV_TH[p.event] || p.event) + ' <span class="tiny">' + esc(p.event) + '</span></td>' +
+          '<td class="num">' + num(p.meta) + '</td>' +
+          '<td class="num">' + num(p.ours) + '</td>' +
+          '<td class="num">' + num(p.bots) + '</td>' +
+          '<td class="num' + (bad ? ' warn' : '') + '">' + esc(rc) + (bad ? ' ควรดู' : '') + '</td></tr>';
+      }).join('');
+      html += '<p><b>Pixel นับได้เท่าไหร่</b> <span class="tiny">อัตราส่วนคือ Meta หารด้วยเรา</span></p>' +
+        '<div class="table-wrap"><table style="min-width:560px"><tr>' +
+        '<th>event</th><th class="num">Meta</th><th class="num">เรา</th>' +
+        '<th class="num">บอทที่เราตัดทิ้ง</th><th class="num">อัตราส่วน</th></tr>' +
+        prows + '</table></div>' +
+        '<p class="tiny">ช่องสีแดงคืออัตราส่วนห่างกันเกิน 30 เปอร์เซ็นต์ ควรดูว่าเกิดจากอะไร</p>';
+    }
+    html += '<div class="note"><b>ทำไมตัวเลขสองฝั่งไม่เท่ากันเป๊ะ</b>' +
+      '<br>1. Meta รวม event ที่เบราว์เซอร์กับเซิร์ฟเวอร์ส่ง แล้วตัดซ้ำด้วย event_id ส่วนเรานับจากเซิร์ฟเวอร์อย่างเดียว' +
+      '<br>2. เราตัดบอททิ้ง แต่ Meta อาจนับบอทรีวิวแอดรวมไปด้วย' +
+      '<br>3. คนที่ปิดการติดตามหรือเปิดตัวบล็อกโฆษณา Meta จะไม่เห็น แต่เซิร์ฟเวอร์เราเห็น' +
+      '<br>4. Meta ผูกยอดให้แอดตามคลิก 1 วันหรือเห็นแอด 1 วัน ส่วนเราผูกตาม utm ใน session' +
+      '<br>5. Meta รายงานช้าได้ 15 ถึง 60 นาที ถ้าเลขยังไม่นิ่งให้กดโหลดใหม่อีกครั้ง</div>';
+    box.innerHTML = html;
   }
 
   function renderMoney(d) {

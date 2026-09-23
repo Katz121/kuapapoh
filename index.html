@@ -37,7 +37,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%233B3E7E'/><g fill='none' stroke='%23F7F0C4' stroke-width='3.4' stroke-linejoin='round'><path d='M24 11h16a2 2 0 0 1 2 2v9c0 3 2 4 5 5a6 6 0 0 1 4 6v14a3 3 0 0 1-3 3H16a3 3 0 0 1-3-3V33a6 6 0 0 1 4-6c3-1 5-2 5-5v-9a2 2 0 0 1 2-2z'/><rect x='27' y='15' width='10' height='12' rx='1'/><rect x='18' y='37' width='11' height='12' rx='1'/><rect x='35' y='37' width='11' height='12' rx='1'/></g></svg>">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/images/icon-180.png">
-<script src="pixel.js?v=202609210003" defer></script>
+<script src="pixel.js?v=202609231800" defer></script>
 <link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1726,6 +1726,30 @@ document.querySelectorAll('[data-open-modal]').forEach(btn => {
     }
   });
 });
+
+/* เปิดหน้าต่างสินค้ายิง ViewContent ให้ อย่างละครั้งต่อการโหลดหน้า */
+(function () {
+  var seenBag = false;
+  var seenShirt = false;
+  function vc(params) {
+    if (window.kpTrack) window.kpTrack('ViewContent', params);
+    else (window.kpPending = window.kpPending || []).push(['ViewContent', params]);
+  }
+  // ผูกที่ document · การ์ดสินค้าถูก cms-loader วาดใหม่หลังโหลด ผูกกับปุ่มตรงๆ จะหลุด
+  document.addEventListener('click', function (event) {
+    var btn = event.target.closest && event.target.closest('[data-open-modal]');
+    if (btn) {
+      var id = btn.getAttribute('data-open-modal');
+      if (id === 'modal-bag' && !seenBag) {
+        seenBag = true;
+        vc({ content_ids: ['je-bag'], content_type: 'product', value: 250, currency: 'THB', content_name: 'กระเป๋าผ้าเทศกาลกินผัก' });
+      } else if (id === 'modal-je' && !seenShirt) {
+        seenShirt = true;
+        vc({ content_ids: ['je-shirt'], content_type: 'product', value: 350, currency: 'THB', content_name: 'เสื้อเทศกาลกินผัก กั่วป่าโพ้' });
+      }
+    }
+  });
+})();
 
 document.querySelectorAll('[data-close-modal]').forEach(btn => {
   btn.addEventListener('click', () => {

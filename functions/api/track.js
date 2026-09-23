@@ -86,6 +86,9 @@ export async function onRequestPost(context) {
   const value = money(body.value);
   const currency = clean(body.currency, 8) || (body.value ? 'THB' : null);
   const orderId = clean(body.orderId, 40) || null;
+  // สินค้าที่ browser แนบมา · ไม่เชื่อทั้งหมด ตรวจ whitelist ก่อนใช้ · ไม่เก็บลง D1
+  const contentIds = cleanIds(body.contentIds !== undefined ? body.contentIds : body.content_ids);
+  const numItems = cleanNum(body.numItems !== undefined ? body.numItems : body.num_items);
   const country = clean(cf.country, 4) || null;
 
   const row = {
@@ -209,9 +212,10 @@ export async function onRequestPost(context) {
           capiEvent.custom_data = {
             currency: currency || 'THB',
             value,
-            content_ids: ['je-shirt'],
+            content_ids: contentIds,
             content_type: 'product',
           };
+          if (numItems) capiEvent.custom_data.num_items = numItems;
           if (orderId) capiEvent.custom_data.order_id = orderId;
         }
 
@@ -262,6 +266,27 @@ function hostOnly(value) {
   } catch {
     return null;
   }
+}
+
+/* content_ids จากเบราว์เซอร์ · รับเฉพาะรหัสที่รู้จัก สูงสุด 5 ตัว · ไม่มีหรือผิดใช้ค่าเดิม */
+const KNOWN_IDS = new Set(['je-shirt', 'je-bag']);
+function cleanIds(input) {
+  if (!Array.isArray(input)) return ['je-shirt'];
+  const out = [];
+  for (const item of input) {
+    if (typeof item !== 'string') continue;
+    const id = item.trim().slice(0, 30);
+    if (KNOWN_IDS.has(id) && !out.includes(id)) out.push(id);
+    if (out.length >= 5) break;
+  }
+  return out.length ? out : ['je-shirt'];
+}
+
+/* num_items จำนวนเต็ม 1 ถึง 100 · นอกช่วงถือว่าไม่มี */
+function cleanNum(input) {
+  const n = Number(input);
+  if (!Number.isInteger(n) || n < 1 || n > 100) return null;
+  return n;
 }
 
 function money(value) {

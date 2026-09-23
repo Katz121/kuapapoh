@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&amp;family=IBM+Plex+Sans+Thai:wght@400;500;600&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&amp;family=IBM+Plex+Sans+Thai:wght@400;500;600&amp;display=swap"></noscript>
-<script src="../pixel.js?v=202609210003" defer></script>
+<script src="../pixel.js?v=202609231800" defer></script>
 <style>
 :root{
   --yellow:#FFE81C; --red:#F4331F; --red-deep:#D42614; --cobalt:#1E3FA8;
@@ -743,11 +743,30 @@ var PREORDER = {
     }).catch(function () { slipHash = ''; });
   }
 
+  // content_ids ตามของในตะกร้าจริงตอนนั้น · ใช้กับ InitiateCheckout และ Lead
+  function cartContentIds() {
+    var ids = [];
+    var hasShirt = false;
+    var hasBag = false;
+    Object.keys(cart).forEach(function (code) {
+      if (isBagCode(code)) hasBag = true; else hasShirt = true;
+    });
+    if (hasShirt) ids.push('je-shirt');
+    if (hasBag) ids.push('je-bag');
+    return ids.length ? ids : ['je-shirt'];
+  }
+
   var form = $('order-form');
-  form.addEventListener('focusin', function () {
+  form.addEventListener('focusin', function (event) {
+    // นับเริ่มกรอกเมื่อแตะช่องข้อมูลจริง · ปุ่มบวกลบจำนวนอยู่ในฟอร์มเดียวกัน ถ้านับด้วยจะได้ยอด 0
+    var el = event.target;
+    if (!el || !el.matches || !el.matches('input:not([type=button]):not([type=file]), textarea, select')) return;
     if (startedCheckout) return;
     startedCheckout = true;
-    track('InitiateCheckout', { value: totals().total, content_ids: ['je-shirt'] });
+    var t = totals();
+    var params = { value: t.total, content_ids: cartContentIds(), content_type: 'product' };
+    if (t.qty > 0) params.num_items = t.qty;
+    track('InitiateCheckout', params);
   });
 
   form.addEventListener('submit', function (event) {
@@ -915,7 +934,9 @@ var PREORDER = {
     link.addEventListener('click', function () {
       // คัดลอกให้เสร็จก่อนเบราว์เซอร์สลับไปแอป LINE ไม่งั้นรายการจะหาย
       try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch (error) { /* ปล่อยผ่าน */ }
-      track('Lead', { value: t.total, content_ids: ['je-shirt'] });
+      var leadParams = { value: t.total, content_ids: cartContentIds(), content_type: 'product' };
+      if (t.qty > 0) leadParams.num_items = t.qty;
+      track('Lead', leadParams);
     });
     var backup = document.createElement('textarea');
     backup.value = text;
@@ -967,12 +988,50 @@ var PREORDER = {
     return '<div><span style="color:var(--muted)">' + label + '</span><b>' + value + '</b></div>';
   }
 
-  track('ViewContent', {
-    value: PREORDER.price,
-    content_ids: ['je-shirt'],
-    content_type: 'product',
-    content_name: 'เสื้อเทศกาลกินผัก กั่วป่าโพ้'
-  });
+  // ViewContent ตอนโหลด: ลิงก์เจาะจงกระเป๋า (#bag หรือ utm_content ขึ้นต้นด้วย bag) ยิง je-bag อย่างเดียว
+  var vcIsBag = (location.hash && location.hash.toLowerCase().indexOf('bag') !== -1) ||
+    ((new URLSearchParams(location.search).get('utm_content') || '').toLowerCase().indexOf('bag') === 0);
+  var bagViewed = vcIsBag;
+  if (vcIsBag) {
+    track('ViewContent', {
+      value: PREORDER.bag.price,
+      content_ids: ['je-bag'],
+      content_type: 'product',
+      content_name: 'กระเป๋าผ้าเทศกาลกินผัก กั่วป่าโพ้'
+    });
+  } else {
+    track('ViewContent', {
+      value: PREORDER.price,
+      content_ids: ['je-shirt', 'je-bag'],
+      content_type: 'product',
+      content_name: 'เสื้อเทศกาลกินผัก กั่วป่าโพ้'
+    });
+  }
+
+  // เลื่อนถึงส่วนกระเป๋าครั้งแรก ยิง ViewContent je-bag เพิ่มให้ ครั้งเดียวต่อการโหลดหน้า
+  (function () {
+    var section = document.getElementById('bag');
+    if (!section || bagViewed || !('IntersectionObserver' in window)) return;
+    var seen = false;
+    var observer = new IntersectionObserver(function (entries) {
+      if (seen) return;
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) {
+          seen = true;
+          bagViewed = true;
+          observer.disconnect();
+          track('ViewContent', {
+            value: PREORDER.bag.price,
+            content_ids: ['je-bag'],
+            content_type: 'product',
+            content_name: 'กระเป๋าผ้าเทศกาลกินผัก กั่วป่าโพ้'
+          });
+          break;
+        }
+      }
+    }, { threshold: 0.3 });
+    observer.observe(section);
+  })();
 
   loadStock();
   render();

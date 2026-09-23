@@ -278,5 +278,13 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0 1
   <a href="/preorder/">สั่งเลย</a>
 </div></div>
 
+<script src="/pixel.js?v=202609231800" defer></script>
+<script>
+(function () {
+  var params = { content_ids: ['je-shirt', 'je-bag'], content_type: 'product', value: 350, currency: 'THB' };
+  if (window.kpTrack) window.kpTrack('ViewContent', params);
+  else (window.kpPending = window.kpPending || []).push(['ViewContent', params]);
+})();
+</script>
 </body>
 </html>

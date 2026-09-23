@@ -409,7 +409,7 @@ footer p{max-width:72ch}
 .dialog-actions{margin-top:.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:.8rem}
 .dialog-subnote{font-size:.8rem;color:var(--muted)}
 </style>
-<script src="/pixel.js?v=202609210003" defer></script>
+<script src="/pixel.js?v=202609231800" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -1111,6 +1111,28 @@ document.querySelectorAll('[data-open-modal]').forEach(btn => {
     if (dlg) { dlg.showModal(); document.body.style.overflow = 'hidden'; }
   });
 });
+
+/* Opening a product dialog fires ViewContent, once per dialog per page load */
+(function () {
+  var seenBag = false;
+  var seenShirt = false;
+  function vc(params) {
+    if (window.kpTrack) window.kpTrack('ViewContent', params);
+    else (window.kpPending = window.kpPending || []).push(['ViewContent', params]);
+  }
+  document.querySelectorAll('[data-open-modal]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.getAttribute('data-open-modal');
+      if (id === 'modal-bag' && !seenBag) {
+        seenBag = true;
+        vc({ content_ids: ['je-bag'], content_type: 'product', value: 250, currency: 'THB', content_name: 'กระเป๋าผ้าเทศกาลกินผัก' });
+      } else if (id === 'modal-je' && !seenShirt) {
+        seenShirt = true;
+        vc({ content_ids: ['je-shirt'], content_type: 'product', value: 350, currency: 'THB', content_name: 'เสื้อเทศกาลกินผัก กั่วป่าโพ้' });
+      }
+    });
+  });
+})();
 document.querySelectorAll('[data-close-modal]').forEach(btn => {
   btn.addEventListener('click', () => {
     const dlg = btn.closest('dialog');

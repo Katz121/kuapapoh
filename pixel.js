@@ -95,7 +95,10 @@
       wd: isWebdriver,
       value: options.value,
       currency: options.value ? 'THB' : '',
-      orderId: options.orderId || ''
+      orderId: options.orderId || '',
+      // สินค้าที่เกี่ยวกับ event นี้ · server ตรวจ whitelist เอง · ไม่มีมาก็ไม่เป็นไร
+      contentIds: options.contentIds,
+      numItems: options.numItems
     };
     var text = JSON.stringify(payload);
     try {
@@ -137,7 +140,10 @@
       sendOurs(eventName, {
         eventId: eventId,
         value: options.value,
-        orderId: options.orderId || options.order_id
+        orderId: options.orderId || options.order_id,
+        // รับทั้ง snake_case (ที่หน้าเว็บส่งมา) และ camelCase · ส่งต่อให้ server ทางเดียว ไม่เข้า fbq
+        contentIds: options.content_ids || options.contentIds,
+        numItems: options.num_items || options.numItems
       });
     } catch (error) { /* ไม่ให้ tracking ทำให้หน้าเว็บสะดุด */ }
     if (!PIXEL_ID) return;
@@ -146,7 +152,8 @@
     try {
       var forMeta = {};
       for (var key in options) {
-        if (Object.prototype.hasOwnProperty.call(options, key) && key !== 'orderId') forMeta[key] = options[key];
+        // orderId ส่งแยกแล้ว · contentIds/numItems เป็นของ server ไม่ต้องเข้า fbq
+        if (Object.prototype.hasOwnProperty.call(options, key) && key !== 'orderId' && key !== 'contentIds' && key !== 'numItems') forMeta[key] = options[key];
       }
       forMeta.currency = forMeta.currency || 'THB';
       // eventID เดียวกับที่เก็บฝั่งเรา · ส่งย้อนเข้า Conversions API ทีหลังแล้วไม่นับซ้ำ

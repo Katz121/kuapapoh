@@ -633,7 +633,8 @@ async function readOrdersByUtm(db, from, to) {
   for (const col of candidates) {
     try {
       const res = await db.prepare(
-        `SELECT COALESCE(NULLIF(${col},''), '(ไม่ติด utm)') AS utm,
+        // นับเป็นออเดอร์ของแอดเฉพาะ medium = paid · ลิงก์ LINE/โพสต์ใช้ชื่อแคมเปญซ้ำกับแอดได้ ห้ามนับรวม
+        `SELECT CASE WHEN medium = 'paid' THEN COALESCE(NULLIF(${col},''), '(แอดไม่ติด utm)') ELSE '(ไม่ได้มาจากแอด)' END AS utm,
                 COUNT(*) AS orders, COALESCE(SUM(value),0) AS revenue
            FROM visits WHERE day >= ? AND day <= ? AND event = 'Purchase' AND is_bot = 0
           GROUP BY utm ORDER BY orders DESC LIMIT 20`

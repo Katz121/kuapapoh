@@ -71,3 +71,12 @@ https://:version.:project.pages.dev/*
 
 /api/*
   Cache-Control: no-store
+
+# ลิงก์สั้น /bag /shirt · มีไว้ให้การ์ดลิงก์ใน Facebook/LINE เท่านั้น ไม่ต้องขึ้นผลค้นหา
+/bag/*
+  X-Robots-Tag: noindex
+  Cache-Control: public, max-age=300
+
+/shirt/*
+  X-Robots-Tag: noindex
+  Cache-Control: public, max-age=300

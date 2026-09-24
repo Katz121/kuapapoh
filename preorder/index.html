@@ -87,6 +87,26 @@ main{padding:26px 0 140px}
 .bag-row .bag-price{color:var(--ink);font-weight:600}
 .bag-row .label{flex:1}
 .bag-out{color:var(--red-deep);font-weight:700}
+/* โหมดกระเป๋า · มาจากแอด/ลิงก์กระเป๋า (#bag หรือ utm_content=bag...) เห็นกระเป๋าเต็มจอก่อนเสื้อ */
+.bag-hero{display:none}
+.bag-mode .shirt-hero{display:none}
+.bag-mode .bag-hero{display:block}
+.bag-hero .kicker{display:inline-block;background:var(--red-deep);color:#fff;font-weight:700;font-size:.88rem;padding:.3rem .85rem;border-radius:99px;border:2px solid var(--ink);margin:0 0 .6rem}
+.bag-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 0}
+.bag-pick button{display:block;padding:0;border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:#fff;font:inherit;cursor:pointer;text-align:center;color:var(--ink)}
+.bag-pick button img{display:block;width:100%;height:auto}
+.bag-pick button span{display:block;padding:.7rem .4rem;font-family:var(--display);font-weight:700;font-size:1.02rem;min-height:44px}
+.bag-pick button.on{border-color:var(--red);box-shadow:0 0 0 3px var(--red)}
+.bag-pick button.on span{background:var(--red-deep);color:#fff}
+.bag-pick button:disabled{opacity:.55;cursor:not-allowed}
+.bag-story{background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:10px 12px;margin:12px 0 0;font-size:.95rem;line-height:1.6}
+.bag-next{display:none;width:100%;margin:12px 0 0;background:var(--ink);color:#fff;border:0;border-radius:99px;padding:.85rem 1rem;font:inherit;font-family:var(--display);font-weight:700;font-size:1.02rem;cursor:pointer}
+.bag-next.show{display:block}
+.bag-line{margin:10px 0 0;font-size:.95rem}
+.bag-line a{color:#067A35;font-weight:700}
+.bag-mode #shirt-step > h2 .n{display:none}
+.bag-combo{display:none;background:#fff6f4;border:2px dashed var(--red);border-radius:12px;padding:8px 12px;margin:0 0 10px;font-size:.92rem;font-weight:600}
+.bag-combo.show{display:block}
 details.chart{margin-top:12px;border-top:1px dashed var(--rule);padding-top:12px}
 details.chart summary{cursor:pointer;font-weight:600;font-size:.9rem;color:var(--cobalt)}
 details.chart .charts{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:12px}
@@ -216,7 +236,25 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
 </div></div>
 
 <header class="hero">
-  <div class="wrap">
+  <div class="wrap bag-hero" id="bag-hero">
+    <span class="kicker">ใหม่ · จำนวนจำกัด ช้าหมดอด</span>
+    <h1>กระเป๋าผ้ากินผัก<br>ลายน้องจำปูน ใบละ 250</h1>
+    <p class="lede">สะพายไปงานกินผักตะกั่วป่าปีนี้ ผ้าแคนวาส 13 x 15 นิ้ว ลายเดียวกับเสื้อกินผักกั่วป่าโพ้ มีสีเหลืองกับสีแดง</p>
+    <div class="bag-pick" id="bag-pick">
+      <button type="button" data-bag="BAG-YELLOW"><img src="../images/je-bag-yellow-friends.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="กระเป๋าผ้ากินผักสีเหลือง มีน้องจำปูนเกาะขอบกระเป๋า"><span>+ เอาสีเหลือง</span></button>
+      <button type="button" data-bag="BAG-RED"><img src="../images/je-bag-red-friends.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="กระเป๋าผ้ากินผักสีแดง มีน้องจำปูนเกาะขอบกระเป๋า"><span>+ เอาสีแดง</span></button>
+    </div>
+    <button type="button" class="bag-next" id="bag-next">ใส่ตะกร้าแล้ว · ไปกรอกชื่อกับเบอร์ ↓</button>
+    <p class="bag-line">ไม่ถนัดกรอกเว็บ? <a href="https://line.me/R/oaMessage/@kuapapoh/?%E0%B8%AA%E0%B8%99%E0%B9%83%E0%B8%88%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%9B%E0%B9%8B%E0%B8%B2%E0%B8%9C%E0%B9%89%E0%B8%B2%E0%B8%81%E0%B8%B4%E0%B8%99%E0%B8%9C%E0%B8%B1%E0%B8%81%20%E0%B8%AA%E0%B8%B5" target="_blank" rel="noopener">ทัก LINE สั่งได้เลย</a> บอกสีกับจำนวนมา เดี๋ยวเราจดให้</p>
+    <ul class="facts">
+      <li>ใบละ 250 บาท</li>
+      <li>รับเองที่บ้าน 78 ไม่มีค่าส่ง</li>
+      <li>ส่งไปรษณีย์ +50 ต่อออเดอร์</li>
+      <li>สั่งคู่เสื้อ ค่าส่งไม่เพิ่ม</li>
+    </ul>
+    <p class="bag-story"><b>น้องจำปูน</b> มาสคอตจากดอกจำปูน ดอกไม้ประจำพังงา คว้าอันดับ 3 เวทีประกวดมาสคอตประจำจังหวัดพังงา ฝีมือพี่เบิร์ด ปีนี้ใส่ชุดขาวมาชวนไปงานกินผักด้วยกัน</p>
+  </div>
+  <div class="wrap shirt-hero">
     <a class="bag-note" href="#bag">ใหม่ · กระเป๋าผ้ากินผัก 250 บาท จำนวนจำกัด สั่งพร้อมเสื้อได้ ↓</a>
     <h1>เสื้อเทศกาลกินผัก<br>กั่วป่าโพ้ · รอบพรีออเดอร์</h1>
     <p class="lede">เสื้อยืดสีขาว ผ้าฝ้าย 100% เกรด 32 คอมบ์ อกซ้ายเป็นตราผ้ากันเปื้อนกั่วป่าโพ้สีแดง ด้านหลังรวมสัญลักษณ์เทศกาลกินผักของตะกั่วป่า ทั้งศาลเจ้า มังกร เสือ และเตาไฟ</p>
@@ -238,8 +276,8 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
   <form id="order-form" novalidate>
     <p class="msg" id="form-msg" role="alert"></p>
 
-    <section class="step">
-      <h2><span class="n">1</span> เลือกไซส์และจำนวน</h2>
+    <section class="step" id="shirt-step">
+      <h2><span class="n">1</span> <span id="shirt-title">เลือกไซส์และจำนวน</span></h2>
       <p class="hint">กดปุ่มบวกตามจำนวนที่ต้องการ สั่งหลายไซส์ในออเดอร์เดียวได้เลย</p>
       <p class="notice">รอบนี้ยังเปิดรับอยู่ ยังไม่มีวันปิด · พอครบจำนวนที่สั่งผลิตได้ ทีมงานจะแจ้งวันปิดรับและรอบได้ของทางเพจ LINE และทักกลับไปที่เบอร์ที่กรอกไว้</p>
       <div class="size-group" id="sizes-adult"><h3>ไซส์ผู้ใหญ่ <span style="font-weight:400">(ตัวเลขคือขนาดตัวเสื้อ ไม่ใช่รอบตัวคน วัดจากเสื้อที่ใส่อยู่แล้วเทียบ)</span></h3></div>
@@ -256,6 +294,7 @@ footer{border-top:2px solid var(--ink);background:var(--yellow);padding:18px 0;f
     <section class="step" id="bag">
       <h2>กระเป๋าผ้าเทศกาลกินผัก ฿250 · จำนวนจำกัด</h2>
       <p class="hint">ผ้าแคนวาส 13 x 15 นิ้ว พรีเซนเตอร์น้องจำปูน · มีสีเหลืองกับสีแดง จำนวนจำกัด ช้าหมดอด สั่งพร้อมเสื้อในออเดอร์เดียวได้</p>
+      <p class="bag-combo" id="bag-combo">มีเสื้อในตะกร้าแล้ว เพิ่มกระเป๋าในออเดอร์เดียวกัน ค่าส่งไม่เพิ่ม</p>
       <div class="size-group" id="bags"></div>
     </section>
     <section class="step">
@@ -501,6 +540,60 @@ var PREORDER = {
   }
   buildBags();
 
+  // โหมดกระเป๋า · คนที่มาจากแอด/ลิงก์กระเป๋าต้องเห็นกระเป๋าก่อน ไม่ใช่หัวหน้าเสื้อแล้วโดนกระโดดลงกลางฟอร์ม
+  // เงื่อนไขเดียวกับ ViewContent je-bag ด้านล่าง · ปุ่มเลือกสีกดปุ่มบวกของแถวกระเป๋าจริง ตะกร้า/สต็อก/event ใช้ทางเดิมทั้งหมด
+  var bagMode = (location.hash && location.hash.toLowerCase().indexOf('bag') !== -1) ||
+    ((new URLSearchParams(location.search).get('utm_content') || '').toLowerCase().indexOf('bag') === 0);
+  if (bagMode) {
+    document.body.classList.add('bag-mode');
+    var bagSection = $('bag');
+    var shirtStep = $('shirt-step');
+    shirtStep.parentNode.insertBefore(bagSection, shirtStep);
+    bagSection.id = 'bag-order';   // ไม่ให้เบราว์เซอร์กระโดดตาม #bag ข้ามหัวกระเป๋าไป
+    bagSection.querySelector('h2').insertAdjacentHTML('afterbegin', '<span class="n">1</span> ');
+    $('shirt-title').textContent = 'อยากได้เสื้อลายเดียวกันด้วยไหม (ไม่บังคับ)';
+    // เบราว์เซอร์กระโดดไปที่ #bag เองตอนโหลด · ดึงกลับขึ้นบนให้เห็นหัวกระเป๋าก่อน
+    var toTop = function () { if (!touchedBag && window.scrollY) window.scrollTo(0, 0); };
+    toTop();
+    window.addEventListener('load', function () { toTop(); setTimeout(toTop, 0); });
+  }
+  function bagPlus(code) {
+    var plus = document.querySelector('.size-row[data-size="' + code + '"] [data-act="plus"]');
+    if (plus && !plus.disabled) plus.click();
+  }
+  document.getElementById('bag-pick').addEventListener('click', function (event) {
+    var btn = event.target.closest('button[data-bag]');
+    if (!btn) return;
+    var code = btn.dataset.bag;
+    if (!cart[code]) { bagPlus(code); return; }
+    // เลือกสีนี้ไว้แล้ว · พาไปแถวกระเป๋าให้ปรับจำนวนเอง
+    var row = document.querySelector('.size-row[data-size="' + code + '"]');
+    if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  $('bag-next').addEventListener('click', function () {
+    var field = $('f-name');
+    field.closest('section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(function () { try { field.focus({ preventScroll: true }); } catch (e) {} }, 450);
+  });
+  function syncBagPick() {
+    var any = false;
+    PREORDER.bag.colors.forEach(function (color) {
+      var btn = document.querySelector('#bag-pick button[data-bag="' + color.code + '"]');
+      if (!btn) return;
+      var qty = cart[color.code] || 0;
+      var left = bagStock[color.code] || 0;
+      if (qty) any = true;
+      btn.classList.toggle('on', !!qty);
+      btn.disabled = !qty && bagReady && left <= 0;
+      btn.querySelector('span').textContent = qty
+        ? '✓ ' + color.label + ' ' + qty + ' ใบ'
+        : (bagReady && left <= 0 ? color.label + ' หมดแล้ว' : '+ เอา' + color.label);
+    });
+    $('bag-next').classList.toggle('show', any);
+    var t = totals();
+    $('bag-combo').classList.toggle('show', !bagMode && t.shirts > 0 && t.bags === 0);
+  }
+
   // เลขเหลือโหลดตอนเปิดหน้า · โหลดไม่ได้ก็ซ่อนตัวเลข ขายต่อได้ตามปกติเพราะ server คุมสต็อกจริง
   function loadStock() {
     fetch('/api/stock', { headers: { 'accept': 'application/json' } }).then(function (response) {
@@ -609,6 +702,7 @@ var PREORDER = {
       : 'ยังไม่ได้เลือกสินค้า';
 
     refreshBagRows();
+    syncBagPick();
     renderQr(t.total);
   }
 

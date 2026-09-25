@@ -172,6 +172,20 @@ button.danger:hover{background:var(--red);color:#fff}
   <ol class="timeline" id="event-list"></ol>
 </div></dialog>
 
+<dialog id="attach-dialog"><div class="box">
+  <button class="ghost small" id="attach-close" style="float:right">ปิด</button>
+  <h3 style="font-family:var(--display);margin:0 0 4px" id="attach-title">แนบสลิป</h3>
+  <p style="color:var(--muted);font-size:.88rem;margin:0 0 14px" id="attach-sub"></p>
+  <label class="check-drop" id="attach-drop">
+    <input type="file" id="attach-file" accept="image/*">
+    <b id="attach-label">แตะเพื่อเลือกรูปสลิป</b>
+    <div style="font-size:.85rem;color:var(--muted);margin-top:4px">หรือวางรูปที่คัดลอกไว้ (Ctrl+V) ก็ได้</div>
+    <img id="attach-preview" alt="สลิปที่เลือก" hidden style="max-width:170px;margin:10px auto 0;border:2px solid var(--rule);border-radius:8px">
+  </label>
+  <button id="attach-run" style="width:100%;margin-top:12px" disabled>บันทึกสลิปเข้าออเดอร์นี้</button>
+  <div id="attach-result" class="check-result" hidden></div>
+</div></dialog>
+
 <dialog id="slip-dialog"><div class="box">
   <button class="ghost small" id="slip-close" style="float:right">ปิด</button>
   <h3 style="font-family:var(--display);margin:0 0 10px" id="slip-title">สลิป</h3>
@@ -345,7 +359,9 @@ button.danger:hover{background:var(--red);color:#fff}
               (order.slip_ref
                 ? '<div class="rowline"><span class="pill-ok">มีเลขอ้างอิง</span></div>'
                 : '<div class="rowline"><span class="pill-warn">ไม่มีเลขอ้างอิง</span></div>')
-            : '<span class="rowline">ยังไม่แนบ</span>') + '</td>' +
+            : '<span class="rowline">ยังไม่แนบ</span>') +
+          '<div style="margin-top:6px"><button class="' + (order.has_slip ? 'ghost ' : '') + 'small" data-attach="' + order.id + '">' +
+            (order.has_slip ? 'เปลี่ยนสลิป' : 'แนบสลิป') + '</button></div></td>' +
         '<td><span class="status s-' + order.status + '">' + (STATUS_TH[order.status] || order.status) + '</span>' +
           '<div style="margin-top:6px"><select data-status="' + order.id + '" style="font-size:.82rem;padding:5px 8px">' +
             Object.keys(STATUS_TH).map(function (key) {
@@ -552,6 +568,127 @@ button.danger:hover{background:var(--red);color:#fff}
         $('list-msg').textContent = 'ตรวจไม่สำเร็จ: ' + data.error;
         return;
       }
+      load(false);
+    });
+  });
+
+  /* แนบสลิปให้ออเดอร์เอง · ลูกค้าส่งสลิปมาทาง LINE / Facebook แทนการแนบในหน้าสั่งซื้อ
+     บีบรูปแบบเดียวกับหน้าลูกค้า + อ่านคิวอาร์ไปด้วย ระบบจะตรวจกับธนาคารต่อให้ */
+  var attach = { id: '', dataUrl: '', ref: '', hash: '' };
+
+  document.addEventListener('click', function (event) {
+    var btn = event.target.closest('[data-attach]');
+    if (!btn) return;
+    var id = btn.dataset.attach;
+    var order = orders.find(function (o) { return o.id === id; });
+    attach = { id: id, dataUrl: '', ref: '', hash: '' };
+    $('attach-title').textContent = (order && order.has_slip ? 'เปลี่ยนสลิป · ' : 'แนบสลิป · ') + id;
+    $('attach-sub').textContent = (order ? order.name + ' · ยอด ฿' + order.total.toLocaleString('th-TH') + ' · ' : '') +
+      'มีคิวอาร์ในสลิประบบจะตรวจกับธนาคารให้เลย';
+    $('attach-file').value = '';
+    $('attach-preview').hidden = true;
+    $('attach-drop').classList.remove('on');
+    $('attach-label').textContent = 'แตะเพื่อเลือกรูปสลิป';
+    $('attach-run').disabled = true;
+    $('attach-run').textContent = 'บันทึกสลิปเข้าออเดอร์นี้';
+    $('attach-result').hidden = true;
+    $('attach-dialog').showModal();
+  });
+  $('attach-close').addEventListener('click', function () { $('attach-dialog').close(); });
+  $('attach-file').addEventListener('change', function () { readAttachFile(this.files && this.files[0]); });
+  document.addEventListener('paste', function (event) {
+    if (!$('attach-dialog').open) return;
+    var items = (event.clipboardData && event.clipboardData.items) || [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].type && items[i].type.indexOf('image') === 0) {
+        readAttachFile(items[i].getAsFile());
+        break;
+      }
+    }
+  });
+
+  function readAttachFile(file) {
+    if (!file) return;
+    attach.dataUrl = ''; attach.ref = ''; attach.hash = '';
+    $('attach-run').disabled = true;
+    $('attach-result').hidden = true;
+    $('attach-label').textContent = 'กำลังเตรียมรูป...';
+    var reader = new FileReader();
+    reader.onload = function () {
+      var image = new Image();
+      image.onload = function () {
+        var scale = Math.min(1, 1400 / Math.max(image.width, image.height));
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(image.width * scale);
+        canvas.height = Math.round(image.height * scale);
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        var dataUrl = '';
+        try {
+          dataUrl = canvas.toDataURL('image/webp', 0.82);
+          if (dataUrl.indexOf('data:image/webp') !== 0) dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+          if (dataUrl.length > 520000) dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+        } catch (error) { dataUrl = ''; }
+        if (!dataUrl || dataUrl.length > 520000) {
+          $('attach-label').textContent = 'รูปนี้ใหญ่เกินไป · ลองครอปให้เหลือแค่สลิป';
+          return;
+        }
+        attach.dataUrl = dataUrl;
+        $('attach-preview').src = dataUrl;
+        $('attach-preview').hidden = false;
+        $('attach-drop').classList.add('on');
+        if (window.crypto && crypto.subtle) {
+          crypto.subtle.digest('SHA-256', new TextEncoder().encode(dataUrl)).then(function (buffer) {
+            attach.hash = [].map.call(new Uint8Array(buffer), function (b) {
+              return b.toString(16).padStart(2, '0');
+            }).join('');
+          });
+        }
+        loadJsQR(function (ok) {
+          if (ok) {
+            try {
+              var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+              var found = window.jsQR(data.data, data.width, data.height, { inversionAttempts: 'attemptBoth' });
+              if (found && found.data) attach.ref = String(found.data).slice(0, 200);
+            } catch (error) { /* อ่านไม่ได้ก็ยังแนบรูปได้ */ }
+          }
+          $('attach-label').textContent = attach.ref
+            ? '✓ อ่านคิวอาร์ได้ · กดบันทึกแล้วระบบจะตรวจกับธนาคารให้'
+            : 'แนบได้ แต่อ่านคิวอาร์ไม่ได้ · ต้องตรวจยอดเองจากรูป';
+          $('attach-run').disabled = false;
+        });
+      };
+      image.onerror = function () { $('attach-label').textContent = 'เปิดไฟล์นี้ไม่ได้ · ลองไฟล์อื่น'; };
+      image.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  $('attach-run').addEventListener('click', function () {
+    if (!attach.dataUrl || !attach.id) return;
+    var button = this;
+    button.disabled = true;
+    button.textContent = attach.ref ? 'กำลังบันทึกและถามธนาคาร...' : 'กำลังบันทึก...';
+    api('/api/admin/attach-slip', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: attach.id, slip: attach.dataUrl, slipRef: attach.ref, slipHash: attach.hash })
+    }).then(function (data) {
+      var box = $('attach-result');
+      box.hidden = false;
+      button.textContent = 'บันทึกสลิปเข้าออเดอร์นี้';
+      if (!data.ok) {
+        button.disabled = false;
+        box.className = 'check-result fail';
+        box.innerHTML = '<h4>บันทึกไม่สำเร็จ</h4><div>' + escapeHtml(data.error || '') + '</div>';
+        return;
+      }
+      box.className = 'check-result ' + (data.verified === true ? 'pass' : data.verified === false ? 'fail' : '');
+      box.innerHTML = '<h4>✓ ' + (data.replaced ? 'เปลี่ยนสลิปแล้ว' : 'แนบสลิปแล้ว') + '</h4><div>' +
+        escapeHtml(data.verified === true ? 'ธนาคารยืนยันว่าโอนจริง · ' + (data.note || '')
+          : data.verified === false ? 'ตรวจกับธนาคารไม่ผ่าน · ' + (data.note || '')
+          : data.hasRef ? (data.note || 'ยังตรวจกับธนาคารไม่ได้ · กดตรวจสลิปใหม่ที่แถวออเดอร์ได้')
+          : 'ไม่มีคิวอาร์ในสลิป · ดูยอดจากรูปแล้วเปลี่ยนสถานะเอง') + '</div>';
       load(false);
     });
   });

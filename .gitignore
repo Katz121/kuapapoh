@@ -29,3 +29,4 @@ wrangler.toml
 
 # ค่าลับสำหรับ wrangler pages dev ในเครื่อง
 .dev.vars
+__pycache__/

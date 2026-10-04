@@ -20,7 +20,7 @@ trap 'rm -rf "$STAGE"' EXIT
 cd "$ROOT"
 
 git ls-files -z \
-  | grep -zEv '^(README\.md|\.gitignore|PROJECT_MEMORY\.md|wrangler\.dev\.toml|scripts/.*|functions/.*|docs/.*|migrations/.*)$' \
+  | grep -zEv '^(README\.md|\.gitignore|PROJECT_MEMORY.md|CLAUDE.md|wrangler\.dev\.toml|scripts/.*|functions/.*|docs/.*|migrations/.*)$' \
   | while IFS= read -r -d '' f; do
       mkdir -p "$STAGE/$(dirname "$f")"
       cp "$f" "$STAGE/$f"
